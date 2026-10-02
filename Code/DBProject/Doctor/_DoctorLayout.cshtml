@@ -1,13 +1,15 @@
-@* Migrated from ASP.NET Web Forms Master Page (Admin.Master) to ASP.NET Core Razor Layout.
+@* ASP.NET Core Razor Layout for the Doctor area.
+   This file replaces the Web Forms DoctorMaster.Master page.
    Rule cr-dotnet-0026: Web Forms Usage → Migrate to ASP.NET Core MVC/Razor Pages
-   Occurrence 6 (Line 1): The <%@ Master %> Web Forms directive has been replaced with a
-   standard ASP.NET Core Razor Layout file (_AdminLayout.cshtml).
-   asp:ContentPlaceHolder controls replaced with @RenderSection() / @RenderBody() calls.
-   runat="server" attributes removed throughout.
-   Navigation links updated from .aspx URLs to Razor Page route paths.
+
+   The <%@ Master %> directive (line 1 of DoctorMaster.Master) and all
+   <asp:ContentPlaceHolder> / <form runat="server"> constructs have been replaced
+   with standard Razor Layout constructs: @RenderBody() and @RenderSection().
+   Enables stateless, cloud-native deployment on AWS
+   (Linux containers, Elastic Beanstalk, ECS/Fargate).
 *@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <!--------------------------------- Styling -------------------------------->
 
@@ -19,7 +21,7 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
           crossorigin="anonymous" />
 
-    <!-- Admin Style -->
+    <!-- Doctor / Patient Style -->
     <link rel="stylesheet" href="/assets/css/patient-style.css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -31,12 +33,11 @@
     <meta name="keywords" content="footer, address, phone, icons" />
 
     <link rel="stylesheet" href="/assets/css/demo.css" />
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="/assets/css/footer-distributed-with-address-and-phones.css" />
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css" />
 
-    <title>@ViewData["Title"] - Admin</title>
+    <title>@ViewData["Title"] - Doctor</title>
 
     @* Replaces asp:ContentPlaceHolder ID="head" — allows child pages to inject head content *@
     @RenderSection("Head", required: false)
@@ -51,23 +52,29 @@
                     <li><a href="/SignUp"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/AddStaff"><span class="glyphicon glyphicon-plus"></span> Add Staff</a></li>
+                    <li><a href="/Doctor/PatientHistory"><span class="glyphicon glyphicon-list-alt"></span> Todays Appointments</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/DoctorRegistrationForm"><span class="glyphicon glyphicon-plus"></span> Add Doctor</a></li>
+                    <li><a href="/Doctor/PendingAppointment"><span class="glyphicon glyphicon-plus"></span> Pending Appointments</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/ManageClinic"><span class="glyphicon glyphicon-cog"></span> Manage Clinic</a></li>
+                    <li><a href="/Doctor/PreviousHistory"><span class="glyphicon glyphicon-list-alt"></span> Patients History</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/AdminHome"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="/Doctor/DoctorHome"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                 </ul>
             </div>
         </nav>
         <!-- Navigation Bar ends here -->
 
-        @* Replaces asp:ContentPlaceHolder ID="ContentPlaceHolder1" — main page body *@
+        @* Replaces asp:ContentPlaceHolder ID="Cp1" — main page body *@
         @RenderBody()
+
+        @* Replaces asp:ContentPlaceHolder ID="Cp2" *@
+        @RenderSection("Cp2", required: false)
+
+        @* Replaces asp:ContentPlaceHolder ID="Cp3" *@
+        @RenderSection("Cp3", required: false)
     </div>
 
     <!--- Footer starts here -->
@@ -105,7 +112,7 @@
     </footer>
     <!--- Footer ends here -->
 
-    @* Replaces asp:ContentPlaceHolder ID="ContentPlaceHolder2" — allows child pages to inject scripts *@
+    @* Replaces asp:ContentPlaceHolder for scripts — allows child pages to inject scripts *@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

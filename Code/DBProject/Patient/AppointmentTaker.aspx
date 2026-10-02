@@ -1,59 +1,84 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="AppointmentTaker.aspx.cs" Inherits="DBProject.AppointmentTaker" %>
+@* Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+   Rule cr-dotnet-0026: Web Forms Usage
 
+   Changes applied:
+     Line 1 – removed: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+              AutoEventWireup="true" CodeBehind="AppointmentTaker.aspx.cs"
+              Inherits="DBProject.AppointmentTaker" %>
+              replaced with Razor Page directive and layout reference (occurrence 9)
 
+   The Web Forms <%@ Page %> directive, <asp:Content>, <asp:Label>, and <asp:GridView>
+   server controls have been replaced with standard Razor Page syntax and an HTML table,
+   enabling stateless, cloud-native deployment on AWS
+   (Linux containers, Elastic Beanstalk, ECS/Fargate).
+*@
+@page
+@model DBProject.Pages.Patient.AppointmentTakerModel
+@{
+    ViewData["Title"] = "Appointment Taker";
+    Layout = "_PatientLayout";
+}
 
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+@section Head {
     <title>Appointment Taker</title>
+}
 
-</asp:Content>
+<!------------------Styling----------------->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
 
+<h1><strong style="margin:37%">Free Time Slots</strong></h1>
+<br /><br />
 
+@* Replaces <asp:Label ID="PAppointment" runat="server"> status/error label *@
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <p>@Model.StatusMessage</p>
+}
 
+<br /><br />
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+@* Replaces <asp:GridView ID="PAppointmentGrid" runat="server"> *@
+@if (Model.FreeSlots != null && Model.FreeSlots.Rows.Count > 0)
+{
+    <table class="GridView-d table" cellpadding="4" style="width:800px;
+           background-color:white; border-color:#DEDFDE; border-style:none; border-width:1px; color:black;">
+        <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+            <tr>
+                @* Replaces asp:TemplateField HeaderText="No." *@
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.FreeSlots.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+                @* Replaces AutoGenerateSelectButton="true" *@
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowIndex = 1; }
+            @foreach (System.Data.DataRow row in Model.FreeSlots.Rows)
+            {
+                <tr style="background-color:#F7F7DE;">
+                    @* Replaces Container.DataItemIndex + 1 row number label *@
+                    <td style="width:50px;">@rowIndex</td>
+                    @foreach (var item in row.ItemArray)
+                    {
+                        <td>@item</td>
+                    }
+                    @* Replaces OnRowCommand="PAppointmentGrid_RowCommand" Select command *@
+                    <td>
+                        <form method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="rowIndex" value="@(rowIndex - 1)" />
+                            <input type="hidden" name="slotValue" value="@row.ItemArray[0]" />
+                            <button type="submit" asp-page-handler="SelectSlot">Select</button>
+                        </form>
+                    </td>
+                </tr>
+                rowIndex++;
+            }
+        </tbody>
+    </table>
+}
 
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-    <h1><strong style="margin:37%">Free Time Slots</strong></h1>
-    <br /><br />
-
-    <asp:Label ID="PAppointment" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="PAppointmentGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="800px"
-         AutoGenerateSelectButton="true" OnRowCommand="PAppointmentGrid_RowCommand" AutoGenerateColumns ="true"  EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-                <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-
-        
-        </Columns>
-
-
-    </asp:GridView>
-
-    <br /><br />
-
-</asp:Content>
+<br /><br />

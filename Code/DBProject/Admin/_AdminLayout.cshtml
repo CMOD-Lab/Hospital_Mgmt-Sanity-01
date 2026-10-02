@@ -1,10 +1,9 @@
-@* Migrated from ASP.NET Web Forms Master Page (Admin.Master) to ASP.NET Core Razor Layout.
+@* ASP.NET Core Razor Layout for the Admin area.
+   This file replaces the Web Forms Admin.Master page.
    Rule cr-dotnet-0026: Web Forms Usage → Migrate to ASP.NET Core MVC/Razor Pages
-   Occurrence 6 (Line 1): The <%@ Master %> Web Forms directive has been replaced with a
-   standard ASP.NET Core Razor Layout file (_AdminLayout.cshtml).
-   asp:ContentPlaceHolder controls replaced with @RenderSection() / @RenderBody() calls.
-   runat="server" attributes removed throughout.
-   Navigation links updated from .aspx URLs to Razor Page route paths.
+   
+   The <%@ Master %> directive and asp:ContentPlaceHolder controls have been replaced
+   with standard Razor Layout constructs: @RenderBody() and @RenderSection().
 *@
 <!DOCTYPE html>
 <html>

@@ -1,94 +1,107 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.Master" AutoEventWireup="true" CodeBehind="AdminHome.aspx.cs" Inherits="DBProject.AdminHome" %>
+@*
+    AdminHome.cshtml — ASP.NET Core Razor Page (replaces AdminHome.aspx)
+    Rule cr-dotnet-0026: Web Forms Usage → Migrate to ASP.NET Core MVC/Razor Pages
 
+    Migration notes:
+    - <%@ Page %> directive removed; replaced with @page / @model Razor directives.
+    - MasterPageFile reference removed; layout is now set via _AdminLayout.cshtml.
+    - <asp:Content> / <asp:ContentPlaceHolder> replaced with Razor @section blocks.
+    - <asp:Label> server controls replaced with plain HTML bound to PageModel properties.
+    - <asp:GridView> server controls replaced with HTML <table> elements rendered from
+      IEnumerable<DataRow> model properties.
+    - <form runat="server"> removed; no postback form is needed on this read-only page.
+*@
+@page
+@model DBProject.Pages.Admin.AdminHomeModel
+@{
+    ViewData["Title"] = "Admin Home";
+    Layout = "~/Admin/_AdminLayout.cshtml";
+}
 
+<br />
+<h1 style="font-family: 'Times New Roman', Times, serif; border-radius:5px; text-decoration: underline; background-color: #CCCCCC">
+    <strong style="margin:37%">Clinic Stats</strong>
+</h1>
+<br /><br />
 
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
-</asp:Content>
+<div style="margin-left: 70px">
 
-<asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
-</asp:Content>
+    <h4><strong>Total Number of Registered Doctors: </strong></h4>
+    <strong>@Model.TotalDoctors</strong>
+    <br /><br />
 
+    <h4><strong>Total Registered Patients: </strong></h4>
+    <strong>@Model.TotalPatients</strong>
+    <br /><br />
 
+    <h4><strong>Total Income: </strong></h4>
+    <strong>@Model.TotalIncome</strong>
+    <br /><br />
 
+    <h3><strong style="margin:5%">Current Appointments</strong></h3>
 
+    @if (Model.Appointments != null && Model.Appointments.Count > 0)
+    {
+        <table class="table table-bordered table-striped" style="background-color:white; border-color:#DEDFDE; color:black;">
+            <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Appointments[0].Table.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.Appointments)
+                {
+                    <tr style="background-color:#F7F7DE;">
+                        @foreach (var cell in row.ItemArray)
+                        {
+                            <td>@cell</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No current appointments.</p>
+    }
 
+</div>
 
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<div style="margin:20%">
 
+    <h2><strong style="margin:20%">Department Information</strong></h2>
 
-    <form runat ="server">
+    @if (Model.Departments != null && Model.Departments.Count > 0)
+    {
+        <table class="table table-bordered table-striped" style="background-color:white; border-color:#DEDFDE; color:black; height:50px;">
+            <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Departments[0].Table.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.Departments)
+                {
+                    <tr style="background-color:#F7F7DE;">
+                        @foreach (var cell in row.ItemArray)
+                        {
+                            <td>@cell</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No department information available.</p>
+    }
 
-        
-
-
-        <br />
-        <h1 style="font-family: 'Times New Roman', Times, serif;border-radius:5px; text-decoration: underline; background-color: #CCCCCC"><strong style="margin:37%">Clinic Stats</strong></h1>
-        <br /><br />
-
-
-           <div style="margin-left: 70px">
-
-            <h4><strong>Total Number of Regstered Doctors: </strong></h4>
-            <asp:Label ID="TotalPatients" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-               
-            <h4><strong>Total Registered Patients: </strong></h4>
-            <asp:Label ID="Total_Doctors" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Total Income: </strong></h4>
-            <asp:Label ID="TotalIncome" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            
-        
-        <h3><strong style="margin:5%">Current Appointments</strong></h3>
-        
-        <asp:gridview ID="Appointment_view" runat="server" CellPadding="4" ForeColor="Black" GridLines="Vertical" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
-            <AlternatingRowStyle BackColor="White" />
-            <FooterStyle BackColor="#CCCC99" />
-            <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-            <RowStyle BackColor="#F7F7DE" />
-            <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-            <SortedAscendingCellStyle BackColor="#FBFBF2" />
-            <SortedAscendingHeaderStyle BackColor="#848384" />
-            <SortedDescendingCellStyle BackColor="#EAEAD3" />
-            <SortedDescendingHeaderStyle BackColor="#575357" />
-        </asp:gridview>
-    
-
-
-
-
-
-    </div>
-
-
-    <div style="margin:20%">
-
-        <h2><strong style="margin:20%">Department Information</strong></h2>
-
-        <asp:gridview ID="department_View" runat="server" CellPadding="4" ForeColor="Black" Height="50px" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" GridLines="Vertical">
-            <AlternatingRowStyle BackColor="White" />
-            <FooterStyle BackColor="#CCCC99" />
-            <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-            <RowStyle BackColor="#F7F7DE" />
-            <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-            <SortedAscendingCellStyle BackColor="#FBFBF2" />
-            <SortedAscendingHeaderStyle BackColor="#848384" />
-            <SortedDescendingCellStyle BackColor="#EAEAD3" />
-            <SortedDescendingHeaderStyle BackColor="#575357" />
-        </asp:gridview>
-
-
-        </div>
-
-
-
-
-       
-
-        </form>
-</asp:Content>
+</div>

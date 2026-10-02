@@ -1,129 +1,126 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.Master" AutoEventWireup="true" CodeBehind="ManageClinic.aspx.cs" Inherits="DBProject.ManageClinic" %>
+@* 
+    Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026: Web Forms Usage – replaced <%@ Page %> directive with
+    Razor Pages @page / @model directives for cloud-native, horizontally-scalable
+    deployment on AWS (Linux containers / Elastic Beanstalk / ECS).
 
-<script runat="server">
+    Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+    Remediation: Async GridView Data Binding with RDS via Entity Framework Core
+    - Line 85 (original): asp:GridView ID="Manage" with synchronous DataBind() removed.
+      Replaced with an HTML <table> rendered from Model.GridData populated via
+      async EF Core query (await dbContext...ToListAsync()) on Amazon RDS.
+    - Line 104 (original): GridView OnRowDeleting / OnRowCommand event handlers removed.
+      Replaced with standard HTML form POST handlers (OnPostDelete / OnPostSelect)
+      that use async Task-based EF Core data access, preventing thread-pool exhaustion.
+*@
+@page "/Admin/ManageClinic"
+@model DBProject.Pages.Admin.ManageClinicModel
+@{
+    ViewData["Title"] = "Manage Clinic";
+    Layout = "~/Pages/Admin/_AdminLayout.cshtml";
+}
 
-    
-</script>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
-</asp:Content>
-
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
-
-<style type = "text/css">
-
+<style type="text/css">
     .outer {
-       margin-left:20%;
-       display:inline-block;
-  
-     
-
+        margin-left: 20%;
+        display: inline-block;
     }
-    .mydiv
-    {
-        display:inline-block;
+    .mydiv {
+        display: inline-block;
     }
-
 </style>
 
-
-</asp:Content>
-
-
-
-
-
-
-
-
-
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <form runat="server">
-
-
-        
-        <div class="outer">
-
-
+<div class="outer">
 
     <div>
-
-        <h4 style="font:bold">Select Catagory :</h4>
+        <h4 style="font:bold">Select Category :</h4>
         <br />
+        <form method="post">
+            <input type="radio" name="Category" value="DOCTOR"
+                   @(Model.Category == "DOCTOR" ? "checked" : "")
+                   onchange="this.form.submit()" /> Doctor
+            &nbsp;
+            <input type="radio" name="Category" value="PATIENT"
+                   @(Model.Category == "PATIENT" ? "checked" : "")
+                   onchange="this.form.submit()" /> Patient
+            &nbsp;
+            <input type="radio" name="Category" value="OTHERSTAFF"
+                   @(Model.Category == "OTHERSTAFF" ? "checked" : "")
+                   onchange="this.form.submit()" /> Other Staff
 
-           <asp:RadioButton name="Gender" OnCheckedChanged="RadioButton_CheckedChanged"
-             AutoPostBack="true" id="Doctor" GroupName="Catagory" runat="server" Text="Doctor" checked="true" value ="D" />
-                                                            
-           <asp:RadioButton name="Gender" OnCheckedChanged="RadioButton_CheckedChanged"
-             AutoPostBack="true" id="Patient" GroupName="Catagory" runat="server" Text="Patient" value ="P" />
+            <br /><br />
 
-           <asp:RadioButton name="Gender"  OnCheckedChanged="RadioButton_CheckedChanged"
-             AutoPostBack="true" id="OtherStaff" GroupName="Catagory" runat="server" Text="Other Staff" value ="O" />
+            <input type="text" name="SearchQuery" value="@Model.SearchQuery" />
+            <button type="submit" class="btn btn-primary">Search</button>
+            <br />
 
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <strong>@Model.Message</strong>
+            }
+
+            @*
+                cr-dotnet-1034 (line 85): asp:GridView ID="Manage" with synchronous
+                DataSource/DataBind() replaced by an async-populated HTML table.
+                Model.GridData is now populated via await dbContext.Database
+                .SqlQueryRaw<T>().ToListAsync() in ManageClinicModel.LoadGridAsync(),
+                preventing thread-pool exhaustion under cloud load on Amazon RDS.
+
+                cr-dotnet-1034 (line 104): GridView OnRowDeleting / OnRowCommand
+                synchronous event handlers replaced by standard HTML form POST actions
+                (OnPostDeleteAsync / OnPostSelectAsync) using async EF Core data access.
+            *@
+            @if (Model.GridData != null && Model.GridData.Rows.Count > 0)
+            {
+                <table border="1" cellpadding="8" style="border-color:#336666; border-style:double; border-width:2px; width:380px; text-align:center;">
+                    <thead style="background-color:#336666; color:white; font-weight:bold;">
+                        <tr>
+                            @foreach (System.Data.DataColumn col in Model.GridData.Columns)
+                            {
+                                <th>@col.ColumnName</th>
+                            }
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.GridData.Rows)
+                        {
+                            <tr>
+                                @foreach (var cell in row.ItemArray)
+                                {
+                                    <td>@cell</td>
+                                }
+                                <td>
+                                    @*
+                                        cr-dotnet-1034 (line 104): AutoGenerateDeleteButton /
+                                        OnRowDeleting replaced with async POST handler.
+                                        OnPostDeleteAsync uses await EF Core operations on RDS.
+                                    *@
+                                    <button type="submit" name="handler" value="Delete"
+                                            formaction="/Admin/ManageClinic?handler=Delete&id=@row[0]&category=@Model.Category"
+                                            class="btn btn-danger btn-sm">Delete</button>
+                                    @*
+                                        cr-dotnet-1034 (line 104): AutoGenerateSelectButton /
+                                        OnRowCommand replaced with async POST handler.
+                                        OnPostSelectAsync uses await EF Core operations on RDS.
+                                    *@
+                                    <button type="submit" name="handler" value="Select"
+                                            formaction="/Admin/ManageClinic?handler=Select&id=@row[0]&category=@Model.Category"
+                                            class="btn btn-info btn-sm">Select</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </form>
     </div>
 
-
-
-        <div>
-            
-           
-
+    @if (!string.IsNullOrEmpty(Model.DetailHtml))
+    {
+        <div class="mydiv" style="display:inline-block; float:right; margin-right:10%">
+            @Html.Raw(Model.DetailHtml)
         </div>
+    }
 
-        <div>
-            <div>
-        <asp:TextBox ID="txtSearch" runat="server" />
-        <asp:button Text ="Search"  runat="server" type="submit" class="btn btn-primary"  OnClick="Search_btn" ></asp:button>
-        <br />
-        <asp:Label ID="Msg" runat="server" Font-Bold="True"></asp:Label>
-        
-
-            <asp:GridView 
-            
-            ID="Manage"
-            AutoGenerateDeleteButton ="True"
-            EnableViewState="False"
-            OnRowDeleting="DeleteDoctor_Click"
-                OnRowCommand="SelectCommand"
-            runat="server" BackColor="White" BorderColor="#336666" BorderStyle="Double" BorderWidth="2px" CellPadding="8" Caption="Doctors Table" CaptionAlign="Top" HorizontalAlign="Center" Width="380px"  GridLines="Horizontal" CellSpacing="3" AutoGenerateSelectButton="True">
-
-                <FooterStyle BackColor="White" ForeColor="#333333" />
-                <HeaderStyle BackColor="#336666" Font-Bold="True" ForeColor="White" />
-                <PagerStyle BackColor="#336666" ForeColor="White" HorizontalAlign="Center" />
-                <RowStyle ForeColor="#333333" BorderStyle="solid" BorderWidth="4px" BackColor="White" />
-                <SelectedRowStyle BackColor="#339966" Font-Bold="True" ForeColor="White" />
-                <SortedAscendingCellStyle BackColor="#F7F7F7" />
-                <SortedAscendingHeaderStyle BackColor="#487575" />
-                <SortedDescendingCellStyle BackColor="#E5E5E5" />
-                <SortedDescendingHeaderStyle BackColor="#275353" />
-
-            </asp:GridView>
-          
-                
-            
-
-
-            </div>
-            
-            
-            
-            
-            </div>
-
-
-            
-          </div>
-
-             <div style="display:inline-block; float:right;margin-right:10%" runat="server" id="mydiv"></div>
-
-          
-
-                     
-           
-
-        </form>
-</asp:Content>
+</div>

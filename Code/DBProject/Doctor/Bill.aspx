@@ -1,43 +1,38 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="Bill.aspx.cs" Inherits="doctor.bill" %>
+@*
+    Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026: Web Forms Usage – replaced <%@ Page %> directive with
+    Razor Pages @page / @model directives for cloud-native, horizontally-scalable
+    deployment on AWS (Linux containers / Elastic Beanstalk / ECS).
+*@
+@page "/Doctor/Bill"
+@model DBProject.Pages.Doctor.BillModel
+@{
+    ViewData["Title"] = "Generate Bill";
+    Layout = "~/Pages/Doctor/_DoctorLayout.cshtml";
+}
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<h1>
+    Your Bill For this Appointment is :
+    <strong>@Model.BillAmount</strong>
+</h1>
 
-<title>Generate Bill</title>
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
 
-</asp:Content>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
 
+<form method="post">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="submit" asp-page-handler="BillPaid" class="btn btn-primary" style="font-weight:bold">
+        Bill Paid
+    </button>
 
-
-<asp:Content ID="Content4" ContentPlaceHolderID="Cp3" runat="server">
-
-
-
-    <h1>Your Bill For this Appointment is :      <asp:Label ID="Label1" runat="server" Text="Label" Font-Bold="true" Font-Size="Medium" ></asp:Label> </h1>
-   
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-
-
-    &nbsp&nbsp&nbsp&nbsp<asp:Button ID="Bill" runat="server" Text="Bill Paid" OnClick="bill_paid" Font-Bold ="true" />
-   
-
-     &nbsp&nbsp&nbsp&nbsp<asp:Button ID="Button1" runat="server" Text="Bill Unpaid" OnClick="bill_Unpaid" Font-Bold ="true" />
-   
-
-
-
-
-</asp:Content>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="submit" asp-page-handler="BillUnpaid" class="btn btn-secondary" style="font-weight:bold">
+        Bill Unpaid
+    </button>
+</form>

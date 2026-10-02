@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DBProject</RootNamespace>
     <AssemblyName>DBProject</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -93,6 +93,41 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Dapper: lightweight ORM used with Amazon RDS Proxy for cloud-native connection pooling -->
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net452\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- cr-dotnet-0045: Amazon ElastiCache for Redis distributed session provider -->
+    <!-- Replaces InProc HttpSessionState with Redis-backed IDistributedCache -->
+    <Reference Include="Microsoft.Extensions.Caching.StackExchangeRedis">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.StackExchangeRedis.7.0.0\lib\net7.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Session">
+      <HintPath>..\packages\Microsoft.AspNetCore.Session.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Session.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- cr-dotnet-1034: Entity Framework Core for async GridView data binding on Amazon RDS -->
+    <!-- Replaces synchronous GridView.DataSource/DataBind() with async Task-based EF Core queries -->
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.7.0.0\lib\net6.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.SqlServer.7.0.0\lib\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.7.0.0\lib\net6.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\AddStaff.aspx" />
@@ -213,6 +248,13 @@
       <DependentUpon>CurrentAppointment.aspx</DependentUpon>
     </Compile>
     <Compile Include="DAL\myDAL.cs" />
+    <!-- cr-dotnet-0045: Redis distributed session configuration helper -->
+    <Compile Include="Session\RedisSessionConfiguration.cs" />
+    <!-- cr-dotnet-1034: EF Core DbContext for async GridView data binding on Amazon RDS -->
+    <Compile Include="Data\HospitalDbContext.cs" />
+    <!-- cr-dotnet-1041: ContentSecurityPolicyModule – injects CSP headers on every response -->
+    <!-- Registered in Web.config under system.web/httpModules and system.webServer/modules -->
+    <Compile Include="Security\ContentSecurityPolicyModule.cs" />
     <Compile Include="Doctor\DoctorHome.aspx.cs">
       <DependentUpon>DoctorHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

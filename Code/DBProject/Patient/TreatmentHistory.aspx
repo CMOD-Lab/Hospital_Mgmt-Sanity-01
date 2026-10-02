@@ -1,59 +1,71 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="TreatmentHistory.aspx.cs" Inherits="DBProject.TreatmentHistory" %>
+@* Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+   Rule cr-dotnet-0026: Web Forms Usage
 
+   Changes applied:
+     Line 1 – removed: <%@ Page Title="" Language="C#"
+              MasterPageFile="~/Patient/PatientMaster.Master"
+              AutoEventWireup="true"
+              CodeBehind="TreatmentHistory.aspx.cs"
+              Inherits="DBProject.TreatmentHistory" %>
+              replaced with Razor Page @page / @model directives.
 
+   The <%@ Page %> directive, <asp:Content>, <asp:Label>, and <asp:GridView>
+   server controls have been replaced with standard Razor Page constructs.
+   The Master Page reference is replaced by Layout = "_PatientLayout".
+   Enables stateless, cloud-native deployment on AWS
+   (Linux containers, Elastic Beanstalk, ECS/Fargate).
+*@
+@page
+@model DBProject.Pages.Patient.TreatmentHistoryModel
+@{
+    ViewData["Title"] = "Treatment History";
+    Layout = "_PatientLayout";
+}
 
+@section Head {
+    <title>Treatment History</title>
+}
 
+<!------------------Styling---------------->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<h1><strong style="margin:35%">Your Treatment History</strong></h1>
+<br /><br />
 
-        <title>Treatment History</title>
+@if (!string.IsNullOrEmpty(Model.THistoryMessage))
+{
+    <span>@Model.THistoryMessage</span>
+}
+<br /><br />
 
-</asp:Content>
+@if (Model.TreatmentHistoryData != null && Model.TreatmentHistoryData.Rows.Count > 0)
+{
+    <table class="GridView-d" cellpadding="4" style="color:black; border-style:none; border-width:1px; width:1000px;">
+        <thead>
+            <tr style="background-color:#6B696B; font-weight:bold; color:white;">
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.TreatmentHistoryData.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowIndex = 0; }
+            @foreach (System.Data.DataRow row in Model.TreatmentHistoryData.Rows)
+            {
+                rowIndex++;
+                string rowStyle = (rowIndex % 2 == 0) ? "background-color:white;" : "background-color:#F7F7DE;";
+                <tr style="@rowStyle">
+                    <td style="width:50px;">@rowIndex</td>
+                    @foreach (var cell in row.ItemArray)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-    
-    <h1><strong style="margin:35%">Your Treatment History</strong></h1>
-    <br /><br />
-
-
-
-    <asp:Label ID="THistory" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="THistoryGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-
-
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-            <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-          
-    </asp:GridView>
-
-    <br /><br />
-
-</asp:Content>
+<br /><br />

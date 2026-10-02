@@ -1,60 +1,93 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="PatientFeedback.aspx.cs" Inherits="DBProject.PatientFeedback" %>
+@* Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+   Rule cr-dotnet-0026: Web Forms Usage
 
+   Changes applied:
+     Line 1 – removed: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+              AutoEventWireup="true" CodeBehind="PatientFeedback.aspx.cs"
+              Inherits="DBProject.PatientFeedback" %>
+              replaced with Razor Page directive and layout reference (occurrence 9)
 
+   The Web Forms <%@ Page %> directive, <asp:Content>, <asp:Label>,
+   <asp:DropDownList>, and <asp:Button> server controls have been replaced
+   with standard Razor Page syntax, enabling stateless, cloud-native deployment
+   on AWS (Linux containers, Elastic Beanstalk, ECS/Fargate).
+*@
+@page
+@model DBProject.Pages.Patient.PatientFeedbackModel
+@{
+    ViewData["Title"] = "Feedback";
+    Layout = "_PatientLayout";
+}
 
-
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+@section Head {
     <title>Feedback</title>
+}
 
-</asp:Content>
+<h1><strong style="margin:37%">Feedback</strong></h1>
+<br /><br />
 
+<div style="margin-left: 70px">
 
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-
-    <h1><strong style="margin:37%">Feedback</strong></h1>
+    @* Replaces <asp:Label ID="Feedback" runat="server"> *@
+    @if (!string.IsNullOrEmpty(Model.FeedbackMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FeedbackMessage</p>
+    }
     <br /><br />
 
-    <div style="margin-left: 70px">
-
-    <asp:Label ID="Feedback" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
+    @* Replaces <asp:Label ID="FDoctor" runat="server"> *@
+    @if (!string.IsNullOrEmpty(Model.FDoctorMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FDoctorMessage</p>
+    }
     <br /><br />
 
-    <asp:Label ID="FDoctor" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
+    @* Replaces <asp:Label ID="FTimings" runat="server"> *@
+    @if (!string.IsNullOrEmpty(Model.FTimingsMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FTimingsMessage</p>
+    }
     <br /><br />
 
-    <asp:Label ID="FTimings" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <br /><br />
-    <asp:Label ID="Message" runat="server" Visible="false"  Font-Bold="true" Font-Size="Medium">Dear Patient, How was your treatment experience with our specialized Doctor on a rating of 1 - 5:</asp:Label>
-
-
-    <div  style="margin-left: 790px">
-        <asp:DropDownList ID="List"  runat="server" Visible="false" Font-Bold ="true"  >
-            <asp:ListItem>1</asp:ListItem>
-            <asp:ListItem>2</asp:ListItem>
-            <asp:ListItem>3</asp:ListItem>
-            <asp:ListItem>4</asp:ListItem>
-            <asp:ListItem>5</asp:ListItem>
-        </asp:DropDownList>
-
+    @* Replaces <asp:Label ID="Message" runat="server" Visible="false"> and
+       <asp:DropDownList ID="List">, <asp:Button ID="button1" OnClick="giveFeedback">,
+       <asp:Label ID="F"> — shown only when a pending feedback exists *@
+    @if (Model.ShowFeedbackForm)
+    {
         <br /><br />
+        <p style="font-weight:bold; font-size:medium;">
+            Dear Patient, How was your treatment experience with our specialized Doctor on a rating of 1 - 5:
+        </p>
 
-        <asp:Button ID="button1" runat="server" Visible="false" OnClick="giveFeedback"  Text ="Give Feedback" Font-Bold ="true" />
-       
-        <br /><br />
-        <asp:Label ID="F" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
+        <div style="margin-left: 790px">
+            <form method="post">
+                @* Hidden field carries the appointment ID for the POST handler *@
+                <input type="hidden" name="aID" value="@Model.PendingAppointmentId" />
 
-     </div>
+                @* Replaces <asp:DropDownList ID="List"> *@
+                <select name="rating" style="font-weight:bold;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
 
+                <br /><br />
 
-     <br /><br />
-    </div>
+                @* Replaces <asp:Button ID="button1" OnClick="giveFeedback"> *@
+                <button type="submit" style="font-weight:bold;">Give Feedback</button>
 
-</asp:Content>
+                <br /><br />
+
+                @* Replaces <asp:Label ID="F" runat="server"> *@
+                @if (!string.IsNullOrEmpty(Model.FeedbackResultMessage))
+                {
+                    <p style="font-weight:bold; font-size:medium;">@Model.FeedbackResultMessage</p>
+                }
+            </form>
+        </div>
+    }
+
+    <br /><br />
+</div>

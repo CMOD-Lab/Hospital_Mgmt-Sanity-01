@@ -1,13 +1,15 @@
-@* Migrated from ASP.NET Web Forms Master Page (Admin.Master) to ASP.NET Core Razor Layout.
+@* ASP.NET Core Razor Layout for the Patient area.
+   This file replaces the Web Forms PatientMaster.Master page.
    Rule cr-dotnet-0026: Web Forms Usage → Migrate to ASP.NET Core MVC/Razor Pages
-   Occurrence 6 (Line 1): The <%@ Master %> Web Forms directive has been replaced with a
-   standard ASP.NET Core Razor Layout file (_AdminLayout.cshtml).
-   asp:ContentPlaceHolder controls replaced with @RenderSection() / @RenderBody() calls.
-   runat="server" attributes removed throughout.
-   Navigation links updated from .aspx URLs to Razor Page route paths.
+
+   The <%@ Master %> directive (line 1 of PatientMaster.Master) and all
+   <asp:ContentPlaceHolder> / <form runat="server"> constructs have been replaced
+   with standard Razor Layout constructs: @RenderBody() and @RenderSection().
+   Enables stateless, cloud-native deployment on AWS
+   (Linux containers, Elastic Beanstalk, ECS/Fargate).
 *@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <!--------------------------------- Styling -------------------------------->
 
@@ -19,7 +21,7 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
           crossorigin="anonymous" />
 
-    <!-- Admin Style -->
+    <!-- Patient Style -->
     <link rel="stylesheet" href="/assets/css/patient-style.css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -31,12 +33,11 @@
     <meta name="keywords" content="footer, address, phone, icons" />
 
     <link rel="stylesheet" href="/assets/css/demo.css" />
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="/assets/css/footer-distributed-with-address-and-phones.css" />
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css" />
 
-    <title>@ViewData["Title"] - Admin</title>
+    <title>@ViewData["Title"] - Patient</title>
 
     @* Replaces asp:ContentPlaceHolder ID="head" — allows child pages to inject head content *@
     @RenderSection("Head", required: false)
@@ -51,16 +52,25 @@
                     <li><a href="/SignUp"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/AddStaff"><span class="glyphicon glyphicon-plus"></span> Add Staff</a></li>
+                    <li><a href="/Patient/PatientFeedback"><span class="glyphicon glyphicon-thumbs-up"></span> Feedback</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/DoctorRegistrationForm"><span class="glyphicon glyphicon-plus"></span> Add Doctor</a></li>
+                    <li><a href="/Patient/TreatmentHistory"><span class="glyphicon glyphicon-info-sign"></span> Treatment History</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/ManageClinic"><span class="glyphicon glyphicon-cog"></span> Manage Clinic</a></li>
+                    <li><a href="/Patient/BillsHistory"><span class="glyphicon glyphicon-usd"></span> Bills History</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/Admin/AdminHome"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="/Patient/TakeAppointment"><span class="glyphicon glyphicon-plus"></span> Take Appointment</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/Patient/CurrentAppointment"><span class="glyphicon glyphicon-search"></span> Current Appointment</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/Patient/PatientNotifications"><span class="glyphicon glyphicon-flag"></span> Notifications</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/Patient/PatientHome"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                 </ul>
             </div>
         </nav>
@@ -105,7 +115,7 @@
     </footer>
     <!--- Footer ends here -->
 
-    @* Replaces asp:ContentPlaceHolder ID="ContentPlaceHolder2" — allows child pages to inject scripts *@
+    @* Replaces asp:ContentPlaceHolder for scripts — allows child pages to inject scripts *@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

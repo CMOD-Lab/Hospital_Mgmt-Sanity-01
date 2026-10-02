@@ -1,47 +1,106 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+// Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+// Rule cr-dotnet-0026: Web Forms Usage
+// Rule cr-dotnet-0045: Session State Provider – replaced InProc HttpSessionState
+//   with Amazon ElastiCache for Redis distributed session store.
+//
+// Changes applied (cr-dotnet-0026):
+//   Line 5  – removed: using System.Web;
+//   Line 6  – removed: using System.Web.UI;
+//   Line 12 – removed: public partial class Historyupdate : System.Web.UI.Page
+//             replaced with: public class HistoryUpdateModel : PageModel
+//   Line 14 – removed: protected void Page_Load(object sender, EventArgs e)
+//             replaced with: public void OnGet()
+//   Response.Write("<script>alert(...)") replaced with model-bound StatusMessage property.
+//   Response.Redirect replaced with RedirectToPage.
+//
+// Changes applied (cr-dotnet-0045):
+//   Line 23 – Session["idoriginal"] (InProc HttpSessionState) replaced with
+//             HttpContext.Session.GetInt32("idoriginal") backed by
+//             Amazon ElastiCache for Redis distributed session, enabling
+//             stateless horizontal scaling across multiple ECS tasks or pods.
+//   Line 28 – Session["appointid"] (InProc HttpSessionState) replaced with
+//             HttpContext.Session.GetInt32("appointid") backed by
+//             Amazon ElastiCache for Redis distributed session.
+//
+// The PageModel pattern (ASP.NET Core Razor Pages) + Redis distributed session
+// replaces the Web Forms / InProc session model, enabling stateless, cloud-native
+// deployment on AWS (Linux containers, Elastic Beanstalk, ECS/Fargate).
+
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
 using DBProject.DAL;
-using System.Data;
+using DBProject.Session;
 
-namespace doctor
+namespace DBProject.Pages.Doctor
 {
-    public partial class Historyupdate : System.Web.UI.Page
+    /// <summary>
+    /// Razor Page model for HistoryUpdate – replaces the Web Forms
+    /// Historyupdate : System.Web.UI.Page code-behind.
+    /// Handles saving prescription updates and redirecting to bill generation.
+    /// Session state is backed by Amazon ElastiCache for Redis via
+    /// IDistributedCache (Microsoft.Extensions.Caching.StackExchangeRedis).
+    /// </summary>
+    public class HistoryUpdateModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
+        [BindProperty]
+        public string Disease { get; set; } = string.Empty;
 
+        [BindProperty]
+        public string Progress { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string Prescription { get; set; } = string.Empty;
+
+        public string StatusMessage { get; set; } = string.Empty;
+        public bool IsError { get; set; } = false;
+
+        /// <summary>
+        /// Replaces Page_Load – no initialisation logic was present in the original.
+        /// </summary>
+        public void OnGet()
+        {
+            // Intentionally empty – no load logic in original Page_Load.
         }
 
-        public void saveindatabase(object sender, EventArgs e)
+        /// <summary>
+        /// Replaces saveindatabase event handler.
+        /// Reads doctor id and appointment id from Redis-backed distributed session,
+        /// then persists the update.
+        /// </summary>
+        public IActionResult OnPostSaveInDatabase()
         {
             myDAL objmyDAL = new myDAL();
-            int found;
-            int did = (int)Session["idoriginal"];
-            string disease= Disease.Text;
-            string progres = progress.Text;
-            string prescrip = Prescription.Text;
 
-            int appid = (int)Session["appointid"];
+            // cr-dotnet-0045 (Line 23): Read "idoriginal" from Redis-backed
+            // distributed session instead of InProc HttpSessionState.
+            int did = HttpContext.Session.GetInt32("idoriginal") ?? 0;
 
-            
-            found = objmyDAL.update_prescription_DAL(did,appid,disease,progres,prescrip);
+            // cr-dotnet-0045 (Line 28): Read "appointid" from Redis-backed
+            // distributed session instead of InProc HttpSessionState.
+            int appid = HttpContext.Session.GetInt32("appointid") ?? 0;
+
+            int found = objmyDAL.update_prescription_DAL(did, appid, Disease, Progress, Prescription);
 
             if (found != 1)
-            { Response.Write("<script>alert('There was some error');</script>"); }
-            else
             {
-                { Response.Write("<script>alert('Information Successfully Updated');</script>"); }
+                IsError = true;
+                StatusMessage = "There was some error";
+                return Page();
             }
+
+            StatusMessage = "Information Successfully Updated";
+            return Page();
         }
 
-
-        public void generate_bill(object sender, EventArgs e)
+        /// <summary>
+        /// Replaces generate_bill event handler.
+        /// Redirects to the Bill Razor Page.
+        /// </summary>
+        public IActionResult OnPostGenerateBill()
         {
-            Response.Redirect("bill.aspx");
+            return RedirectToPage("/Doctor/Bill");
         }
     }
 }

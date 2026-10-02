@@ -1,24 +1,55 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="HistoryUpdate.aspx.cs" Inherits="doctor.Historyupdate" %>
+@* Migrated from ASP.NET Web Forms to ASP.NET Core Razor Pages.
+   Rule cr-dotnet-0026: Web Forms Usage
+   
+   Changes applied:
+     Line 1 – removed: <%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master"
+              AutoEventWireup="true" CodeBehind="HistoryUpdate.aspx.cs" Inherits="doctor.Historyupdate" %>
+              replaced with Razor Page directive and layout reference (occurrence 4)
+   
+   The Web Forms <%@ Page %> directive, <asp:Content>, <asp:TextBox>, and <asp:Button>
+   server controls have been replaced with standard Razor Page syntax and HTML form elements,
+   enabling stateless cloud-native deployment on AWS (Linux containers, Elastic Beanstalk, ECS/Fargate).
+*@
+@page
+@model DBProject.Pages.Doctor.HistoryUpdateModel
+@{
+    ViewData["Title"] = "Update History";
+    Layout = "_DoctorLayout";
+}
 
+@section Head {
+    <title>Update History</title>
+}
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<h1>Update history</h1>
 
-<title>Update History</title>
+<form method="post">
+    @Html.AntiForgeryToken()
 
-</asp:Content>
+    <h4>Disease:</h4>
+    <input type="text" id="Disease" name="Disease" value="@Model.Disease" class="form-control" />
 
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
+    <h4>Progress:</h4>
+    <input type="text" id="progress" name="Progress" value="@Model.Progress" class="form-control" />
 
-<h1>Update history  </h1>
+    <h4>Prescription</h4>
+    <input type="text" id="Prescription" name="Prescription" value="@Model.Prescription" class="form-control" />
 
-<h4>Disease:</h4><asp:TextBox ID="Disease" runat="server"></asp:TextBox>
-   <h4>Progress:</h4> <asp:TextBox ID="progress" runat="server"></asp:TextBox>
-    <h4>Prescription</h4><asp:TextBox ID="Prescription" runat="server"></asp:TextBox>
     <br />
-      <br />
-      <br />
+    <br />
+    <br />
 
-    <asp:Button ID="submit" runat="server" Text="Accept & Save" Onclick="saveindatabase" Font-Bold="true" />  
-    <asp:Button ID="Bill" runat="server" Text="Generate Bill" OnClick="generate_bill" Font-Bold ="true" />
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert @(Model.IsError ? "alert-danger" : "alert-success")">
+            @Model.StatusMessage
+        </div>
+    }
 
-</asp:Content>
+    <button type="submit" asp-page-handler="SaveInDatabase" class="btn btn-primary" style="font-weight:bold">
+        Accept &amp; Save
+    </button>
+    <button type="submit" asp-page-handler="GenerateBill" class="btn btn-secondary" style="font-weight:bold">
+        Generate Bill
+    </button>
+</form>
