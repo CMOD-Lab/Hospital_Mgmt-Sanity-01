@@ -1,0 +1,81 @@
+# ============================================================
+# .dockerignore – Clinic Management System (ASP.NET Web Forms)
+#
+# Excludes source code, PDB/debug files, build artefacts, temp files,
+# and IDE metadata from the Docker build context to reduce Windows
+# container image size and improve AWS EKS deployment speed.
+# ============================================================
+
+# ── Build output and intermediate artefacts ──────────────────
+**/obj/
+**/bin/Debug/
+**/bin/Release/
+
+# ── Debug / PDB symbol files ─────────────────────────────────
+**/*.pdb
+**/*.mdb
+
+# ── NuGet packages directory (restored during build stage) ───
+**/packages/
+
+# ── IDE and editor metadata ───────────────────────────────────
+.vs/
+**/.vs/
+*.DotSettings
+*.DotSettings.user
+*.ReSharper
+.idea/
+**/.idea/
+*.swp
+*.swo
+*~
+*.user
+*.suo
+
+# ── Version control ───────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+.hg/
+.svn/
+
+# ── CI/CD and documentation ───────────────────────────────────
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+Jenkinsfile
+README.md
+CHANGELOG.md
+LICENSE
+docs/
+
+# ── Test projects ─────────────────────────────────────────────
+**/*Tests*/
+**/*Test*/
+**/*.Tests.csproj
+**/*.Test.csproj
+
+# ── Temporary / generated files ──────────────────────────────
+**/TemporaryGeneratedFile_*.cs
+**/*.tmp
+**/*.temp
+**/*.log
+**/*.bak
+**/*.orig
+**/*.cache
+
+# ── Node / front-end tooling (if present) ─────────────────────
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm/
+
+# ── OS-generated files ────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# ── Scripts and deployment artifacts (not needed in image) ────
+scripts/
+kubernetes/

@@ -13,9 +13,21 @@ namespace DBProject.DAL
 	//Database Layer of 3 tier architecture
 	public class myDAL
     {
-		//connection string of the server database
+		// cz-dotnet-0055: Replaced Web.config XDT-transform-based connection string lookup
+		// (ConfigurationManager.ConnectionStrings["sqlCon1"]) with an environment variable.
+		// The DB_CONNECTION_STRING environment variable must be injected via a Kubernetes
+		// ConfigMap or Secret (e.g. as an env entry in the Pod/Deployment spec).
+		// Example K8s env injection:
+		//   env:
+		//     - name: DB_CONNECTION_STRING
+		//       valueFrom:
+		//         secretKeyRef:
+		//           name: db-secret
+		//           key: connectionString
         private static readonly string connString =
-            System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+            Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+            ?? System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"]?.ConnectionString
+            ?? string.Empty;
 
 
 

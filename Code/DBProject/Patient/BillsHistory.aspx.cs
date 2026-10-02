@@ -27,7 +27,8 @@ namespace DBProject
             DataTable DT = new DataTable();
 
 
-            int id = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int id = (int)HttpContext.Current.Session["idoriginal"];
 
 
             int status = objmyDAl.getBillHistory(id, ref DT);

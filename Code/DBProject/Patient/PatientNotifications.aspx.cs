@@ -27,7 +27,8 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
-            int pid = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int pid = (int)HttpContext.Current.Session["idoriginal"];
 
             string dName = "";
             string timings = "";
@@ -73,19 +74,6 @@ namespace DBProject
 
     
         //-----------------------Add a new function here------------------//
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

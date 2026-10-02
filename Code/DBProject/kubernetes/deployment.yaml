@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clinic-management-system
+  namespace: clinic-management-system
+  labels:
+    app: clinic-management-system
+    version: "1.0"
+    component: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: clinic-management-system
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: clinic-management-system
+        version: "1.0"
+        component: web
+    spec:
+      # Windows node selector – required for Windows containers on EKS
+      nodeSelector:
+        kubernetes.io/os: windows
+      tolerations:
+        - key: "os"
+          operator: "Equal"
+          value: "windows"
+          effect: "NoSchedule"
+      containers:
+        - name: clinic-management-system
+          image: "{{IMAGE_URI}}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            # Database connection – inject via Kubernetes Secret
+            - name: DB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: clinic-db-secret
+                  key: connectionString
+                  optional: false
+            # Redis session state – inject via Kubernetes Secret
+            - name: REDIS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: clinic-redis-secret
+                  key: connectionString
+                  optional: false
+            # Application environment
+            - name: ASPNET_ENVIRONMENT
+              value: "Production"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          # Liveness probe – uses Health.aspx endpoint detected in source code
+          livenessProbe:
+            httpGet:
+              path: /Health.aspx
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+          # Readiness probe – uses Health.aspx endpoint detected in source code
+          readinessProbe:
+            httpGet:
+              path: /Health.aspx
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+      terminationGracePeriodSeconds: 60

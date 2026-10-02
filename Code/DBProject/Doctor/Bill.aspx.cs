@@ -18,7 +18,8 @@ namespace doctor
             DataTable dt = new DataTable();
             int found;
 
-            int did = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int did = (int)HttpContext.Current.Session["idoriginal"];
             
             found = objmyDAL.generate_bill_DAL(did, ref dt);
 
@@ -35,8 +36,10 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
             
-            int  did = (int)Session["idoriginal"];
-            int appoint = (int)Session["appointid"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int  did = (int)HttpContext.Current.Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["appointid"] with distributed Redis-backed session (ElastiCache on EKS)
+            int appoint = (int)HttpContext.Current.Session["appointid"];
             objmyDAL.paid_bill_DAL(did,appoint);
 
 			Response.BufferOutput = false;
@@ -48,8 +51,10 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
 
-            int did = (int)Session["idoriginal"];
-            int appoint = (int)Session["appointid"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int did = (int)HttpContext.Current.Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["appointid"] with distributed Redis-backed session (ElastiCache on EKS)
+            int appoint = (int)HttpContext.Current.Session["appointid"];
             objmyDAL.Unpaid_bill_DAL(did, appoint);
 
             Response.BufferOutput = false;

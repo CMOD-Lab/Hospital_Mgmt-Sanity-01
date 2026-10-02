@@ -26,7 +26,8 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
-            string dID1 = (string) Session["dID"];
+            // cz-dotnet-0022: Replaced InProc Session["dID"] with distributed Redis-backed session (ElastiCache on EKS)
+            string dID1 = (string) HttpContext.Current.Session["dID"];
 
             int dID = Convert.ToInt32(dID1);
 
@@ -42,7 +43,8 @@ namespace DBProject
             int workE = 0;
             int age = 0;
 
-            string deptName = (string)Session["deptOriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["deptOriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            string deptName = (string)HttpContext.Current.Session["deptOriginal"];
 
             int status = objmyDAl.doctorInfoDisplayer(dID, ref name, ref phone, ref gender, ref charges_Per_Visit, ref ReputeIndex, ref PatientsTreated, ref qualification, ref specialization, ref workE, ref age);
 

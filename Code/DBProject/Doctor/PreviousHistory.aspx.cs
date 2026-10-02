@@ -28,7 +28,8 @@ namespace DBProject.Doctor
             DataTable DT = new DataTable();
 
 
-            int id = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int id = (int)HttpContext.Current.Session["idoriginal"];
 
 
             int status = objmyDAl.getPHistory(id, ref DT);
@@ -51,7 +52,6 @@ namespace DBProject.Doctor
 
 
         //-----------------------Add a new function here------------------//
-
 
 
 

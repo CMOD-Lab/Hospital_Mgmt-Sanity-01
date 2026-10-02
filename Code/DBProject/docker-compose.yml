@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  clinic-management-system:
+    image: clinic-management-system:latest
+    build:
+      context: ../..
+      dockerfile: Code/DBProject/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNET_ENVIRONMENT=Production
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING:-}
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-}
+    volumes:
+      - clinic-logs:/inetpub/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "powershell", "-Command",
+             "try { $r = Invoke-WebRequest -Uri 'http://localhost/Health.aspx' -UseBasicParsing -TimeoutSec 8; if ($r.StatusCode -eq 200) { exit 0 } else { exit 1 } } catch { exit 1 }"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 90s
+
+volumes:
+  clinic-logs:
+    driver: local
+
+networks:
+  default:
+    name: clinic-network

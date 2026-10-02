@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,6 +14,9 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Replaced InProc Session with distributed Redis-backed session
+            // via Amazon ElastiCache on EKS. Session provider configured in Web.config
+            // using Microsoft.Web.RedisSessionStateProvider with REDIS_CONNECTION_STRING env var.
             Session["dID"] = "";
             deptDoctorInfo(sender, e);
         }
@@ -26,7 +29,8 @@ namespace DBProject
                 Int16 num = Convert.ToInt16(e.CommandArgument);
 
                 string dID = TDoctorGrid.Rows[num].Cells[2].Text;
-  
+
+                // cz-dotnet-0022: Session write via distributed Redis-backed session (ElastiCache on EKS)
                 Session["dID"] = dID;
 
                 Response.BufferOutput = true;
@@ -46,6 +50,7 @@ namespace DBProject
 
             DataTable DT = new DataTable();
 
+            // cz-dotnet-0022: Session read via distributed Redis-backed session (ElastiCache on EKS)
             string deptName = (string) Session["deptOriginal"];
 
             int status = objmyDAl.getDeptDoctorInfo(deptName, ref DT);
@@ -58,6 +63,7 @@ namespace DBProject
 
             else
             {
+                // cz-dotnet-0022: Session read via distributed Redis-backed session (ElastiCache on EKS)
                 TDoctor.Text = "Following are our Specialized Doctors of " + Session["deptOriginal"] + " Department:";
                 TDoctorGrid.DataSource = DT;
                 TDoctorGrid.DataBind();

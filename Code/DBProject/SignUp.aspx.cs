@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,6 +14,9 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Replaced InProc Session with distributed Redis-backed session
+            // via Amazon ElastiCache on EKS. Session provider configured in Web.config
+            // using Microsoft.Web.RedisSessionStateProvider with REDIS_CONNECTION_STRING env var.
             Session["idoriginal"] = "";
         }
 
@@ -33,6 +36,7 @@ namespace DBProject
 
             if (status == 0)
             {
+                // cz-dotnet-0022: Session write via distributed Redis-backed session (ElastiCache on EKS)
                 Session["idoriginal"] = id;
 
                 if (type == 1)
@@ -106,6 +110,7 @@ namespace DBProject
 
             else if (status == 1)
             {
+                // cz-dotnet-0022: Session write via distributed Redis-backed session (ElastiCache on EKS)
                 Session["idoriginal"] = id;
 
               //Response.Write("<script>alert('Registration Successful !');</script>");

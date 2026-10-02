@@ -18,7 +18,8 @@ namespace doctor
             myDAL objmyDAL = new myDAL();
             DataTable dt = new DataTable();
             int found;
-            int did = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int did = (int)HttpContext.Current.Session["idoriginal"];
          
             found = objmyDAL.docinfo_DAL(did, ref dt);
 

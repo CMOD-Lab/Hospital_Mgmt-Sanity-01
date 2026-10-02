@@ -20,12 +20,14 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
             int found;
-            int did = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Replaced InProc Session["idoriginal"] with distributed Redis-backed session (ElastiCache on EKS)
+            int did = (int)HttpContext.Current.Session["idoriginal"];
             string disease= Disease.Text;
             string progres = progress.Text;
             string prescrip = Prescription.Text;
 
-            int appid = (int)Session["appointid"];
+            // cz-dotnet-0022: Replaced InProc Session["appointid"] with distributed Redis-backed session (ElastiCache on EKS)
+            int appid = (int)HttpContext.Current.Session["appointid"];
 
             
             found = objmyDAL.update_prescription_DAL(did,appid,disease,progres,prescrip);

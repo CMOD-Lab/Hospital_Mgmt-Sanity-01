@@ -27,8 +27,9 @@
     <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <!-- cz-dotnet-1040: Reduced debug symbol verbosity to avoid bloating container image -->
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -133,6 +134,13 @@
     <Content Include="Patient\TreatmentHistory.aspx" />
     <Content Include="Patient\ViewDoctors.aspx" />
     <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Health.aspx" />
+    <Compile Include="Health.aspx.cs">
+      <DependentUpon>Health.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddStaff.aspx.cs">

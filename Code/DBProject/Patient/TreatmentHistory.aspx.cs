@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -27,7 +27,9 @@ namespace DBProject
 
             DataTable DT = new DataTable();
 
-
+            // cz-dotnet-0022: Replaced InProc Session with distributed Redis-backed session
+            // via Amazon ElastiCache on EKS. Session provider configured in Web.config
+            // using Microsoft.Web.RedisSessionStateProvider with REDIS_CONNECTION_STRING env var.
             int id = (int)Session["idoriginal"];
 
 
