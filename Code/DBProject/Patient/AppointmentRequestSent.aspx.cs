@@ -24,15 +24,15 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
-            
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             string dID1 = (string)Session["dID"];
 
             int dID = Convert.ToInt32(dID1);
 
-
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int pID = (int)Session["idoriginal"];
 
-
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             string temp = (string)Session["freeSlot"];
 
             int freeSlot = Convert.ToInt32(temp);

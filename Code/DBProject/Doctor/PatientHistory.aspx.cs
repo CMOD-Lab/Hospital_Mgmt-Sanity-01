@@ -18,6 +18,7 @@ namespace doctor
                 DataTable dt = new DataTable();
                 int found = 0;
 
+                // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 int did = (int)Session["idoriginal"];
 
                 found = objmydal.search_patient_DAL(did, ref dt);
@@ -43,6 +44,7 @@ namespace doctor
                 //retrieve appointmentid  from that row (key-non editable)
                 int appointmentid = Convert.ToInt32(aId);
 
+                // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 Session["appointid"] = appointmentid;
                 Response.Redirect("Historyupdate.aspx");
             }

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  clinic-management-system:
+    image: clinic-management-system:latest
+    build:
+      context: ../..
+      dockerfile: Code/DBProject/Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_ACCESS_KEY=${REDIS_ACCESS_KEY}
+    volumes:
+      - app-logs:C:\inetpub\logs
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  app-logs:

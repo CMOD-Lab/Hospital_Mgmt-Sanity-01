@@ -1,0 +1,93 @@
+# =============================================================
+# .dockerignore – Hospital Management System (ASP.NET Web Forms)
+# Rule: cz-dotnet-1040 – Unoptimized Web Forms Container Image Size
+#
+# Excludes PDB debug symbols, build artefacts, temp files, and
+# development-only assets from the Docker build context to reduce
+# Windows container image size on EKS.
+#
+# NOTE: Source files (.cs, .csproj, .sln) are intentionally NOT
+# excluded here because the multi-stage Dockerfile build stage
+# requires them to compile the application. The published output
+# (Stage 2 runtime image) contains only the compiled artefacts.
+# =============================================================
+
+# ── Version control ──────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ── Visual Studio IDE / tooling ──────────────────────────────
+.vs/
+*.suo
+*.userosscache
+*.sln.docstates
+*.vsp
+*.vspx
+*.sap
+
+# ── Build output directories ─────────────────────────────────
+# obj/ contains intermediate build artefacts (not needed in image)
+**/obj/
+**/bin/Debug/
+**/bin/Release/
+
+# ── PDB debug symbol files ───────────────────────────────────
+# PDB files bloat Windows container images; strip from build context
+**/*.pdb
+
+# ── Temporary / cache files ───────────────────────────────────
+**/*.cache
+**/*.tmp
+**/*.temp
+**/Temp/
+**/tmp/
+**/.tmp/
+**/TemporaryGeneratedFile_*.cs
+
+# ── Log files ─────────────────────────────────────────────────
+**/*.log
+**/logs/
+
+# ── Test projects and artefacts ───────────────────────────────
+**/*Test*/
+**/*Tests*/
+**/*Spec*/
+**/*.Test.dll
+**/*.Tests.dll
+
+# ── Documentation and non-runtime assets ─────────────────────
+*.md
+*.pdf
+*.txt
+LICENSE
+README*
+docs/
+images/
+Database\ Files/
+*.sql
+
+# ── CI/CD pipeline files ──────────────────────────────────────
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+Jenkinsfile
+*.sh
+*.ps1
+
+# ── Docker files (not needed inside the image) ────────────────
+Dockerfile*
+.dockerignore
+
+# ── Node / front-end tooling (if present) ────────────────────
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm/
+.yarn/
+
+# ── OS-generated files ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db

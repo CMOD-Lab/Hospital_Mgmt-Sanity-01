@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: clinic-management-system
+  labels:
+    name: clinic-management-system
+    app: clinic-management-system
+    managed-by: kubectl

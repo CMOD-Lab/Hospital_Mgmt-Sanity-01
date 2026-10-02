@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,6 +14,7 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             Session["deptOriginal"] = "";
             deptInfo(sender, e);
 
@@ -28,6 +29,7 @@ namespace DBProject
 
                 string deptName = TDeptGrid.Rows[num].Cells[2].Text;
 
+                // cz-dotnet-0022: Session["deptOriginal"] stored in Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 Session["deptOriginal"] = deptName;
 
                 Response.BufferOutput = true;
@@ -68,9 +70,6 @@ namespace DBProject
 
 
         //-----------------------Add a new function here------------------//
-
-
-
 
 
     }

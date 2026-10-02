@@ -22,6 +22,7 @@ namespace doctor
         {
                 myDAL objDAL = new myDAL();
                 
+               // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                int did = (int)Session["idoriginal"];
 
                     DataTable DT = new DataTable();

@@ -18,6 +18,7 @@ namespace doctor
             DataTable dt = new DataTable();
             int found;
 
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int did = (int)Session["idoriginal"];
             
             found = objmyDAL.generate_bill_DAL(did, ref dt);
@@ -35,7 +36,9 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
             
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int  did = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int appoint = (int)Session["appointid"];
             objmyDAL.paid_bill_DAL(did,appoint);
 
@@ -48,7 +51,9 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
 
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int did = (int)Session["idoriginal"];
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int appoint = (int)Session["appointid"];
             objmyDAL.Unpaid_bill_DAL(did, appoint);
 

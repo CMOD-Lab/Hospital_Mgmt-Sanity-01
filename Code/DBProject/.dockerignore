@@ -1,0 +1,67 @@
+# .dockerignore for Clinic Management System (ASP.NET Web Forms / .NET Framework)
+# Excludes build artefacts, IDE files, and non-essential content from the Docker build context.
+
+# Build output directories
+bin/
+obj/
+
+# Visual Studio IDE files
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet packages (restored during build)
+packages/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation and images
+*.md
+*.pdf
+images/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test projects
+**/Tests/
+**/test/
+**/*.Tests/
+
+# Publish output (generated during build)
+publish/
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# Launch settings (development only)
+**/Properties/launchSettings.json
+
+# Database files (managed separately)
+"Database Files"/
+*.sql
+*.bak
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+
+# Kubernetes and scripts (not needed in image)
+kubernetes/
+scripts/
+docs/

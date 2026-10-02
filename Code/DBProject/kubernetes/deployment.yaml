@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clinic-management-system
+  namespace: clinic-management-system
+  labels:
+    app: clinic-management-system
+    version: "1.0"
+    component: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: clinic-management-system
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: clinic-management-system
+        version: "1.0"
+        component: web
+    spec:
+      nodeSelector:
+        kubernetes.io/os: windows
+      containers:
+        - name: clinic-management-system
+          image: "{{IMAGE_URI}}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: DB_CONNECTION_STRING
+              value: "{{DB_CONNECTION_STRING}}"
+            - name: REDIS_HOST
+              value: "{{REDIS_HOST}}"
+            - name: REDIS_PORT
+              value: "{{REDIS_PORT}}"
+            - name: REDIS_ACCESS_KEY
+              value: "{{REDIS_ACCESS_KEY}}"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /Health.aspx
+              port: 80
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /Health.aspx
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 3
+      terminationGracePeriodSeconds: 60

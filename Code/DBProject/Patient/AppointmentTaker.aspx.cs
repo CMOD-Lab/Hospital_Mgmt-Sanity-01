@@ -14,6 +14,7 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             Session["freeSlot"] = "";
             freeSlots(sender, e);
         }
@@ -30,6 +31,7 @@ namespace DBProject
 
                 string[] tokens = appointment.Split(':');
 
+                // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 Session["freeSlot"] = tokens[0];
 
                 Response.BufferOutput = true;
@@ -48,12 +50,12 @@ namespace DBProject
 
             DataTable DT = new DataTable();
 
-
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             string dID1 = (string)Session["dID"];
 
             int dID = Convert.ToInt32(dID1);
 
-
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int pID = (int)Session["idoriginal"];
 
             

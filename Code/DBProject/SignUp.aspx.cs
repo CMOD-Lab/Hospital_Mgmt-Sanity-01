@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,6 +14,7 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Session["idoriginal"] stored in Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             Session["idoriginal"] = "";
         }
 
@@ -33,6 +34,7 @@ namespace DBProject
 
             if (status == 0)
             {
+                // cz-dotnet-0022: Session["idoriginal"] stored in Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 Session["idoriginal"] = id;
 
                 if (type == 1)
@@ -106,6 +108,7 @@ namespace DBProject
 
             else if (status == 1)
             {
+                // cz-dotnet-0022: Session["idoriginal"] stored in Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 Session["idoriginal"] = id;
 
               //Response.Write("<script>alert('Registration Successful !');</script>");

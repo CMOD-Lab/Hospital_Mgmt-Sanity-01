@@ -18,6 +18,7 @@ namespace DBProject
         {
 			if (!IsPostBack)
 			{
+                // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
 				Session["aID"] = "";
 				pendingFeedback(sender, e);
 			}
@@ -32,6 +33,7 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int pid = (int)Session["idoriginal"];
 
             string dName = "";
@@ -53,6 +55,7 @@ namespace DBProject
 
             else
             {
+                // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
                 Session["aID"] = aID;
 
                 FDoctor.Text = "Your feedback for the appointment with Doctor " + dName + " is pending. Kindly give it.";
@@ -76,6 +79,7 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int aID = (int)Session["aID"];
 
 

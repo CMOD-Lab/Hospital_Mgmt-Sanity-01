@@ -26,7 +26,7 @@ namespace DBProject
 
             DataTable DT = new DataTable();
 
-
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int id = (int)Session["idoriginal"];
 
 

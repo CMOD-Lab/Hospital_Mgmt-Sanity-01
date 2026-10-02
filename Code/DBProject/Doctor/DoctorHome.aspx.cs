@@ -18,6 +18,7 @@ namespace doctor
             myDAL objmyDAL = new myDAL();
             DataTable dt = new DataTable();
             int found;
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int did = (int)Session["idoriginal"];
          
             found = objmyDAL.docinfo_DAL(did, ref dt);

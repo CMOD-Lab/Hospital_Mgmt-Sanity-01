@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -27,7 +27,7 @@ namespace DBProject
 
             DataTable DT = new DataTable();
 
-
+            // cz-dotnet-0022: Session["idoriginal"] retrieved from Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int id = (int)Session["idoriginal"];
 
 

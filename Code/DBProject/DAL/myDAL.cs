@@ -13,9 +13,13 @@ namespace DBProject.DAL
 	//Database Layer of 3 tier architecture
 	public class myDAL
     {
-		//connection string of the server database
+		// cz-dotnet-0055: Web.config XDT transforms do not work in containers.
+		// Connection string is now resolved from the DB_CONNECTION_STRING environment
+		// variable (injected via Kubernetes ConfigMap/Secret), with a fallback to
+		// System.Configuration.ConfigurationManager for local/legacy compatibility.
         private static readonly string connString =
-            System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+            System.Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+            ?? System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"]?.ConnectionString;
 
 
 

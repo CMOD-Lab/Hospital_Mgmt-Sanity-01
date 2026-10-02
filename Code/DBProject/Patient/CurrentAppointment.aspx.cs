@@ -25,6 +25,7 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
+            // cz-dotnet-0022: Session backed by Redis distributed cache via RedisSessionStateProvider (ElastiCache on EKS)
             int pid = (int)Session["idoriginal"];
 
             string dName = "";
@@ -69,10 +70,6 @@ namespace DBProject
 
 
         //-----------------------Add a new function here------------------//
-
-
-
-
 
 
     }
