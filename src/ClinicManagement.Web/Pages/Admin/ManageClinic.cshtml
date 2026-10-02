@@ -1,0 +1,132 @@
+@page
+@model ClinicManagement.Web.Pages.Admin.ManageClinicModel
+@{
+    ViewData["Title"] = "Manage Clinic";
+    Layout = "_AdminLayout";
+}
+
+<h2 class="mb-4"><i class="fas fa-cogs text-dark me-2"></i>Manage Clinic</h2>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-@(Model.IsSuccess ? "success" : "danger") alert-dismissible fade show">
+        @Model.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<ul class="nav nav-tabs mb-4" id="manageTabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" href="#doctors">Doctors</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#staff">Staff</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#patients">Patients</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- Doctors Tab -->
+    <div class="tab-pane fade show active" id="doctors">
+        <div class="mb-3">
+            <form method="get">
+                <input type="hidden" name="tab" value="doctors" />
+                <div class="input-group">
+                    <input type="text" name="doctorSearch" class="form-control" placeholder="Search doctors..." value="@Model.DoctorSearch" />
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr><th>ID</th><th>Name</th><th>Department</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var doc in Model.Doctors)
+                {
+                    <tr>
+                        <td>@doc.DoctorId</td>
+                        <td>@doc.Name</td>
+                        <td>@doc.DeptName</td>
+                        <td>
+                            <form method="post">
+                                <input type="hidden" name="doctorId" value="@doc.DoctorId" />
+                                <button type="submit" asp-page-handler="DeleteDoctor" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Remove this doctor?')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Staff Tab -->
+    <div class="tab-pane fade" id="staff">
+        <div class="mb-3">
+            <form method="get">
+                <input type="hidden" name="tab" value="staff" />
+                <div class="input-group">
+                    <input type="text" name="staffSearch" class="form-control" placeholder="Search staff..." value="@Model.StaffSearch" />
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr><th>ID</th><th>Name</th><th>Designation</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var staff in Model.Staff)
+                {
+                    <tr>
+                        <td>@staff.StaffId</td>
+                        <td>@staff.Name</td>
+                        <td>@staff.Designation</td>
+                        <td>
+                            <form method="post">
+                                <input type="hidden" name="staffId" value="@staff.StaffId" />
+                                <button type="submit" asp-page-handler="DeleteStaff" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Delete this staff member?')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Patients Tab -->
+    <div class="tab-pane fade" id="patients">
+        <div class="mb-3">
+            <form method="get">
+                <input type="hidden" name="tab" value="patients" />
+                <div class="input-group">
+                    <input type="text" name="patientSearch" class="form-control" placeholder="Search patients..." value="@Model.PatientSearch" />
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr><th>ID</th><th>Name</th><th>Phone</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model.Patients)
+                {
+                    <tr>
+                        <td>@patient.PatientId</td>
+                        <td>@patient.Name</td>
+                        <td>@patient.Phone</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

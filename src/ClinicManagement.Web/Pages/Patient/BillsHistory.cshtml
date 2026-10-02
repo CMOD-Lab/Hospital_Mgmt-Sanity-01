@@ -1,0 +1,49 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.BillsHistoryModel
+@{
+    ViewData["Title"] = "Bills History";
+    Layout = "_PatientLayout";
+}
+
+<h2 class="mb-4"><i class="fas fa-file-invoice-dollar text-warning me-2"></i>Bills History</h2>
+
+@if (Model.Bills.Any())
+{
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Disease</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bill in Model.Bills)
+                    {
+                        <tr>
+                            <td>@bill.AppointId</td>
+                            <td>@bill.DoctorName</td>
+                            <td>@bill.Date?.ToString("yyyy-MM-dd")</td>
+                            <td>@bill.Disease</td>
+                            <td>Rs. @bill.BillAmount?.ToString("F2")</td>
+                            <td>
+                                <span class="badge @(bill.BillStatus == "Paid" ? "bg-success" : "bg-danger")">
+                                    @bill.BillStatus
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No bill history found.</div>
+}

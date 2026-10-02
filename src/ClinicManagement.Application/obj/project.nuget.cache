@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "dgSpecHash": "GpF7xdVvnf0=",
+  "success": true,
+  "projectFilePath": "/modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Application/ClinicManagement.Application.csproj",
+  "expectedPackageFiles": [
+    "/app/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
+    "/app/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
+    "/app/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
+    "/app/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/app/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "/app/.nuget/packages/microsoft.netcore.app.ref/8.0.30/microsoft.netcore.app.ref.8.0.30.nupkg.sha512",
+    "/app/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.30/microsoft.aspnetcore.app.ref.8.0.30.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'AutoMapper' 12.0.1 has a known high severity vulnerability, https://github.com/advisories/GHSA-rvv3-g6hj-g44x",
+      "projectPath": "/modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Application/ClinicManagement.Application.csproj",
+      "warningLevel": 1,
+      "filePath": "/modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Application/ClinicManagement.Application.csproj",
+      "libraryId": "AutoMapper",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

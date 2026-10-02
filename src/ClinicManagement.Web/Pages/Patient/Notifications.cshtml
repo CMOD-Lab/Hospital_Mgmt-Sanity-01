@@ -1,0 +1,28 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.NotificationsModel
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "_PatientLayout";
+}
+
+<h2 class="mb-4"><i class="fas fa-bell text-warning me-2"></i>Notifications</h2>
+
+@if (Model.Notifications.Any())
+{
+    <div class="list-group">
+        @foreach (var n in Model.Notifications)
+        {
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1"><i class="fas fa-check-circle text-success me-2"></i>Appointment Approved</h6>
+                </div>
+                <p class="mb-1">Doctor: <strong>@n.DoctorName</strong></p>
+                <small>Time: @n.Timings</small>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No new notifications.</div>
+}

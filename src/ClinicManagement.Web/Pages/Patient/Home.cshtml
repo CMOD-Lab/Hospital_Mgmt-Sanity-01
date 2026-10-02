@@ -1,0 +1,64 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.HomeModel
+@{
+    ViewData["Title"] = "Patient Home";
+    Layout = "_PatientLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4"><i class="fas fa-home text-success me-2"></i>Welcome, @Model.PatientName!</h2>
+    </div>
+</div>
+
+@if (Model.Profile != null)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Patient Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr><th>Name:</th><td>@Model.Profile.Name</td></tr>
+                        <tr><th>Phone:</th><td>@Model.Profile.Phone</td></tr>
+                        <tr><th>Address:</th><td>@Model.Profile.Address</td></tr>
+                        <tr><th>Date of Birth:</th><td>@Model.Profile.BirthDate</td></tr>
+                        <tr><th>Age:</th><td>@Model.Profile.Age years</td></tr>
+                        <tr><th>Gender:</th><td>@(Model.Profile.Gender == "M" ? "Male" : "Female")</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/Patient/TakeAppointment" class="btn btn-outline-primary">
+                            <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                        </a>
+                        <a href="/Patient/CurrentAppointment" class="btn btn-outline-success">
+                            <i class="fas fa-clock me-2"></i>Current Appointment
+                        </a>
+                        <a href="/Patient/BillsHistory" class="btn btn-outline-warning">
+                            <i class="fas fa-file-invoice-dollar me-2"></i>Bills History
+                        </a>
+                        <a href="/Patient/TreatmentHistory" class="btn btn-outline-info">
+                            <i class="fas fa-history me-2"></i>Treatment History
+                        </a>
+                        <a href="/Patient/Notifications" class="btn btn-outline-secondary">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </a>
+                        <a href="/Patient/Feedback" class="btn btn-outline-danger">
+                            <i class="fas fa-star me-2"></i>Give Feedback
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

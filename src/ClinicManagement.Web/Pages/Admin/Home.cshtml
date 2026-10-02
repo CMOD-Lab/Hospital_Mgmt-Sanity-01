@@ -1,0 +1,87 @@
+@page
+@model ClinicManagement.Web.Pages.Admin.HomeModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<h2 class="mb-4"><i class="fas fa-tachometer-alt text-dark me-2"></i>Admin Dashboard</h2>
+
+@if (Model.Dashboard != null)
+{
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-md fa-3x mb-2"></i>
+                    <h3>@Model.Dashboard.TotalDoctors</h3>
+                    <p class="mb-0">Total Doctors</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x mb-2"></i>
+                    <h3>@Model.Dashboard.TotalPatients</h3>
+                    <p class="mb-0">Total Patients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-dollar-sign fa-3x mb-2"></i>
+                    <h3>Rs. @Model.Dashboard.TotalIncome.ToString("F0")</h3>
+                    <p class="mb-0">Total Income</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-hospital me-2"></i>Departments</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead><tr><th>Department</th><th>Doctors</th></tr></thead>
+                        <tbody>
+                            @foreach (var dept in Model.Dashboard.Departments)
+                            {
+                                <tr>
+                                    <td>@dept.DeptName</td>
+                                    <td>@dept.DoctorCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Recent Appointments</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead><tr><th>Patient</th><th>Doctor</th><th>Status</th></tr></thead>
+                        <tbody>
+                            @foreach (var appt in Model.Dashboard.Appointments.Take(10))
+                            {
+                                <tr>
+                                    <td>@appt.PatientName</td>
+                                    <td>@appt.DoctorName</td>
+                                    <td><span class="badge bg-warning text-dark">@appt.Status</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

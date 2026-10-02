@@ -1,0 +1,45 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.TreatmentHistoryModel
+@{
+    ViewData["Title"] = "Treatment History";
+    Layout = "_PatientLayout";
+}
+
+<h2 class="mb-4"><i class="fas fa-history text-info me-2"></i>Treatment History</h2>
+
+@if (Model.History.Any())
+{
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Disease</th>
+                        <th>Progress</th>
+                        <th>Prescription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.History)
+                    {
+                        <tr>
+                            <td>@item.AppointId</td>
+                            <td>@item.DoctorName</td>
+                            <td>@item.Date?.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Disease</td>
+                            <td>@item.Progress</td>
+                            <td>@item.Prescription</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No treatment history found.</div>
+}

@@ -1,0 +1,54 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.HomeModel
+@{
+    ViewData["Title"] = "Doctor Home";
+    Layout = "_DoctorLayout";
+}
+
+<h2 class="mb-4"><i class="fas fa-user-md text-info me-2"></i>Doctor Dashboard</h2>
+
+@if (Model.Dashboard != null)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Doctor Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr><th>Name:</th><td>@Model.Dashboard.Name</td></tr>
+                        <tr><th>Department:</th><td>@Model.Dashboard.DeptName</td></tr>
+                        <tr><th>Phone:</th><td>@Model.Dashboard.Phone</td></tr>
+                        <tr><th>Qualification:</th><td>@Model.Dashboard.Qualification</td></tr>
+                        <tr><th>Specialization:</th><td>@Model.Dashboard.Specialization</td></tr>
+                        <tr><th>Experience:</th><td>@Model.Dashboard.WorkExperience years</td></tr>
+                        <tr><th>Charges/Visit:</th><td>Rs. @Model.Dashboard.ChargesPerVisit</td></tr>
+                        <tr><th>Patients Treated:</th><td>@Model.Dashboard.PatientsTreated</td></tr>
+                        <tr><th>Repute Index:</th><td>@Model.Dashboard.ReputeIndex?.ToString("F2")</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/Doctor/PendingAppointments" class="btn btn-outline-warning">
+                            <i class="fas fa-clock me-2"></i>Pending Appointments
+                        </a>
+                        <a href="/Doctor/PatientHistory" class="btn btn-outline-info">
+                            <i class="fas fa-history me-2"></i>Patient History
+                        </a>
+                        <a href="/Doctor/Bill" class="btn btn-outline-success">
+                            <i class="fas fa-file-invoice-dollar me-2"></i>Generate Bills
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
