@@ -1,0 +1,57 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.TakeAppointmentModel
+@{
+    ViewData["Title"] = "Take Appointment";
+}
+
+<div class="row mb-3">
+    <div class="col-12">
+        <h2><i class="fas fa-calendar-plus me-2"></i>Book Appointment</h2>
+        <hr />
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="Input.DoctorId" class="form-label">Select Doctor</label>
+                <select asp-for="Input.DoctorId" asp-items="Model.DoctorOptions" class="form-select"
+                    onchange="this.form.submit()">
+                    <option value="">Select a Doctor</option>
+                </select>
+            </div>
+
+            @if (Model.FreeSlots.Any())
+            {
+                <div class="mb-3">
+                    <label asp-for="Input.TimeSlotId" class="form-label">Select Time Slot</label>
+                    <select asp-for="Input.TimeSlotId" class="form-select">
+                        <option value="">Select a Time Slot</option>
+                        @foreach (var slot in Model.FreeSlots)
+                        {
+                            <option value="@slot.TimeSlotId">@slot.Timings</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Input.TimeSlotId" class="text-danger"></span>
+                </div>
+                <button type="submit" asp-page-handler="Book" class="btn btn-success">
+                    <i class="fas fa-calendar-check me-1"></i>Book Appointment
+                </button>
+            }
+            else if (Model.Input.DoctorId > 0)
+            {
+                <div class="alert alert-warning">No available time slots for this doctor.</div>
+            }
+        </form>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.HomeModel
+@{
+    ViewData["Title"] = "Doctor Home";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user-md me-2"></i>Welcome, Dr. @Model.DoctorInfo?.Name</h2>
+        <hr />
+    </div>
+</div>
+
+@if (Model.DoctorInfo != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Profile</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model.DoctorInfo.Name</p>
+                    <p><strong>Department:</strong> @Model.DoctorInfo.DepartmentName</p>
+                    <p><strong>Specialization:</strong> @Model.DoctorInfo.Specialization</p>
+                    <p><strong>Qualification:</strong> @Model.DoctorInfo.Qualification</p>
+                    <p><strong>Experience:</strong> @Model.DoctorInfo.Experience years</p>
+                    <p><strong>Charges/Visit:</strong> $@Model.DoctorInfo.ChargesPerVisit</p>
+                    <p><strong>Repute Index:</strong> @Model.DoctorInfo.ReputeIndex.ToString("F1")</p>
+                    <p><strong>Patients Treated:</strong> @Model.DoctorInfo.PatientsTreated</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <div class="card shadow">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Pending Appointments</h5>
+                        </div>
+                        <div class="card-body">
+                            <a asp-page="/Doctor/PendingAppointments" class="btn btn-warning">
+                                <i class="fas fa-calendar-check me-1"></i>View Pending Appointments
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Appointments</h5>
+                        </div>
+                        <div class="card-body">
+                            <a asp-page="/Doctor/PatientHistory" class="btn btn-success">
+                                <i class="fas fa-stethoscope me-1"></i>View Today's Patients
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Previous History</h5>
+                        </div>
+                        <div class="card-body">
+                            <a asp-page="/Doctor/PreviousHistory" class="btn btn-info text-white">
+                                <i class="fas fa-file-medical me-1"></i>View Previous History
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

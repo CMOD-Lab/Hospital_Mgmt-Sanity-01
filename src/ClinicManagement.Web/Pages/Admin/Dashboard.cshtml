@@ -1,0 +1,132 @@
+@page
+@model ClinicManagement.Web.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Doctors</h6>
+                        <h2 class="mb-0">@Model.Dashboard?.TotalDoctors</h2>
+                    </div>
+                    <i class="fas fa-user-md fa-3x opacity-50"></i>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a asp-page="/Admin/ManageDoctors" class="text-white text-decoration-none">
+                    <small>View Details <i class="fas fa-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Patients</h6>
+                        <h2 class="mb-0">@Model.Dashboard?.TotalPatients</h2>
+                    </div>
+                    <i class="fas fa-users fa-3x opacity-50"></i>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a asp-page="/Admin/ManagePatients" class="text-white text-decoration-none">
+                    <small>View Details <i class="fas fa-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Income</h6>
+                        <h2 class="mb-0">$@Model.Dashboard?.TotalIncome.ToString("N2")</h2>
+                    </div>
+                    <i class="fas fa-dollar-sign fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-building me-2"></i>Departments</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Department Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Dashboard?.Departments != null)
+                        {
+                            int i = 1;
+                            foreach (var dept in Model.Dashboard.Departments)
+                            {
+                                <tr>
+                                    <td>@i++</td>
+                                    <td>@dept.DeptName</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Recent Appointments</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Dashboard?.RecentAppointments != null)
+                        {
+                            foreach (var appt in Model.Dashboard.RecentAppointments)
+                            {
+                                <tr>
+                                    <td>@appt.PatientName</td>
+                                    <td>@appt.DoctorName</td>
+                                    <td>
+                                        <span class="badge @(appt.Status == ClinicManagement.Domain.Enums.AppointmentStatus.Approved ? "bg-success" : appt.Status == ClinicManagement.Domain.Enums.AppointmentStatus.Pending ? "bg-warning" : "bg-secondary")">
+                                            @appt.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
