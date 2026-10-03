@@ -1,0 +1,38 @@
+@*
+    ASP.NET Core MVC Razor View for Generate Bill (cr-dotnet-0026).
+    Migrated from Bill.aspx (Web Forms) to Bill.cshtml (Razor View).
+    Web Forms server controls (asp:Label, asp:Button) replaced with
+    standard HTML elements and Razor syntax.
+    Code-behind logic moved to BillController.cs.
+*@
+@model DBProject.Models.BillViewModel
+@{
+    ViewData["Title"] = "Generate Bill";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<h1>
+    Your Bill For this Appointment is :
+    <strong style="font-size:medium;">@Model.BillAmount</strong>
+</h1>
+
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form asp-controller="Bill" asp-action="BillPaid" method="post" style="display:inline;">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary" style="font-weight:bold;">Bill Paid</button>
+</form>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<form asp-controller="Bill" asp-action="BillUnpaid" method="post" style="display:inline;">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-warning" style="font-weight:bold;">Bill Unpaid</button>
+</form>

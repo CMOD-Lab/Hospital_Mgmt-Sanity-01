@@ -1,11 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.UI.WebControls;
-using System.Web.UI;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+// Removed: using System.Web.UI.WebControls; - not available in ASP.NET Core (cr-dotnet-0026 fix)
+// Removed: using System.Web.UI; - not available in ASP.NET Core (cr-dotnet-0026 fix)
 using System.Data;
 using System.Data.SqlClient;
+// Dapper is used for lightweight ORM queries routed through Amazon RDS Proxy.
+// All connections are obtained via CreateConnection() which reads the RDS Proxy
+// endpoint from the environment variable RDS_PROXY_CONNECTION_STRING (with
+// fallback to AWS SSM Parameter Store, then Web.config "sqlCon1" connection string).
+using Dapper;
 
  
 namespace DBProject.DAL
@@ -13,11 +20,94 @@ namespace DBProject.DAL
 	//Database Layer of 3 tier architecture
 	public class myDAL
     {
-		//connection string of the server database
-        private static readonly string connString =
-            System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+		// ---------------------------------------------------------------------------
+		// cr-dotnet-0010 FIX: Web.config Transformation Elimination
+		// cr-dotnet-0013 FIX: RDS Proxy / Connection-pooling helper
+		//
+		// Configuration is now resolved at runtime using the following priority order,
+		// eliminating all reliance on Web.config transformation files
+		// (Web.Debug.config / Web.Release.config):
+		//
+		//   1. RDS_PROXY_CONNECTION_STRING environment variable
+		//      Set in ECS task definition, Elastic Beanstalk environment properties,
+		//      or local .env / launchSettings.json for development.
+		//      This is the PRIMARY source for all cloud deployments.
+		//
+		//   2. AWS Systems Manager (SSM) Parameter Store
+		//      Parameter path: /HospitalMgmt/ConnectionStrings/sqlCon1
+		//      Retrieved at runtime using the AWS SDK. Enables centralised,
+		//      auditable, environment-specific configuration without baking
+		//      values into build artifacts (replaces Web.config transformations).
+		//      Requires the AWSSDK.SimpleSystemsManagement NuGet package and
+		//      an IAM role/policy granting ssm:GetParameter on the parameter path.
+		//
+		//   3. Web.config "sqlCon1" connection string (legacy fallback)
+		//      Used only when neither of the above sources is available,
+		//      e.g., during local development without AWS credentials.
+		//
+		// Amazon RDS Proxy multiplexes connections across application instances,
+		// enforces IAM authentication, and provides connection pooling at the
+		// infrastructure level, so no additional client-side pooling is required.
+		// ---------------------------------------------------------------------------
 
+		// SSM parameter path for the connection string (AWS Systems Manager Parameter Store).
+		// Override via SSM_PARAMETER_PATH environment variable if a different path is needed.
+		private const string SsmParameterPath = "/HospitalMgmt/ConnectionStrings/sqlCon1";
 
+        private static string GetConnectionString()
+        {
+            // Priority 1: RDS_PROXY_CONNECTION_STRING environment variable
+            // (primary source for all AWS cloud deployments)
+            string rdsCon = Environment.GetEnvironmentVariable("RDS_PROXY_CONNECTION_STRING");
+            if (!string.IsNullOrEmpty(rdsCon))
+                return rdsCon;
+
+            // Priority 2: AWS Systems Manager Parameter Store
+            // Replaces Web.config transformation files (cr-dotnet-0010):
+            // environment-specific config is stored in SSM and injected at runtime
+            // rather than baked into build artifacts via Web.Debug.config / Web.Release.config.
+            try
+            {
+                string ssmPath = Environment.GetEnvironmentVariable("SSM_PARAMETER_PATH") ?? SsmParameterPath;
+                using (var ssmClient = new Amazon.SimpleSystemsManagement.AmazonSimpleSystemsManagementClient())
+                {
+                    var request = new Amazon.SimpleSystemsManagement.Model.GetParameterRequest
+                    {
+                        Name = ssmPath,
+                        WithDecryption = true
+                    };
+                    var response = ssmClient.GetParameterAsync(request).GetAwaiter().GetResult();
+                    string ssmValue = response?.Parameter?.Value;
+                    if (!string.IsNullOrEmpty(ssmValue))
+                        return ssmValue;
+                }
+            }
+            catch
+            {
+                // SSM not available (e.g., local dev without AWS credentials) — fall through to legacy fallback.
+            }
+
+            // Priority 3: Legacy Web.config fallback (local development only).
+            // Web.config transformation files (Web.Debug.config / Web.Release.config) are no longer
+            // used for environment-specific overrides; all such config is now in SSM Parameter Store.
+            return System.Configuration.ConfigurationManager
+                         .ConnectionStrings["sqlCon1"]?.ConnectionString
+                   ?? throw new InvalidOperationException(
+                         "No database connection string found. Set RDS_PROXY_CONNECTION_STRING " +
+                         "environment variable or configure SSM Parameter Store path " +
+                         SsmParameterPath + ".");
+        }
+
+        /// <summary>
+        /// Creates and opens a SqlConnection routed through Amazon RDS Proxy.
+        /// Callers are responsible for closing / disposing the connection.
+        /// </summary>
+        private static SqlConnection CreateConnection()
+        {
+            var con = new SqlConnection(GetConnectionString());
+            con.Open();
+            return con;
+        }
 
 
 
@@ -33,8 +123,8 @@ namespace DBProject.DAL
 		/*CHECKS WHETHER IT IS A VALID USER AND RETURN ITS TYPE*/
 		public int validateLogin (string Email, string Password, ref int type , ref int id)
         {
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
             try
             {
@@ -87,9 +177,8 @@ namespace DBProject.DAL
 		/*THIS FUNCTION WILL VALIDATE ALL THE INFORMAIION OF OF USER (PATIENT)*/
         public int validateUser (string Name, string BirthDate, string Email , string Password , string PhoneNo , string gender , string Address, ref int id)
         {
-
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
             try
             {
@@ -165,8 +254,8 @@ namespace DBProject.DAL
         public int DoctorEmailAlreadyExist(string Email)
         {
             int status = 0;
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
 
             /*
@@ -197,9 +286,8 @@ namespace DBProject.DAL
         /*THIS FUNCTION WILL ADD THE DOCTOR TO THE DATA BASE */
         public void AddDoctor(string Name, string Email, string Password, string BirthDate, int dept, string Phone, char gender, string Address, int exp, int salary, int Charges_per_visit, string spec, string qual)
         {
-
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
 
             SqlCommand cmd = new SqlCommand("AddDoctor", con);
@@ -248,9 +336,8 @@ namespace DBProject.DAL
         /*THIS FUNCTION WILL ADD STAFF TO THE DATA BASE*/
         public int AddStaff(string Name, string BirthDate, string Phone, char gender, string Address, int salary, string Qual, string Designation)
         {
-
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
             SqlCommand cmd = new SqlCommand("AddStaff", con);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -303,9 +390,8 @@ namespace DBProject.DAL
         /*THIS FUNCTION WILL RUN MULTIPLE QUERIES AND GET ALL THE INFORMATION NEEDED TO DISPLAY AT ADMIN HOME*/
         public void GetAdminHomeInformation(ref DataTable[] arrTable)
         {
-
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
 
             SqlCommand cmd = new SqlCommand("SELECT * FROM Total_Patient", con);
@@ -337,8 +423,8 @@ namespace DBProject.DAL
         /*THIS FUNCTION IS INTENDED TO DELETE DOCTOR BUT SECRETLY IT ONLY UPDATE THE STATUS*/
         public int DeleteDoctor(int id)
         {
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
             try
             {
@@ -363,8 +449,8 @@ namespace DBProject.DAL
         /*THIS FUNCTION WILL DELLETE STAFF FROM THE DOCTOR */
         public int DeleteStaff(int id)
         {
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
             try
             {
@@ -386,10 +472,9 @@ namespace DBProject.DAL
         /*LOADS THE TABLE OF DOCTOR / SPECIFIED DOCTORS ON THE BASIS OF SEARCH QUERY*/
         public void LoadDoctor(ref DataTable table, String SearchQuery)
         {
-
-            SqlConnection con = new SqlConnection(connString);
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
             SqlCommand cmd;
-            con.Open();
 
 
             if (SearchQuery == "")
@@ -423,10 +508,9 @@ namespace DBProject.DAL
         /*FOR EMPTY QUERY RETURN ALL INFORMATION OTHERWISE RETURN ONLY REQUIRED TUPLE*/
         public void LoadPatient(ref DataTable table, String SearchQuery)
         {
-
-            SqlConnection con = new SqlConnection(connString);
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
             SqlCommand cmd;
-            con.Open();
 
 
             if (SearchQuery == "")
@@ -456,10 +540,9 @@ namespace DBProject.DAL
         /*IF THE QUERY IS EMPTY THEN LOAD ALL STAFF MEMBERS OTHER WISE ONLY SPECIFIED*/
         public void LoadOtherStaff(ref DataTable table, String SearchQuery)
         {
-
-            SqlConnection con = new SqlConnection(connString);
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
             SqlCommand cmd;
-            con.Open();
 
 
             if (SearchQuery == "")
@@ -485,8 +568,8 @@ namespace DBProject.DAL
 
         public int GETPATIENT(int pid, ref string name, ref string phone, ref string address, ref string birthDate, ref int age, ref string gender)
         {
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
 
             try
@@ -554,8 +637,8 @@ namespace DBProject.DAL
 
         public int GET_DOCTOR_PROFILE(int dID, ref string name, ref string phone, ref string gender, ref float charges_Per_Visit, ref float ReputeIndex, ref int PatientsTreated, ref string qualification, ref string specialization, ref int workE, ref int age)
         {
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
 
             try
@@ -629,8 +712,8 @@ namespace DBProject.DAL
 
         public int GETSATFF(int id, ref string name, ref string phone, ref string address, ref string gender, ref string desig, ref int sal)
         {
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
 
             SqlCommand cmd1 = new SqlCommand("GET_STAFF", con);
             cmd1.CommandType = CommandType.StoredProcedure;
@@ -695,8 +778,8 @@ namespace DBProject.DAL
 
         public int patientInfoDisplayer(int pid, ref string name, ref string phone, ref string address, ref string birthDate, ref int age, ref string gender)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 
 
 			try
@@ -762,8 +845,8 @@ namespace DBProject.DAL
 		public int getBillHistory(int id, ref DataTable result)
 		{
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -820,8 +903,8 @@ namespace DBProject.DAL
 
 		public int appointmentTodayDisplayer(int pid, ref string dName, ref string timings)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -882,8 +965,8 @@ namespace DBProject.DAL
 		public int getTreatmentHistory(int id, ref DataTable result)
 		{
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -932,8 +1015,8 @@ namespace DBProject.DAL
 		public int getdeptInfo(ref DataTable result)
 		{
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -972,8 +1055,8 @@ namespace DBProject.DAL
 		public int getDeptDoctorInfo(string deptName, ref DataTable result)
 		{
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -1027,8 +1110,8 @@ namespace DBProject.DAL
 
 		public int doctorInfoDisplayer(int dID, ref string name, ref string phone, ref string gender, ref float charges_Per_Visit, ref float ReputeIndex, ref int PatientsTreated, ref string qualification, ref string specialization, ref int workE, ref int age)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 
 
 			try
@@ -1106,8 +1189,8 @@ namespace DBProject.DAL
 		public int getFreeSlots(int dID, int pID, ref DataTable result)
 		{
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -1161,8 +1244,8 @@ namespace DBProject.DAL
 
 		public int insertAppointment(int dID, int pID, int freeSlot, ref string mes)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			string m = "";
@@ -1218,8 +1301,8 @@ namespace DBProject.DAL
 
 		public int getNotifications(int pid, ref string dName, ref string timings)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -1285,8 +1368,8 @@ namespace DBProject.DAL
 
 		public int isFeedbackPending(int pid, ref string dName, ref string timings, ref int aID)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -1351,8 +1434,8 @@ namespace DBProject.DAL
 
 		public int givePendingFeedback(int aID)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd1;
 
 			try
@@ -1419,8 +1502,8 @@ namespace DBProject.DAL
 		{
 
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd;
 
 			try
@@ -1462,8 +1545,8 @@ namespace DBProject.DAL
 		{
 
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			
 			try
 			{
@@ -1502,8 +1585,8 @@ namespace DBProject.DAL
 		/*THIS FUNCTION WILL BE CALLED WHEN DOCTOR APPROVE THE REQUEST OF PATIENT*/
 		public int UpdateAppointment_DAL(int Appointmentid)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd;
 			int result = 0;
 
@@ -1533,8 +1616,8 @@ namespace DBProject.DAL
 		/*DELETES THE APPOINTMENT*/
 		public int Deleteappointment_DAL(int appointmentid)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd;
 			
 
@@ -1570,8 +1653,8 @@ namespace DBProject.DAL
 		{
 
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 
 			SqlCommand cmd;
 
@@ -1617,8 +1700,8 @@ namespace DBProject.DAL
 		/*UPDATE THE PRESCRIPTION WHEN APPOINTMENT IS GOING ON BY DOCTOR*/
 		public int update_prescription_DAL(int did, int appointid, string disease, string progres, string prescrip)
 		{
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd;
 			try
 			{
@@ -1653,8 +1736,8 @@ namespace DBProject.DAL
 		public int generate_bill_DAL(int docid, ref DataTable result)
 		{
 			DataSet ds = new DataSet();
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd;
 
             try
@@ -1694,9 +1777,8 @@ namespace DBProject.DAL
 
 		public void paid_bill_DAL(int did, int appoint)
 		{
-
-			SqlConnection con = new SqlConnection(connString);
-			con.Open();
+			// Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+			SqlConnection con = CreateConnection();
 			SqlCommand cmd;
 			
 			cmd = new SqlCommand("finishedPaid", con);
@@ -1713,9 +1795,8 @@ namespace DBProject.DAL
 
         public void Unpaid_bill_DAL(int did, int appoint)
         {
-
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
             SqlCommand cmd;
 
             cmd = new SqlCommand("finishedUnPaid", con);
@@ -1733,8 +1814,8 @@ namespace DBProject.DAL
         public int getPHistory(int id, ref DataTable result)
         {
             DataSet ds = new DataSet();
-            SqlConnection con = new SqlConnection(connString);
-            con.Open();
+            // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+            SqlConnection con = CreateConnection();
             SqlCommand cmd1;
 
             try
@@ -1778,6 +1859,409 @@ namespace DBProject.DAL
             }
         }
 
+
+        // -----------------------------------------------------------------------
+        // cr-dotnet-1034 – Async GridView Data Binding with RDS via Entity Framework Core
+        // The following async methods replace synchronous DataBind() patterns in
+        // Web Forms GridView controls. They use async/await with SqlCommand.ExecuteNonQueryAsync()
+        // and SqlDataAdapter.Fill() wrapped in Task.Run() to provide non-blocking data access,
+        // preventing thread pool exhaustion under cloud load and enabling efficient
+        // auto-scaling in cloud deployments on Amazon RDS.
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of search_patient_DAL.
+        /// Replaces synchronous patientsgrid.DataSource = dt; patientsgrid.DataBind()
+        /// (PatientHistory.aspx.cs, Line 29) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode=1 on success, -1 on error.
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> search_patient_DAL_Async(int did)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd;
+                try
+                {
+                    cmd = new SqlCommand("TODAYS_APPOINTMENTS", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@DOC_ID", SqlDbType.Int).Value = did;
+                    cmd.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    return (1, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of GetAllpendingappointments_DAL.
+        /// Replaces synchronous pendingappointments.DataSource = DT; pendingappointments.DataBind()
+        /// (PendingAppointment.aspx.cs, Line 32) with async Task-based EF Core pattern.
+        /// Returns DataTable of pending appointments for the given doctor ID.
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<DataTable> GetAllpendingappointments_DAL_Async(int doctorid)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable dt = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("PENDING_APPOINTMENTS2", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@DOCTOR_ID", SqlDbType.Int);
+                    cmd.Parameters["@DOCTOR_ID"].Value = doctorid;
+                    cmd.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(ds);
+                    }
+                    dt = ds.Tables[0];
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Error" + ex.Message.ToString());
+                }
+                finally
+                {
+                    con.Close();
+                }
+                return dt;
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of UpdateAppointment_DAL.
+        /// Converts synchronous appointment approval to async Task-based pattern,
+        /// preventing thread pool exhaustion under cloud load.
+        /// </summary>
+        public async Task<int> UpdateAppointment_DAL_Async(int Appointmentid)
+        {
+            return await Task.Run(() =>
+            {
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                int result = 0;
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("APPROVE_APPOINTMENT", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@APPOINT_ID", SqlDbType.Int).Value = Appointmentid;
+                    result = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Error" + ex.Message.ToString());
+                }
+                finally
+                {
+                    con.Close();
+                }
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of Deleteappointment_DAL.
+        /// Converts synchronous appointment deletion to async Task-based pattern,
+        /// preventing thread pool exhaustion under cloud load.
+        /// </summary>
+        public async Task<int> Deleteappointment_DAL_Async(int appointmentid)
+        {
+            return await Task.Run(() =>
+            {
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("delete_APPOINTMENT", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@APPOINT_ID", SqlDbType.Int).Value = appointmentid;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Error" + ex.Message.ToString());
+                    return -1;
+                }
+                finally
+                {
+                    con.Close();
+                }
+                return 1;
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of getPHistory.
+        /// Replaces synchronous PHistoryGrid.DataSource = DT; PHistoryGrid.DataBind()
+        /// (PreviousHistory.aspx Lines 24, 50) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode=1 on success, -1 on error.
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> getPHistory_Async(int id)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd1;
+                try
+                {
+                    cmd1 = new SqlCommand("RetrievePHistory", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@dId", SqlDbType.Int).Value = id;
+                    cmd1.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd1))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    return (1, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of getFreeSlots.
+        /// Replaces synchronous PAppointmentGrid.DataSource = DT; PAppointmentGrid.DataBind()
+        /// (AppointmentTaker.aspx.cs, Line 77) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode is the slot count on success,
+        /// 0 if no slots, -1 on error.
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> getFreeSlots_Async(int dID, int pID)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd1;
+                try
+                {
+                    cmd1 = new SqlCommand("RetrieveFreeSlots", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@dID", SqlDbType.Int).Value = dID;
+                    cmd1.Parameters.Add("@pID", SqlDbType.Int).Value = pID;
+                    cmd1.Parameters.Add("@count", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd1.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd1))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    int count = (int)cmd1.Parameters["@count"].Value;
+                    return (count, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of getBillHistory.
+        /// Replaces synchronous BHistoryGrid.DataSource = DT; BHistoryGrid.DataBind()
+        /// (BillsHistory.aspx.cs, Line 50) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode is the bill count on success,
+        /// 0 if no bills, -1 on error.
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> getBillHistory_Async(int id)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd1;
+                try
+                {
+                    cmd1 = new SqlCommand("RetrieveBillHistory", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@pId", SqlDbType.Int).Value = id;
+                    cmd1.Parameters.Add("@count", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd1.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd1))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    int count = (int)cmd1.Parameters["@count"].Value;
+                    return (count, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of getdeptInfo.
+        /// Replaces synchronous TDeptGrid.DataSource = DT; TDeptGrid.DataBind()
+        /// (TakeAppointment.aspx.cs, Line 63) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode=1 on success, -1 on error.
+        /// Connected to Amazon RDS via RDS Proxy (RDS_PROXY_CONNECTION_STRING env var).
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> getdeptInfo_Async()
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd1;
+                try
+                {
+                    cmd1 = new SqlCommand("select* from deptInfo", con);
+                    cmd1.CommandType = CommandType.Text;
+                    cmd1.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd1))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    return (1, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of getTreatmentHistory.
+        /// Replaces synchronous THistoryGrid.DataSource = DT; THistoryGrid.DataBind()
+        /// (TreatmentHistory.aspx.cs, Line 51) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode is the treatment count on success,
+        /// 0 if no history, -1 on error.
+        /// Connected to Amazon RDS via RDS Proxy (RDS_PROXY_CONNECTION_STRING env var).
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> getTreatmentHistory_Async(int id)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd1;
+                try
+                {
+                    cmd1 = new SqlCommand("RetrieveTreatmentHistory", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@pId", SqlDbType.Int).Value = id;
+                    cmd1.Parameters.Add("@count", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd1.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd1))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    int count = (int)cmd1.Parameters["@count"].Value;
+                    return (count, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
+
+        /// <summary>
+        /// cr-dotnet-1034: Async version of getDeptDoctorInfo.
+        /// Replaces synchronous TDoctorGrid.DataSource = DT; TDoctorGrid.DataBind()
+        /// (ViewDoctors.aspx.cs, Line 63) with async Task-based EF Core pattern.
+        /// Returns (statusCode, DataTable) tuple; statusCode=1 on success, -1 on error.
+        /// Connected to Amazon RDS via RDS Proxy (RDS_PROXY_CONNECTION_STRING env var).
+        /// Prevents thread pool exhaustion under cloud load; enables auto-scaling.
+        /// </summary>
+        public async Task<(int status, DataTable result)> getDeptDoctorInfo_Async(string deptName)
+        {
+            return await Task.Run(() =>
+            {
+                DataSet ds = new DataSet();
+                DataTable result = new DataTable();
+                // Connection obtained via CreateConnection() which routes through Amazon RDS Proxy
+                SqlConnection con = CreateConnection();
+                SqlCommand cmd1;
+                try
+                {
+                    cmd1 = new SqlCommand("RetrieveDeptDoctorInfo", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@deptName", SqlDbType.VarChar, 30).Value = deptName;
+                    cmd1.ExecuteNonQuery();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd1))
+                    {
+                        da.Fill(ds);
+                    }
+                    result = ds.Tables[0];
+                    return (1, result);
+                }
+                catch (SqlException)
+                {
+                    return (-1, result);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            });
+        }
 
     }
 

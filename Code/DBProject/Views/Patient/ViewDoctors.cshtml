@@ -1,0 +1,91 @@
+@*
+    Views/Patient/ViewDoctors.cshtml
+    ASP.NET Core MVC Razor View – replaces ViewDoctors.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="ViewDoctors.aspx.cs"
+                       Inherits="DBProject.ViewDoctors" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="TDoctor"                     → @Model.StatusMessage display
+      asp:GridView ID="TDoctorGrid"              → HTML table rendered from Model.DoctorData
+        AutoGenerateSelectButton="True"          → Select button column in each row
+        OnRowCommand="TDoctorGrid_RowCommand"     → POST to SelectDoctor action
+        asp:TemplateField HeaderText="No."       → row-number column (loop index + 1)
+        asp:Label ID="lblRowNumber"              → @(i + 1) in table cell
+
+    Code-behind logic moved to Controllers/ViewDoctorsController.cs.
+*@
+@model DBProject.Models.ViewDoctorsViewModel
+
+@{
+    ViewData["Title"] = "Doctors";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Doctors</title>
+}
+
+<!-- Styling -->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:23%">Select a Doctor to view his Profile</strong></h1>
+<br /><br />
+
+@* Replaces asp:Label ID="TDoctor" used for status messages *@
+<div>@Model.StatusMessage</div>
+<br /><br />
+
+@* Replaces asp:GridView ID="TDoctorGrid" with AutoGenerateSelectButton and OnRowCommand *@
+@if (Model.DoctorData != null && Model.DoctorData.Rows.Count > 0)
+{
+    <table class="GridView-d table" cellpadding="4"
+           style="width:1000px; color:black; border:1px solid #DEDFDE; border-style:none; border-width:1px;">
+        <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+            <tr>
+                @* Select button column – replaces AutoGenerateSelectButton="True" *@
+                <th></th>
+                @* Replaces asp:TemplateField HeaderText="No." ItemStyle-Width="50" *@
+                <th style="width:50px">No.</th>
+                @foreach (System.Data.DataColumn col in Model.DoctorData.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.DoctorData.Rows.Count; i++)
+            {
+                var row = Model.DoctorData.Rows[i];
+                @* Build the doctor ID from the row data (mirrors original Cells[2].Text) *@
+                string doctorId = Model.DoctorData.Columns.Count > 1
+                    ? row[Model.DoctorData.Columns[1].ColumnName]?.ToString() ?? ""
+                    : row[Model.DoctorData.Columns[0].ColumnName]?.ToString() ?? "";
+
+                <tr style="background-color:#F7F7DE;">
+                    <td>
+                        @* Replaces AutoGenerateSelectButton – posts selected doctor ID to SelectDoctor action *@
+                        <form asp-controller="ViewDoctors" asp-action="SelectDoctor" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="selectedDoctorId" value="@doctorId" />
+                            <button type="submit" class="btn btn-xs btn-primary">Select</button>
+                        </form>
+                    </td>
+                    @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                    <td style="width:50px">@(i + 1)</td>
+                    @foreach (System.Data.DataColumn col in Model.DoctorData.Columns)
+                    {
+                        <td>@row[col]</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br /><br />

@@ -1,0 +1,47 @@
+@*
+    Views/Patient/AppointmentRequestSent.cshtml
+    ASP.NET Core MVC Razor View – replaces AppointmentRequestSent.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="AppointmentRequestSent.aspx.cs"
+                       Inherits="DBProject.AppointmentNotificationSent" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Button OnClick="sendARequest"          → HTML <form> with POST to SendRequest action
+      asp:Label ID="Message"                     → @Model.Message display div
+
+    Code-behind logic moved to Controllers/AppointmentRequestSentController.cs.
+*@
+@model DBProject.Models.AppointmentRequestSentViewModel
+
+@{
+    ViewData["Title"] = "Send Appointment Request";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Send Appointment Request</title>
+}
+
+<br /><br /><br /><br />
+<h3><strong>Click on this button to send an appointment request to the Doctor</strong></h3>
+
+@* Replaces asp:Button OnClick="sendARequest" – submits a POST to SendRequest action *@
+<form asp-controller="AppointmentRequestSent" asp-action="SendRequest" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" style="font-weight:bold;" class="btn btn-default">Send Request</button>
+</form>
+
+<br /><br />
+
+@* Replaces asp:Label ID="Message" used for status/error messages *@
+@if (Model.RequestSubmitted && !string.IsNullOrEmpty(Model.Message))
+{
+    <div>@Model.Message</div>
+}
+
+<br /><br />

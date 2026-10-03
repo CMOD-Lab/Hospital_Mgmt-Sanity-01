@@ -1,0 +1,83 @@
+@*
+    Views/Patient/PatientHome.cshtml
+    ASP.NET Core MVC Razor View – replaces PatientHome.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientHome.aspx.cs"
+                       Inherits="DBProject.PatientHome" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="PName"      → @Model.Name
+      asp:Label ID="PPhone"     → @Model.Phone
+      asp:Label ID="PBirthDate" → @Model.BirthDate
+      asp:Label ID="PatientAge" → @Model.Age
+      asp:Label ID="PGender"    → @Model.Gender
+      asp:Label ID="PAddress"   → @Model.Address
+      Response.Write("<script>alert(...)") → @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+
+    Code-behind logic moved to Controllers/PatientHomeController.cs.
+*@
+@model DBProject.Models.PatientHomeViewModel
+
+@{
+    ViewData["Title"] = "Patient's Home";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Patient's Home</title>
+}
+
+<div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px">
+
+    <br />
+    <h1><strong style="margin:37%">Your Information</strong></h1>
+    <br /><br />
+
+    @* Replaces Response.Write("<script>alert('...');</script>") *@
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" style="margin-left:70px; margin-right:70px;">
+            @Model.ErrorMessage
+        </div>
+    }
+
+    <div style="margin-left: 70px">
+
+        @* Replaces asp:Label ID="PName" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Name: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Name</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PPhone" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Phone: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Phone</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PBirthDate" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Birth Date: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.BirthDate</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PatientAge" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Age: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Age</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PGender" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Gender:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Gender</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PAddress" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Address: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Address</div>
+        <br /><br />
+
+    </div>
+
+</div>

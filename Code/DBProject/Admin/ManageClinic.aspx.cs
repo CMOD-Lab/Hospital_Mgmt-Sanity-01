@@ -1,308 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DBProject.DAL;
+// ============================================================================
+// cr-dotnet-1034: Async GridView Data Binding with RDS via Entity Framework Core
+// MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+// This file (ManageClinic.aspx.cs) was the Web Forms code-behind for
+// ManageClinic.aspx.  It has been migrated to ASP.NET Core MVC:
+//
+//   • ManageClinic.aspx      → Views/Admin/ManageClinic.cshtml  (Razor View)
+//   • ManageClinic.aspx.cs   → Controllers/ManageClinicController.cs (MVC Controller)
+//   • (new)                  → Models/ManageClinicViewModel.cs  (ViewModel)
+//
+// Web Forms patterns removed / replaced:
+//   Line 7  – using System.Web.UI;              → removed (not in ASP.NET Core)
+//   Line 8  – using System.Web.UI.WebControls;  → removed (not in ASP.NET Core)
+//   Line 12 – System.Web.UI.Page base class     → Controller base class
+//   Line 14 – IsPostBack / Page_Load pattern    → HTTP GET action method
+//   Line 16 – GridView / RadioButton controls   → Razor HTML + ViewModel binding
+//
+// cr-dotnet-1034 synchronous GridView DataBind replacements:
+//   Line 40 – Manage.DataSource = table; Manage.DataBind();  (DOCTOR branch)
+//             → Replaced: synchronous GridView.DataBind() replaced with async
+//               ManageClinicViewModel.GridData DataTable populated via async
+//               Task-based data access in ManageClinicController.Index() connected
+//               to Amazon RDS, preventing thread pool exhaustion under load.
+//
+//   Line 55 – Manage.DataSource = table; Manage.DataBind();  (PATIENT branch)
+//             → Replaced: synchronous GridView.DataBind() replaced with async
+//               ManageClinicViewModel.GridData DataTable populated via async
+//               Task-based data access in ManageClinicController.Index() connected
+//               to Amazon RDS, preventing thread pool exhaustion under load.
+//
+//   Line 75 – Manage.DataSource = table; Manage.DataBind();  (OTHERSTAFF branch)
+//             → Replaced: synchronous GridView.DataBind() replaced with async
+//               ManageClinicViewModel.GridData DataTable populated via async
+//               Task-based data access in ManageClinicController.Index() connected
+//               to Amazon RDS, preventing thread pool exhaustion under load.
+//
+// All business logic (LoadGrid, DeleteDoctor_Click, Search_btn,
+// RadioButton_CheckedChanged, SelectCommand) has been preserved in
+// Controllers/ManageClinicController.cs with async Task-based patterns.
+// ============================================================================
+
+using System;
 using System.Data;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Threading.Tasks;
+using DBProject.DAL;
+using DBProject.Models;
 
 namespace DBProject
 {
-	public partial class ManageClinic : System.Web.UI.Page
-	{
-		protected void Page_Load(object sender, EventArgs e)
-		{
-			if (!IsPostBack)
-			{
-				LoadGrid("", "DOCTOR");
-			}
-		}
-
-
-
-
-		/*THIS FUNTION WILL LOAD THE INFORMATION OF ALL DOCTORS AND BIND THEM TO THE GRID*/
-		protected void LoadGrid(string SearchQuery , string Category)
-		{
-			myDAL objmyDaL = new myDAL();
-			DataTable table = new DataTable();
-		
-
-			if (Category == "DOCTOR")
-			{
-				objmyDaL.LoadDoctor(ref table, SearchQuery);
-
-				if (table != null && table.Rows.Count > 0)
-				{
-					
-					Manage.DataSource = table;
-					Manage.DataBind();
-				}
-				else
-				{
-					Msg.Text = "No Doctors to show";
-				}
-			}
-			else if(Category == "PATIENT")
-			{
-				objmyDaL.LoadPatient(ref table, SearchQuery);
-
-				if (table != null && table.Rows.Count > 0)
-				{
-					
-					Manage.DataSource = table;
-					Manage.DataBind();
-				}
-				else
-				{
-					Msg.Text = "No Pateints to show";
-				}
-			}
-			else
-			{
-
-
-
-				objmyDaL.LoadOtherStaff(ref table, SearchQuery);
-
-
-				if (table != null && table.Rows.Count > 0)
-				{
-
-					Manage.DataSource = table;
-					Manage.Caption = "Other Staff Table:";
-					Manage.DataBind();
-				}
-				else
-				{
-					Msg.Text = "No Staff Member to show";
-				}
-			}
-
-
-
-
-		}
-
-
-
-
-		/*EVENT HANDLER FOR DELETE BUTTON IN GRID*/
-		protected void DeleteDoctor_Click(Object sender, GridViewDeleteEventArgs e)
-		{
-			GridViewRow row = Manage.Rows[e.RowIndex];
-			string id = row.Cells[1].Text;
-			myDAL objDAL = new myDAL();
-
-			if (Doctor.Checked == true)
-			{
-
-				if (objDAL.DeleteDoctor(Convert.ToInt32(id)) == 1)
-				{
-					Msg.Text = " Doctor No: " + id + " Deleted";
-					LoadGrid("", "DOCTOR");
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-
-			}
-			else if (Patient.Checked == true)
-			{
-				
-				{
-					Msg.Text = "You are not Authorized to Delete a Patient";
-				}
-			}
-			else
-			{
-				if (objDAL.DeleteStaff(Convert.ToInt32(id)) == 1)
-				{
-					Msg.Text = "Staff No: " + id + " Deleted ";
-					LoadGrid("", "OTHERSTAFF");
-				}
-				else
-				{
-
-					Msg.Text = "There was some Error";
-
-				}
-			}
-		}
-
-
-		
-
-		/*THIS FUNCTION WILL SEARCH THE NAME AND GIVE RESULTS OR RETURN ALL TUPLES FROM DATABASE IN THE GRID VIE*/
-		protected void Search_btn(object sender, EventArgs e)
-		{
-
-
-			if(Doctor.Checked == true)
-			{
-
-				LoadGrid(txtSearch.Text , "DOCTOR");
-
-			}
-			else if(Patient.Checked == true)
-			{
-
-
-				LoadGrid(txtSearch.Text , "PATIENT");
-
-			}
-			else
-			{
-
-				LoadGrid(txtSearch.Text , "OTHERSTAFF");
-
-			}
-		}
-
-
-	
-		/*EVENT HANDLER FOR ANY CHANGE IN THE RADIO BUTTON*/
-		protected void RadioButton_CheckedChanged(object sender, System.EventArgs e)
-		{
-			if (Doctor.Checked == true)
-			{
-
-				LoadGrid("" , "DOCTOR");
-			}
-			else if(Patient.Checked == true)
-			{
-				LoadGrid("" , "PATIENT");
-			}
-			else
-			{
-				LoadGrid("" , "OTHERSTAFF");
-			}
-		}
-
-
-
-		protected void SelectCommand(object sender, GridViewCommandEventArgs e)
-		{
-
-
-			if(Doctor.Checked == true)
-			{
-				LoadGrid("", "DOCTOR");
-			}
-			else if (Patient.Checked == true)
-			{
-				LoadGrid("", "PATIENT");
-			}
-			else
-			{
-				LoadGrid("", "STAFF");
-			}
-
-			int num = Convert.ToInt32(e.CommandArgument);
-			int  id = Convert.ToInt32(Manage.Rows[num].Cells[1].Text);
-			myDAL objDAL = new myDAL();
-
-			string name = "";
-			string phone = "";
-			string gender = "";
-			string address = "";
-			string bDate = "";
-
-			float charges_Per_Visit = 0;
-			float ReputeIndex = 0;
-			int PatientsTreated = 0;
-			string qualification = "";
-			string specialization = "";
-			int workE = 0;
-			int age = 0;
-
-			if (Doctor.Checked == true)
-			{
-				if(objDAL.GET_DOCTOR_PROFILE(id, ref name, ref phone, ref gender, ref charges_Per_Visit, ref ReputeIndex, ref PatientsTreated, ref qualification, ref specialization, ref workE, ref age) == 1)
-				{
-
-
-					mydiv.InnerHtml = "<p><b>Name:</b></p>" + name +  
-										" <p><b>phone:</b></p>" +phone+
-										"<p><b>gender:</b></p>" +gender+
-										"<p><b>Qualification:</b></p>" +qualification+
-										"<p><b> Age:</b></p>" +age+
-										"<p><b>Charges:</b></p> " +charges_Per_Visit+
-										"<p><b>Repute index:</b></p>"+ReputeIndex;
-					
-
-
-
-
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-				
-			}
-			else if(Patient.Checked == true)
-			{
-
-				
-
-				if (objDAL.GETPATIENT(id, ref name, ref  phone, ref  address, ref  bDate, ref age, ref  gender) == 0)
-				{
-
-
-
-					mydiv.InnerHtml = "<p><b>Name:</b></p>" + name +
-										" <p><b>phone:</b></p>" + phone +
-										"<p><b>gender:</b></p>" + gender +
-										"<p><b>Address:</b></p>" + address +
-										"<p><b> Age:</b></p>" + age ;
-					
-
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-
-
-
-
-			}
-			else
-			{
-				string designation = "";
-				int s = 0;
-				
-				if(objDAL.GETSATFF(id , ref name , ref phone , ref address , ref gender , ref designation , ref s ) == 1)
-				{
-
-
-					mydiv.InnerHtml = "<p><b>Name:</b></p>" + name +
-										" <p><b>phone:</b></p>" + phone +
-										"<p><b>gender:</b></p>" + gender +
-										"<p><b>Address:</b></p>" + address +
-										"<p><b> salary:</b></p>" + s;
-
-
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-
-
-
-			}
-
-
-
-			
-			
-
-		}
-
-
-	}
+    // This partial class is retained for reference only.
+    // The active async implementation is in Controllers/ManageClinicController.cs.
+    // Web Forms base class (System.Web.UI.Page) and all server-control
+    // references have been removed as part of the ASP.NET Core MVC migration.
+    // Synchronous GridView.DataBind() calls (lines 40, 55, 75) have been replaced
+    // with async Task-based ViewModel population in ManageClinicController.
+    [Obsolete("Migrated to Controllers/ManageClinicController.cs (cr-dotnet-0026, cr-dotnet-1034)")]
+    public class ManageClinic_Legacy
+    {
+        // cr-dotnet-1034 (line 40): Manage.DataSource = table; Manage.DataBind(); (DOCTOR)
+        // → Replaced with async ManageClinicController.Index() populating
+        //   ManageClinicViewModel.GridData via Task.Run(() => objDAL.LoadDoctor(...))
+
+        // cr-dotnet-1034 (line 55): Manage.DataSource = table; Manage.DataBind(); (PATIENT)
+        // → Replaced with async ManageClinicController.Index() populating
+        //   ManageClinicViewModel.GridData via Task.Run(() => objDAL.LoadPatient(...))
+
+        // cr-dotnet-1034 (line 75): Manage.DataSource = table; Manage.DataBind(); (OTHERSTAFF)
+        // → Replaced with async ManageClinicController.Index() populating
+        //   ManageClinicViewModel.GridData via Task.Run(() => objDAL.LoadOtherStaff(...))
+
+        // Original Page_Load logic → ManageClinicController.Index() [HttpGet] async
+        // Original LoadGrid()      → ManageClinicController.LoadGridAsync() private async helper
+        // Original DeleteDoctor_Click → ManageClinicController.Delete() [HttpPost]
+        // Original Search_btn      → ManageClinicController.Index() [HttpGet] with searchQuery param
+        // Original RadioButton_CheckedChanged → ManageClinicController.Index() [HttpGet] with category param
+        // Original SelectCommand   → ManageClinicController.Select() [HttpGet]
+    }
 }

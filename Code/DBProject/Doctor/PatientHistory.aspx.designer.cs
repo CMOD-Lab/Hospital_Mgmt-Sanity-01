@@ -7,18 +7,38 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+// ============================================================================
+// MIGRATION NOTE (cr-dotnet-1034 – Synchronous Data Binding in GridView Controls):
+// Line 22 – protected global::System.Web.UI.WebControls.GridView patientsgrid;
+//   The synchronous Web Forms GridView control (patientsgrid) has been removed.
+//   System.Web.UI.WebControls.GridView is not available in ASP.NET Core and
+//   relied on synchronous DataBind() which blocks request threads, degrading
+//   cloud scalability under load.
+//
+//   Replaced with:
+//     • async Task<IActionResult> Index() in PatientHistoryController.cs
+//       using await objmydal.search_patient_DAL_Async(did) (EF Core / Amazon RDS)
+//     • PatientHistoryViewModel.Patients (DataTable) passed to Razor View
+//     • HTML table rendered in Views/Doctor/PatientHistory.cshtml
+//
+//   This prevents thread pool exhaustion under cloud load and enables efficient
+//   auto-scaling in cloud deployments on Amazon RDS.
+//
+// MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+//   This designer file is retained for reference only.
+//   The active view is Views/Doctor/PatientHistory.cshtml (Razor View).
+//   The active controller is Controllers/PatientHistoryController.cs.
+//   System.Web.UI.WebControls.GridView removed – not available in ASP.NET Core.
+// ============================================================================
+
 namespace doctor {
     
     
     public partial class patienthistory {
         
-        /// <summary>
-        /// patientsgrid control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView patientsgrid;
+        // cr-dotnet-1034 / cr-dotnet-0026:
+        // protected global::System.Web.UI.WebControls.GridView patientsgrid;
+        // REMOVED – synchronous Web Forms GridView replaced with async Razor View table.
+        // See Controllers/PatientHistoryController.cs and Views/Doctor/PatientHistory.cshtml.
     }
 }

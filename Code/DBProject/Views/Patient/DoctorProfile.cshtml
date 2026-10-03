@@ -1,0 +1,123 @@
+@*
+    Views/Patient/DoctorProfile.cshtml
+    ASP.NET Core MVC Razor View – replaces DoctorProfile.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="DoctorProfile.aspx.cs"
+                       Inherits="DBProject.DoctorProfile" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="DName"           → @Model.Name
+      asp:Label ID="DPhone"          → @Model.Phone
+      asp:Label ID="DQualification"  → @Model.Qualification
+      asp:Label ID="DSpecialization" → @Model.Specialization
+      asp:Label ID="DWork"           → @Model.WorkExperience
+      asp:Label ID="DAge"            → @Model.Age
+      asp:Label ID="DGender"         → @Model.Gender
+      asp:Label ID="DDept"           → @Model.Department
+      asp:Label ID="DCharges"        → @Model.ChargesPerVisit
+      asp:Label ID="DRI"             → @Model.ReputeIndex
+      asp:Label ID="DPT"             → @Model.PatientsTreated
+      asp:Button OnClick="RedirectToAppointmentTaker"
+                                     → <form asp-controller="DoctorProfile" asp-action="TakeAppointment">
+
+    Code-behind logic moved to Controllers/DoctorProfileController.cs.
+*@
+@model DBProject.Models.DoctorProfileViewModel
+
+@{
+    ViewData["Title"] = "Doctor's Profile";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Doctor's Profile</title>
+}
+
+<!-- Styling -->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px">
+
+    <br />
+    <h1><strong style="margin:37%">Doctor's Profile</strong></h1>
+    <br /><br />
+
+    @* Display error message if doctor info retrieval failed *@
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" style="margin-left:70px; margin-right:70px;">
+            @Model.ErrorMessage
+        </div>
+    }
+
+    <div style="margin-left: 70px">
+
+        @* Replaces asp:Label ID="DName" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Name: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Name</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DPhone" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Phone: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Phone</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DQualification" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Qualification:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Qualification</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DSpecialization" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Specialization:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Specialization</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DWork" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Work Experience:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.WorkExperience</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DAge" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Age: </strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Age</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DGender" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Gender:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Gender</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DDept" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Department:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.Department</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DCharges" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Charges Per Appointment:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.ChargesPerVisit</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DRI" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Repute Index:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.ReputeIndex</div>
+        <br /><br />
+
+        @* Replaces asp:Label ID="DPT" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Number of Patients Treated:</strong></h4>
+        <div style="font-weight:bold; font-size:medium;">@Model.PatientsTreated</div>
+        <br /><br />
+
+        @* Replaces asp:Button ID="AppointmentB" OnClick="RedirectToAppointmentTaker" *@
+        <form asp-controller="DoctorProfile" asp-action="TakeAppointment" method="post" style="display:inline;">
+            @Html.AntiForgeryToken()
+            <button type="submit" style="font-weight:bold;">Take Appointment</button>
+        </form>
+
+    </div>
+
+</div>

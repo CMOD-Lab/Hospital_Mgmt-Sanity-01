@@ -7,27 +7,42 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+// ============================================================================
+// MIGRATION NOTE (cr-dotnet-1034 – Synchronous Data Binding in GridView Controls):
+// Line 31 – protected global::System.Web.UI.WebControls.GridView BHistoryGrid;
+//   The synchronous Web Forms GridView control (BHistoryGrid) has been removed.
+//   System.Web.UI.WebControls.GridView is not available in ASP.NET Core and
+//   relied on synchronous DataBind() which blocks request threads, degrading
+//   cloud scalability under load.
+//
+//   Replaced with:
+//     • async Task<IActionResult> Index() in BillsHistoryController.cs
+//       using await objmyDAl.getBillHistory_Async(id) (EF Core / Amazon RDS)
+//     • BillsHistoryViewModel.BillHistoryData (DataTable) passed to Razor View
+//     • HTML table rendered in Views/Patient/BillsHistory.cshtml
+//
+//   This prevents thread pool exhaustion under cloud load and enables efficient
+//   auto-scaling in cloud deployments on Amazon RDS.
+//
+// MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+//   This designer file is retained for reference only.
+//   The active view is Views/Patient/BillsHistory.cshtml (Razor View).
+//   The active controller is Controllers/BillsHistoryController.cs.
+//   System.Web.UI.WebControls.GridView and Label removed – not available in ASP.NET Core.
+// ============================================================================
+
 namespace DBProject {
     
     
     public partial class BillsHistory {
         
-        /// <summary>
-        /// BHistory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label BHistory;
+        // cr-dotnet-1034 / cr-dotnet-0026:
+        // protected global::System.Web.UI.WebControls.Label BHistory;
+        // REMOVED – Web Forms Label replaced with @Model.StatusMessage in Razor View.
         
-        /// <summary>
-        /// BHistoryGrid control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView BHistoryGrid;
+        // cr-dotnet-1034 / cr-dotnet-0026:
+        // protected global::System.Web.UI.WebControls.GridView BHistoryGrid;
+        // REMOVED – synchronous Web Forms GridView replaced with async Razor View table.
+        // See Controllers/BillsHistoryController.cs and Views/Patient/BillsHistory.cshtml.
     }
 }

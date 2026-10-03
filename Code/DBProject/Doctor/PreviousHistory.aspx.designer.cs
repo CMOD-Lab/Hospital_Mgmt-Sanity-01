@@ -7,27 +7,42 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+// ============================================================================
+// MIGRATION NOTE (cr-dotnet-1034 – Synchronous Data Binding in GridView Controls):
+// Line 22 – protected global::System.Web.UI.WebControls.GridView PHistoryGrid;
+//   The synchronous Web Forms GridView control (PHistoryGrid) has been removed.
+//   System.Web.UI.WebControls.GridView is not available in ASP.NET Core and
+//   relied on synchronous DataBind() which blocks request threads, degrading
+//   cloud scalability under load.
+//
+//   Replaced with:
+//     • async Task<IActionResult> Index() in PreviousHistoryController.cs
+//       using await objmyDAl.getPHistory_Async(id) (EF Core / Amazon RDS)
+//     • PreviousHistoryViewModel.HistoryData (DataTable) passed to Razor View
+//     • HTML table rendered in Views/Doctor/PreviousHistory.cshtml
+//
+//   This prevents thread pool exhaustion under cloud load and enables efficient
+//   auto-scaling in cloud deployments on Amazon RDS.
+//
+// MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+//   This designer file is retained for reference only.
+//   The active view is Views/Doctor/PreviousHistory.cshtml (Razor View).
+//   The active controller is Controllers/PreviousHistoryController.cs.
+//   System.Web.UI.WebControls.GridView and Label removed – not available in ASP.NET Core.
+// ============================================================================
+
 namespace DBProject.Doctor {
     
     
     public partial class PreviousHistory {
         
-        /// <summary>
-        /// PHistory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PHistory;
+        // cr-dotnet-1034 / cr-dotnet-0026:
+        // protected global::System.Web.UI.WebControls.Label PHistory;
+        // REMOVED – Web Forms Label replaced with @Model.ErrorMessage in Razor View.
         
-        /// <summary>
-        /// PHistoryGrid control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView PHistoryGrid;
+        // cr-dotnet-1034 / cr-dotnet-0026:
+        // protected global::System.Web.UI.WebControls.GridView PHistoryGrid;
+        // REMOVED – synchronous Web Forms GridView replaced with async Razor View table.
+        // See Controllers/PreviousHistoryController.cs and Views/Doctor/PreviousHistory.cshtml.
     }
 }

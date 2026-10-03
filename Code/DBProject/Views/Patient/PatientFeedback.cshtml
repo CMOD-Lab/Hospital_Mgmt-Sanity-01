@@ -1,0 +1,107 @@
+@*
+    Views/Patient/PatientFeedback.cshtml
+    ASP.NET Core MVC Razor View – replaces PatientFeedback.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientFeedback.aspx.cs"
+                       Inherits="DBProject.PatientFeedback" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="Feedback"        → @Model.FeedbackMessage
+      asp:Label ID="FDoctor"         → @Model.DoctorMessage
+      asp:Label ID="FTimings"        → @Model.TimingsMessage
+      asp:Label ID="Message" Visible → @if (Model.ShowRatingPrompt)
+      asp:DropDownList ID="List"     → <select name="rating"> in HTML form
+      asp:Button ID="button1"
+        OnClick="giveFeedback"       → POST to PatientFeedback/GiveFeedback action
+      asp:Label ID="F"               → @Model.ConfirmationMessage
+      IsPostBack check               → GET vs POST action separation
+
+    Code-behind logic moved to Controllers/PatientFeedbackController.cs.
+*@
+@model DBProject.Models.PatientFeedbackViewModel
+
+@{
+    ViewData["Title"] = "Feedback";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Feedback</title>
+}
+
+<h1><strong style="margin:37%">Feedback</strong></h1>
+<br /><br />
+
+<div style="margin-left: 70px">
+
+    @* Replaces asp:Label ID="Feedback" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.FeedbackMessage))
+    {
+        <div style="font-weight:bold; font-size:medium;">@Model.FeedbackMessage</div>
+        <br /><br />
+    }
+
+    @* Replaces asp:Label ID="FDoctor" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.DoctorMessage))
+    {
+        <div style="font-weight:bold; font-size:medium;">@Model.DoctorMessage</div>
+        <br /><br />
+    }
+
+    @* Replaces asp:Label ID="FTimings" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.TimingsMessage))
+    {
+        <div style="font-weight:bold; font-size:medium;">@Model.TimingsMessage</div>
+        <br /><br />
+    }
+
+    <br /><br />
+
+    @* Replaces asp:Label ID="Message" Visible="false" (shown when ShowRatingPrompt = true)
+       asp:DropDownList ID="List" Visible="false"
+       asp:Button ID="button1" Visible="false" OnClick="giveFeedback" *@
+    @if (Model.ShowRatingPrompt)
+    {
+        <div style="font-weight:bold; font-size:medium;">
+            Dear Patient, How was your treatment experience with our specialized Doctor on a rating of 1 - 5:
+        </div>
+
+        <div style="margin-left: 790px">
+            @* Replaces asp:DropDownList ID="List" + asp:Button ID="button1" OnClick="giveFeedback" *@
+            <form asp-controller="PatientFeedback" asp-action="GiveFeedback" method="post">
+                @Html.AntiForgeryToken()
+                <select name="rating" style="font-weight:bold;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <br /><br />
+
+                <button type="submit" style="font-weight:bold;">Give Feedback</button>
+            </form>
+
+            <br /><br />
+
+            @* Replaces asp:Label ID="F" Font-Bold="true" Font-Size="Medium" *@
+            @if (!string.IsNullOrEmpty(Model.ConfirmationMessage))
+            {
+                <div style="font-weight:bold; font-size:medium;">@Model.ConfirmationMessage</div>
+            }
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(Model.ConfirmationMessage))
+    {
+        @* Show confirmation message even when rating prompt is hidden (post-submit state) *@
+        <div style="font-weight:bold; font-size:medium;">@Model.ConfirmationMessage</div>
+    }
+
+    <br /><br />
+</div>

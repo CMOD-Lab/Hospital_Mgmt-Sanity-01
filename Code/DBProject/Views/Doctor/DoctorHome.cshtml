@@ -1,0 +1,96 @@
+@*
+    Views/Doctor/DoctorHome.cshtml
+    ASP.NET Core MVC Razor View – replaces DoctorHome.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      <%@ Page MasterPageFile="~/Doctor/doctormaster.Master" ... %>
+        → @{ Layout = "~/Views/Shared/_DoctorLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="Cp1">   → main content block
+
+      asp:Label Label1  → @Model.Name
+      asp:Label Label2  → @Model.Phone
+      asp:Label Label3  → @Model.Address
+      asp:Label Label4  → @Model.BirthDate
+      asp:Label Label5  → @Model.Gender
+      asp:Label Label6  → @Model.DepartmentNo
+      asp:Label Label7  → @Model.ChargesPerVisit
+      asp:Label Label8  → @Model.MonthlySalary
+      asp:Label Label9  → @Model.ReputeIndex
+      asp:Label Label10 → @Model.PatientsTreated
+      asp:Label Label11 → @Model.Qualification
+      asp:Label Label12 → @Model.Specialization
+      asp:Label Label13 → @Model.WorkExperience
+      asp:Label Label14 → @Model.Status
+*@
+@model DBProject.Models.DoctorHomeViewModel
+
+@{
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+    ViewBag.Title = "Doctor's Home";
+}
+
+@section head {
+    <title>Doctor's Home</title>
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.ErrorMessage
+    </div>
+}
+else
+{
+    <div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px; margin-left:50px">
+
+        <h1>Your Profile</h1>
+        <br />
+        <h3>Name: <strong>@Model.Name</strong><br /><br /></h3>
+
+        <h4>
+            Phone: <strong>@Model.Phone</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Address: <strong>@Model.Address</strong>
+        </h4>
+        <br />
+
+        <h4>BirthDate: <strong>@Model.BirthDate</strong></h4>
+        <br /><br />
+
+        <h4>
+            Gender: <strong>@Model.Gender</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Department No: <strong>@Model.DepartmentNo</strong>
+        </h4>
+        <br /><br />
+
+        <h4>
+            Charges Per Visit: <strong>@Model.ChargesPerVisit</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Monthly Salary: <strong>@Model.MonthlySalary</strong>
+        </h4>
+        <br /><br />
+
+        <h4>
+            Repute Index: <strong>@Model.ReputeIndex</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Patients Treated: <strong>@Model.PatientsTreated</strong>
+        </h4>
+        <br /><br />
+
+        <h4>
+            Qualification: <strong>@Model.Qualification</strong>
+            <br /><br />
+            Specialization: <strong>@Model.Specialization</strong>
+        </h4>
+
+        <h4>
+            Work Experience: <strong>@Model.WorkExperience</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Status: <strong>@Model.Status</strong>
+        </h4>
+        <br />
+    </div>
+}

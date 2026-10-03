@@ -1,0 +1,91 @@
+@*
+    Views/Patient/TakeAppointment.cshtml
+    ASP.NET Core MVC Razor View – replaces TakeAppointment.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="TakeAppointment.aspx.cs"
+                       Inherits="DBProject.TakeAppointment" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="TDept"                       → @Model.StatusMessage display
+      asp:GridView ID="TDeptGrid"                → HTML table rendered from Model.DeptData
+        AutoGenerateSelectButton="true"          → Select button column in each row
+        OnRowCommand="TDeptGrid_RowCommand"       → POST to SelectDepartment action
+        asp:TemplateField HeaderText="No."       → row-number column (loop index + 1)
+        asp:Label ID="lblRowNumber"              → @(i + 1) in table cell
+
+    Code-behind logic moved to Controllers/TakeAppointmentController.cs.
+*@
+@model DBProject.Models.TakeAppointmentViewModel
+
+@{
+    ViewData["Title"] = "Departments";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Departments</title>
+}
+
+<!-- Styling -->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:23%">Select a Department to view its Doctors</strong></h1>
+<br /><br />
+
+@* Replaces asp:Label ID="TDept" used for status messages *@
+<div>@Model.StatusMessage</div>
+<br /><br />
+
+@* Replaces asp:GridView ID="TDeptGrid" with AutoGenerateSelectButton and OnRowCommand *@
+@if (Model.DeptData != null && Model.DeptData.Rows.Count > 0)
+{
+    <table class="GridView-d table" cellpadding="4"
+           style="width:1000px; color:black; border:1px solid #DEDFDE; border-style:none; border-width:1px;">
+        <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+            <tr>
+                @* Select button column – replaces AutoGenerateSelectButton="true" *@
+                <th></th>
+                @* Replaces asp:TemplateField HeaderText="No." ItemStyle-Width="50" *@
+                <th style="width:50px">No.</th>
+                @foreach (System.Data.DataColumn col in Model.DeptData.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.DeptData.Rows.Count; i++)
+            {
+                var row = Model.DeptData.Rows[i];
+                @* Build the department name from the row data (mirrors original Cells[2].Text) *@
+                string deptName = Model.DeptData.Columns.Count > 1
+                    ? row[Model.DeptData.Columns[1].ColumnName]?.ToString() ?? ""
+                    : row[Model.DeptData.Columns[0].ColumnName]?.ToString() ?? "";
+
+                <tr style="background-color:#F7F7DE;">
+                    <td>
+                        @* Replaces AutoGenerateSelectButton – posts selected department to SelectDepartment action *@
+                        <form asp-controller="TakeAppointment" asp-action="SelectDepartment" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="selectedDept" value="@deptName" />
+                            <button type="submit" class="btn btn-xs btn-primary">Select</button>
+                        </form>
+                    </td>
+                    @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                    <td style="width:50px">@(i + 1)</td>
+                    @foreach (System.Data.DataColumn col in Model.DeptData.Columns)
+                    {
+                        <td>@row[col]</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br /><br />

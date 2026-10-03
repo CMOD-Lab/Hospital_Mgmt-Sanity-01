@@ -1,77 +1,31 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="DoctorProfile.aspx.cs" Inherits="DBProject.DoctorProfile" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (DoctorProfile.aspx) has been migrated to ASP.NET Core MVC Razor View.
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    Original Web Forms directive (Line 1 – removed):
+      <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+               AutoEventWireup="true" CodeBehind="DoctorProfile.aspx.cs"
+               Inherits="DBProject.DoctorProfile" %>
 
-<title>Doctor's Profile</title>
+    Migration mapping:
+      DoctorProfile.aspx      → Views/Patient/DoctorProfile.cshtml  (Razor View)
+      DoctorProfile.aspx.cs   → Controllers/DoctorProfileController.cs (MVC Controller)
+      (new)                   → Models/DoctorProfileViewModel.cs (ViewModel)
 
-</asp:Content>
+    Web Forms server controls replaced:
+      <asp:Content>                    → Razor @section / @RenderBody()
+      <asp:Label ID="DName">           → @Model.Name
+      <asp:Label ID="DPhone">          → @Model.Phone
+      <asp:Label ID="DQualification">  → @Model.Qualification
+      <asp:Label ID="DSpecialization"> → @Model.Specialization
+      <asp:Label ID="DWork">           → @Model.WorkExperience
+      <asp:Label ID="DAge">            → @Model.Age
+      <asp:Label ID="DGender">         → @Model.Gender
+      <asp:Label ID="DDept">           → @Model.Department
+      <asp:Label ID="DCharges">        → @Model.ChargesPerVisit
+      <asp:Label ID="DRI">             → @Model.ReputeIndex
+      <asp:Label ID="DPT">             → @Model.PatientsTreated
+      <asp:Button OnClick="RedirectToAppointmentTaker"> → <a asp-controller="AppointmentTaker" asp-action="Index">
 
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-    
-    <div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px">
-
-        <br />
-        <h1><strong style="margin:37%">Doctor's Profile</strong></h1>
-        <br /><br />
-
-        <div style="margin-left: 70px">
-
-            <h4><strong>Name: </strong></h4>
-            <asp:Label ID="DName" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Phone: </strong></h4>
-            <asp:Label ID="DPhone" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Qualification:</strong></h4>
-            <asp:Label ID="DQualification" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Specialization:</strong></h4>
-            <asp:Label ID="DSpecialization" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Work Experience:</strong></h4>
-            <asp:Label ID="DWork" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Age: </strong></h4>
-            <asp:Label ID="DAge" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Gender:</strong></h4>
-            <asp:Label ID="DGender" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Department:</strong></h4>
-            <asp:Label ID="DDept" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Charges Per Appointment:</strong></h4>
-            <asp:Label ID="DCharges" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Repute Index:</strong></h4>
-            <asp:Label ID="DRI" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Number of Patients Treated:</strong></h4>
-            <asp:Label ID="DPT" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <asp:Button ID="AppointmentB" runat="server" Text="Take Appointment" OnClick="RedirectToAppointmentTaker" Font-Bold="true"  />
-
-        </div>
-
-    </div>
-
-</asp:Content>
+    Active implementation: Views/Patient/DoctorProfile.cshtml
+--%>

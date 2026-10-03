@@ -1,0 +1,69 @@
+@*
+    Views/Doctor/HistoryUpdate.cshtml
+    ASP.NET Core MVC Razor View – replaces HistoryUpdate.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master"
+                       AutoEventWireup="true" CodeBehind="HistoryUpdate.aspx.cs"
+                       Inherits="doctor.Historyupdate" %>
+              → @{ Layout = "~/Views/Shared/_DoctorLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="Cp1">   → main content block
+
+      asp:TextBox ID="Disease"       → <input> bound to Model.Disease
+      asp:TextBox ID="progress"      → <input> bound to Model.Progress
+      asp:TextBox ID="Prescription"  → <input> bound to Model.Prescription
+      asp:Button  ID="submit"        → <button> posting to HistoryUpdate/Save
+      asp:Button  ID="Bill"          → <button> posting to HistoryUpdate/GenerateBill
+
+    Code-behind logic moved to Controllers/HistoryUpdateController.cs.
+*@
+@model DBProject.Models.HistoryUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update History";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+@section head {
+    <title>Update History</title>
+}
+
+<h1>Update history</h1>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+
+<form asp-controller="HistoryUpdate" asp-action="Save" method="post">
+    @Html.AntiForgeryToken()
+
+    <h4>Disease:</h4>
+    <input type="text" name="Disease" value="@Model.Disease" class="form-control" style="width:300px;" />
+
+    <h4>Progress:</h4>
+    <input type="text" name="Progress" value="@Model.Progress" class="form-control" style="width:300px;" />
+
+    <h4>Prescription</h4>
+    <input type="text" name="Prescription" value="@Model.Prescription" class="form-control" style="width:300px;" />
+
+    <br />
+    <br />
+    <br />
+
+    <button type="submit" class="btn btn-primary" style="font-weight:bold;">Accept &amp; Save</button>
+</form>
+
+<br />
+
+<form asp-controller="HistoryUpdate" asp-action="GenerateBill" method="post" style="display:inline;">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-warning" style="font-weight:bold;">Generate Bill</button>
+</form>

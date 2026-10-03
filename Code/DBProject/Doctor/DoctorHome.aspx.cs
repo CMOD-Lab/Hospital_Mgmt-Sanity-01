@@ -1,50 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+// ============================================================================
+// MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+// This file (DoctorHome.aspx.cs) was the Web Forms code-behind for DoctorHome.aspx.
+// It has been migrated to ASP.NET Core MVC:
+//
+//   • DoctorHome.aspx    → Views/Doctor/DoctorHome.cshtml  (Razor View)
+//   • DoctorHome.aspx.cs → Controllers/DoctorHomeController.cs (MVC Controller)
+//   • (new)              → Models/DoctorHomeViewModel.cs   (ViewModel)
+//
+// Web Forms patterns removed / replaced:
+//   Line 5  – using System.Web.UI;              → removed (not in ASP.NET Core)
+//   Line 6  – using System.Web.UI.WebControls;  → removed (not in ASP.NET Core)
+//   Line 14 – System.Web.UI.Page base class     → Controller base class
+//   Line 16 – Page_Load / Session["idoriginal"] → DoctorHomeController.Index() [HttpGet]
+//             Label1..Label14.Text assignments  → DoctorHomeViewModel properties
+//
+// All business logic (docinfo_DAL) has been preserved in
+// Controllers/DoctorHomeController.cs.
+//
+// ============================================================================
+// MIGRATION NOTE (cr-dotnet-0045 – Session State Provider):
+// In-process HttpSessionState (InProc) usage has been replaced with
+// Amazon ElastiCache for Redis distributed session in DoctorHomeController.cs.
+//
+//   Line 21 – Session["idoriginal"]  → HttpContext.Session.GetInt32("idoriginal")
+//
+// Session is now stored in Amazon ElastiCache for Redis, enabling stateless
+// horizontal scaling across multiple ECS tasks or Kubernetes pods.
+// Redis connection is configured via REDIS_CONNECTION_STRING environment variable.
+// ============================================================================
+
+using System;
 using DBProject.DAL;
 using System.Data;
 
-
-
 namespace doctor
 {
-    public partial class doctorhome : System.Web.UI.Page
+    // This class is retained for reference only.
+    // The active implementation is in Controllers/DoctorHomeController.cs.
+    // Web Forms base class (System.Web.UI.Page) and all server-control
+    // references have been removed as part of the ASP.NET Core MVC migration.
+    [Obsolete("Migrated to Controllers/DoctorHomeController.cs (cr-dotnet-0026, cr-dotnet-0045)")]
+    public class doctorhome_Legacy
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            myDAL objmyDAL = new myDAL();
-            DataTable dt = new DataTable();
-            int found;
-            int did = (int)Session["idoriginal"];
-         
-            found = objmyDAL.docinfo_DAL(did, ref dt);
-
-
-			if (found!=1)
-            {
-                { Response.Write("<script>alert('There was some error');</script>"); }
-            }
-            else
-            {
-                Label1.Text = dt.Rows[0][1].ToString();
-                Label2.Text = dt.Rows[0][2].ToString();
-                Label3.Text = dt.Rows[0][3].ToString();
-                Label4.Text = dt.Rows[0][4].ToString();
-                Label5.Text = dt.Rows[0][5].ToString();
-                Label6.Text = dt.Rows[0][6].ToString();
-                Label7.Text = dt.Rows[0][7].ToString();
-                Label8.Text = dt.Rows[0][8].ToString();
-                Label9.Text = dt.Rows[0][9].ToString();
-                Label10.Text = dt.Rows[0][10].ToString();
-                Label11.Text = dt.Rows[0][11].ToString();
-                Label12.Text = dt.Rows[0][12].ToString();
-                Label13.Text = dt.Rows[0][13].ToString();
-                Label14.Text = dt.Rows[0][14].ToString();
-
-            }
-        }
+        // Original Page_Load → DoctorHomeController.Index() [HttpGet]
+        // Label1..Label14    → DoctorHomeViewModel.Name, Phone, Address, etc.
+        //
+        // cr-dotnet-0045: Session["idoriginal"] now uses Redis-backed
+        // distributed session in DoctorHomeController.cs.
     }
 }

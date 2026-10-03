@@ -1,0 +1,91 @@
+@*
+    Views/Patient/AppointmentTaker.cshtml
+    ASP.NET Core MVC Razor View – replaces AppointmentTaker.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="AppointmentTaker.aspx.cs"
+                       Inherits="DBProject.AppointmentTaker" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="PAppointment"                → @Model.StatusMessage display
+      asp:GridView ID="PAppointmentGrid"         → HTML table rendered from Model.FreeSlotsData
+        AutoGenerateSelectButton="true"          → Select button column in each row
+        OnRowCommand="PAppointmentGrid_RowCommand" → POST to SelectSlot action
+        asp:TemplateField HeaderText="No."       → row-number column (loop index + 1)
+        asp:Label ID="lblRowNumber"              → @(i + 1) in table cell
+
+    Code-behind logic moved to Controllers/AppointmentTakerController.cs.
+*@
+@model DBProject.Models.AppointmentTakerViewModel
+
+@{
+    ViewData["Title"] = "Appointment Taker";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Appointment Taker</title>
+}
+
+<!-- Styling -->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:37%">Free Time Slots</strong></h1>
+<br /><br />
+
+@* Replaces asp:Label ID="PAppointment" used for status messages *@
+<div>@Model.StatusMessage</div>
+<br /><br />
+
+@* Replaces asp:GridView ID="PAppointmentGrid" with AutoGenerateSelectButton and OnRowCommand *@
+@if (Model.FreeSlotsData != null && Model.FreeSlotsData.Rows.Count > 0)
+{
+    <table class="GridView-d table" cellpadding="4"
+           style="width:800px; color:black; border:1px solid #DEDFDE; border-style:none; border-width:1px;">
+        <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+            <tr>
+                @* Select button column – replaces AutoGenerateSelectButton="true" *@
+                <th></th>
+                @* Replaces asp:TemplateField HeaderText="No." *@
+                <th style="width:50px">No.</th>
+                @foreach (System.Data.DataColumn col in Model.FreeSlotsData.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.FreeSlotsData.Rows.Count; i++)
+            {
+                var row = Model.FreeSlotsData.Rows[i];
+                @* Build the slot value from the row data (mirrors original Cells[2].Text split on ':') *@
+                string slotValue = row[Model.FreeSlotsData.Columns.Count > 1
+                    ? Model.FreeSlotsData.Columns[1].ColumnName
+                    : Model.FreeSlotsData.Columns[0].ColumnName]?.ToString() ?? "";
+
+                <tr style="background-color:#F7F7DE;">
+                    <td>
+                        @* Replaces AutoGenerateSelectButton – posts selected slot to SelectSlot action *@
+                        <form asp-controller="AppointmentTaker" asp-action="SelectSlot" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="selectedSlot" value="@slotValue" />
+                            <button type="submit" class="btn btn-xs btn-primary">Select</button>
+                        </form>
+                    </td>
+                    @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                    <td style="width:50px">@(i + 1)</td>
+                    @foreach (System.Data.DataColumn col in Model.FreeSlotsData.Columns)
+                    {
+                        <td>@row[col]</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br /><br />

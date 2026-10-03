@@ -1,54 +1,26 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="PatientHome.aspx.cs" Inherits="DBProject.PatientHome" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (PatientHome.aspx) has been migrated to ASP.NET Core MVC Razor View.
 
+    Replacement:
+      PatientHome.aspx → Views/Patient/PatientHome.cshtml
 
+    Web Forms patterns removed / replaced (cr-dotnet-0026):
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientHome.aspx.cs"
+                       Inherits="DBProject.PatientHome" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
 
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+      asp:Label ID="PName"      → @Model.Name
+      asp:Label ID="PPhone"     → @Model.Phone
+      asp:Label ID="PBirthDate" → @Model.BirthDate
+      asp:Label ID="PatientAge" → @Model.Age
+      asp:Label ID="PGender"    → @Model.Gender
+      asp:Label ID="PAddress"   → @Model.Address
 
-<title>Patient's Home</title>
-
-</asp:Content>
-
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    
-    <div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px">
-
-        <br />
-        <h1><strong style="margin:37%">Your Information</strong></h1>
-        <br /><br />
-
-        <div style="margin-left: 70px">
-
-            <h4><strong>Name: </strong></h4>
-            <asp:Label ID="PName" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Phone: </strong></h4>
-            <asp:Label ID="PPhone" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Birth Date: </strong></h4>
-            <asp:Label ID="PBirthDate" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Age: </strong></h4>
-            <asp:Label ID="PatientAge" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Gender:</strong></h4>
-            <asp:Label ID="PGender" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Address: </strong></h4>
-            <asp:Label ID="PAddress" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-        </div>
-
-    </div>
-
-</asp:Content>
+    Code-behind logic moved to Controllers/PatientHomeController.cs.
+    Active Razor view is at Views/Patient/PatientHome.cshtml.
+--%>

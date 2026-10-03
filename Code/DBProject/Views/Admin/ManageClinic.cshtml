@@ -1,0 +1,117 @@
+@*
+    ASP.NET Core MVC Razor View for Manage Clinic (cr-dotnet-0026).
+    Migrated from ManageClinic.aspx (Web Forms) to ManageClinic.cshtml (Razor View).
+    Web Forms server controls (asp:RadioButton, asp:TextBox, asp:Button, asp:GridView, asp:Label)
+    replaced with standard HTML5 form elements and Razor syntax.
+    Code-behind logic moved to ManageClinicController.cs.
+*@
+@model DBProject.Models.ManageClinicViewModel
+@{
+    ViewData["Title"] = "Manage Clinic";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style type="text/css">
+    .outer {
+        margin-left: 20%;
+        display: inline-block;
+    }
+    .mydiv {
+        display: inline-block;
+    }
+</style>
+
+<div class="outer">
+
+    <div>
+        <h4 style="font:bold">Select Category :</h4>
+        <br />
+        <form asp-controller="ManageClinic" asp-action="Index" method="get" id="categoryForm">
+            <input type="radio" name="category" value="DOCTOR"
+                   @(Model.Category == "DOCTOR" ? "checked" : "")
+                   onchange="this.form.submit()" /> Doctor
+            &nbsp;
+            <input type="radio" name="category" value="PATIENT"
+                   @(Model.Category == "PATIENT" ? "checked" : "")
+                   onchange="this.form.submit()" /> Patient
+            &nbsp;
+            <input type="radio" name="category" value="OTHERSTAFF"
+                   @(Model.Category == "OTHERSTAFF" ? "checked" : "")
+                   onchange="this.form.submit()" /> Other Staff
+            <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
+        </form>
+    </div>
+
+    <div>
+        <form asp-controller="ManageClinic" asp-action="Index" method="get">
+            <input type="hidden" name="category" value="@Model.Category" />
+            <input type="text" name="searchQuery" value="@Model.SearchQuery" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <br />
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <span style="font-weight:bold;">@Model.Message</span>
+        }
+
+        @if (Model.GridData != null && Model.GridData.Rows.Count > 0)
+        {
+            <table class="table table-bordered" style="background-color:white; border-color:#336666; width:380px; text-align:center;">
+                <caption style="caption-side:top; text-align:center; font-weight:bold;">
+                    @(Model.Category == "OTHERSTAFF" ? "Other Staff Table" : (Model.Category == "PATIENT" ? "Patients Table" : "Doctors Table"))
+                </caption>
+                <thead style="background-color:#336666; color:white; font-weight:bold;">
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.GridData.Columns)
+                        {
+                            <th>@col.ColumnName</th>
+                        }
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.GridData.Rows)
+                    {
+                        <tr>
+                            @foreach (var item in row.ItemArray)
+                            {
+                                <td>@item</td>
+                            }
+                            <td>
+                                @{
+                                    var rowId = row[0].ToString();
+                                }
+                                <a asp-controller="ManageClinic" asp-action="Select"
+                                   asp-route-id="@rowId" asp-route-category="@Model.Category"
+                                   class="btn btn-sm btn-info">Select</a>
+                                @if (Model.Category != "PATIENT")
+                                {
+                                    <form asp-controller="ManageClinic" asp-action="Delete"
+                                          method="post" style="display:inline;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@rowId" />
+                                        <input type="hidden" name="category" value="@Model.Category" />
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else if (Model.GridData != null)
+        {
+            <p>@(string.IsNullOrEmpty(Model.Message) ? "No records to show." : "")</p>
+        }
+    </div>
+</div>
+
+@if (Model.SelectedRecord != null)
+{
+    <div style="display:inline-block; float:right; margin-right:10%">
+        @Html.Raw(Model.SelectedRecord)
+    </div>
+}

@@ -1,59 +1,38 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="AppointmentTaker.aspx.cs" Inherits="DBProject.AppointmentTaker" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (AppointmentTaker.aspx) has been migrated to ASP.NET Core MVC.
 
+    Replacement files:
+      • Views/Patient/AppointmentTaker.cshtml  (Razor View)
+      • Controllers/AppointmentTakerController.cs (MVC Controller)
+      • Models/AppointmentTakerViewModel.cs   (ViewModel)
 
+    Web Forms patterns removed / replaced:
+      Line 1 – <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                        AutoEventWireup="true" CodeBehind="AppointmentTaker.aspx.cs"
+                        Inherits="DBProject.AppointmentTaker" %>
+               → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; } in Razor View
 
+      <asp:Content ContentPlaceHolderID="head">       → @section head { ... } in Razor View
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block in Razor View
+      asp:Label ID="PAppointment"                     → @Model.StatusMessage display
+      asp:GridView ID="PAppointmentGrid"              → HTML table rendered from Model.FreeSlotsData
+        AutoGenerateSelectButton="true"               → Select button column in each row
+        OnRowCommand="PAppointmentGrid_RowCommand"    → POST to SelectSlot action
+        asp:TemplateField HeaderText="No."            → row-number column (loop index + 1)
+        asp:Label ID="lblRowNumber"                   → @(i + 1) in table cell
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    MIGRATION NOTE (cr-dotnet-1034 – Synchronous Data Binding in GridView Controls):
+      Line 27 – asp:GridView ID="PAppointmentGrid" with synchronous DataBind()
+              → Replaced with async Task<IActionResult> Index() in AppointmentTakerController.cs
+                using async EF Core data access (getFreeSlots_Async) connected to
+                Amazon RDS, preventing thread pool exhaustion under cloud load.
 
-    <title>Appointment Taker</title>
+      Line 55 – asp:TemplateField HeaderText="No." / asp:Label ID="lblRowNumber"
+              → Replaced with row-number column rendered via Razor loop index in
+                Views/Patient/AppointmentTaker.cshtml. No synchronous DataBind() –
+                non-blocking async pattern enables efficient auto-scaling in cloud deployments.
 
-</asp:Content>
-
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-    <h1><strong style="margin:37%">Free Time Slots</strong></h1>
-    <br /><br />
-
-    <asp:Label ID="PAppointment" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="PAppointmentGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="800px"
-         AutoGenerateSelectButton="true" OnRowCommand="PAppointmentGrid_RowCommand" AutoGenerateColumns ="true"  EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-                <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-
-        
-        </Columns>
-
-
-    </asp:GridView>
-
-    <br /><br />
-
-</asp:Content>
+    This .aspx file is retained for reference only.
+    The active view is Views/Patient/AppointmentTaker.cshtml.
+--%>

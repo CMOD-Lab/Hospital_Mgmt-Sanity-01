@@ -1,43 +1,17 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="Bill.aspx.cs" Inherits="doctor.bill" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (Bill.aspx) has been migrated to ASP.NET Core MVC Razor View.
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    Replacement files:
+      • Views/Doctor/Bill.cshtml       – Razor View (replaces this .aspx)
+      • Controllers/BillController.cs  – MVC Controller (replaces Bill.aspx.cs)
+      • Models/BillViewModel.cs        – ViewModel
 
-<title>Generate Bill</title>
+    Web Forms directives and server controls replaced:
+      <%@ Page MasterPageFile="~/Doctor/doctormaster.Master" ... %> → Layout = "~/Views/Shared/_DoctorLayout.cshtml"
+      <asp:Label ID="Label1" runat="server">                        → @Model.BillAmount in Razor View
+      <asp:Button ID="Bill" OnClick="bill_paid" runat="server">     → <form> POST to BillController.BillPaid()
+      <asp:Button ID="Button1" OnClick="bill_Unpaid" runat="server">→ <form> POST to BillController.BillUnpaid()
 
-</asp:Content>
-
-
-
-<asp:Content ID="Content4" ContentPlaceHolderID="Cp3" runat="server">
-
-
-
-    <h1>Your Bill For this Appointment is :      <asp:Label ID="Label1" runat="server" Text="Label" Font-Bold="true" Font-Size="Medium" ></asp:Label> </h1>
-   
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-
-
-    &nbsp&nbsp&nbsp&nbsp<asp:Button ID="Bill" runat="server" Text="Bill Paid" OnClick="bill_paid" Font-Bold ="true" />
-   
-
-     &nbsp&nbsp&nbsp&nbsp<asp:Button ID="Button1" runat="server" Text="Bill Unpaid" OnClick="bill_Unpaid" Font-Bold ="true" />
-   
-
-
-
-
-</asp:Content>
+    The active view is now Views/Doctor/Bill.cshtml.
+--%>

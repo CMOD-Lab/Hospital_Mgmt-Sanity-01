@@ -1,0 +1,57 @@
+@*
+    Views/Patient/PatientNotifications.cshtml
+    ASP.NET Core MVC Razor View – replaces PatientNotifications.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientNotifications.aspx.cs"
+                       Inherits="DBProject.PatientNotifications" %>
+              → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+
+      asp:Label ID="Notify"   Font-Bold="true" Font-Size="Medium" → @Model.NotifyMessage
+      asp:Label ID="NDoctor"  Font-Bold="true" Font-Size="Medium" → @Model.DoctorMessage
+      asp:Label ID="NTimings" Font-Bold="true" Font-Size="Medium" → @Model.TimingsMessage
+
+    Code-behind logic moved to Controllers/PatientNotificationsController.cs.
+*@
+@model DBProject.Models.PatientNotificationsViewModel
+
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Notifications</title>
+}
+
+<h1><strong style="margin:37%">Notifications</strong></h1>
+<br /><br />
+
+<div style="margin-left: 70px">
+
+    @* Replaces asp:Label ID="Notify" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.NotifyMessage))
+    {
+        <div style="font-weight:bold; font-size:medium;">@Model.NotifyMessage</div>
+        <br /><br />
+    }
+
+    @* Replaces asp:Label ID="NDoctor" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.DoctorMessage))
+    {
+        <div style="font-weight:bold; font-size:medium;">@Model.DoctorMessage</div>
+        <br /><br />
+    }
+
+    @* Replaces asp:Label ID="NTimings" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.TimingsMessage))
+    {
+        <div style="font-weight:bold; font-size:medium;">@Model.TimingsMessage</div>
+        <br /><br />
+    }
+
+</div>

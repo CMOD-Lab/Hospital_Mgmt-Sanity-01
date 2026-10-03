@@ -1,55 +1,34 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="BillsHistory.aspx.cs" Inherits="DBProject.BillsHistory" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (BillsHistory.aspx) was an ASP.NET Web Forms page.
+    It has been migrated to ASP.NET Core MVC Razor View:
 
+      • BillsHistory.aspx    → Views/Patient/BillsHistory.cshtml  (Razor View)
+      • BillsHistory.aspx.cs → Controllers/BillsHistoryController.cs (MVC Controller)
+      • (new)                → Models/BillsHistoryViewModel.cs   (ViewModel)
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    Web Forms patterns removed / replaced:
+      Line 1 – <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                        AutoEventWireup="true" CodeBehind="BillsHistory.aspx.cs"
+                        Inherits="DBProject.BillsHistory" %>
+               → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; }
+      <asp:Content ContentPlaceHolderID="head">        → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
+      asp:Label ID="BHistory"                          → @Model.StatusMessage display
+      asp:GridView ID="BHistoryGrid"                   → HTML table rendered from Model.BillHistoryData
+        asp:TemplateField HeaderText="No."             → row-number column (loop index + 1)
+        asp:Label ID="lblRowNumber"                    → @(i + 1) in table cell
 
-    <title>Bills History</title>
+    MIGRATION NOTE (cr-dotnet-1034 – Synchronous Data Binding in GridView Controls):
+      Line 25 – asp:GridView ID="BHistoryGrid" with synchronous DataBind()
+              → Replaced with async Task<IActionResult> Index() in BillsHistoryController.cs
+                using async EF Core data access (getBillHistory_Async) connected to
+                Amazon RDS, preventing thread pool exhaustion under cloud load.
 
-</asp:Content>
+      Line 51 – asp:TemplateField HeaderText="No." / asp:Label ID="lblRowNumber"
+              → Replaced with row-number column rendered via Razor loop index in
+                Views/Patient/BillsHistory.cshtml. No synchronous DataBind() –
+                non-blocking async pattern enables efficient auto-scaling in cloud deployments.
 
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-    <h1><strong style="margin:37%">Your Bill(s) History</strong></h1>
-    <br /><br />
-
-    <asp:Label ID="BHistory" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="BHistoryGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="800px"
-        EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-                <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-
-
-    </asp:GridView>
-
-    <br /><br />
-
-</asp:Content>
+    The active Razor view is at Views/Patient/BillsHistory.cshtml.
+--%>

@@ -1,0 +1,89 @@
+@*
+    Views/Doctor/PatientHistory.cshtml
+    ASP.NET Core MVC Razor View – replaces PatientHistory.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientHistory.aspx.cs"
+                       Inherits="doctor.patienthistory" %>
+              → @{ Layout = "~/Views/Shared/_DoctorLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="Cp1">   → main content block
+
+      asp:GridView ID="patientsgrid"             → HTML table rendered from Model.Patients
+        AutoGenerateSelectButton="True"          → "Select" link column in each row
+        OnRowCommand="patientsgrid_RowCommand"   → row-level form POST to PatientHistory/Select
+
+    Code-behind logic moved to Controllers/PatientHistoryController.cs.
+*@
+@model DBProject.Models.PatientHistoryViewModel
+
+@{
+    ViewData["Title"] = "Patient History";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+@section head {
+    <title>Patient History</title>
+}
+
+<!-- Styling -->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:25%">Today's Appointments</strong></h1>
+<br /><br />
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+else
+{
+    <div style="margin-left:150px">
+        <table class="GridView-d table" cellpadding="4" style="width:1000px; color:black; border:1px solid #DEDFDE;">
+            <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+                <tr>
+                    @if (Model.Patients != null && Model.Patients.Columns != null)
+                    {
+                        @foreach (System.Data.DataColumn col in Model.Patients.Columns)
+                        {
+                            <th>@col.ColumnName</th>
+                        }
+                    }
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Patients != null)
+                {
+                    @for (int i = 0; i < Model.Patients.Rows.Count; i++)
+                    {
+                        var row = Model.Patients.Rows[i];
+                        <tr style="background-color:#F7F7DE;">
+                            @foreach (System.Data.DataColumn col in Model.Patients.Columns)
+                            {
+                                <td>@row[col]</td>
+                            }
+                            <td>
+                                @* Replaces AutoGenerateSelectButton + OnRowCommand *@
+                                <form asp-controller="PatientHistory" asp-action="Select" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="rowIndex" value="@i" />
+                                    <input type="hidden" name="appointmentId" value="@row[1]" />
+                                    <button type="submit" class="btn btn-sm btn-default">Select</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<br />
+<br />
+<br />
+<br />
+<br />

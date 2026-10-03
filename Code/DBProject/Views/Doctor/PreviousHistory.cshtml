@@ -1,0 +1,80 @@
+@*
+    Views/Doctor/PreviousHistory.cshtml
+    ASP.NET Core MVC Razor View – replaces PreviousHistory.aspx (cr-dotnet-0026).
+
+    Migration changes from Web Forms:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/DoctorMaster.Master"
+                       AutoEventWireup="true" CodeBehind="PreviousHistory.aspx.cs"
+                       Inherits="DBProject.Doctor.PreviousHistory" %>
+              → @{ Layout = "~/Views/Shared/_DoctorLayout.cshtml"; }
+
+      <asp:Content ContentPlaceHolderID="head">  → @section head { ... }
+      <asp:Content ContentPlaceHolderID="Cp1">   → main content block (@RenderBody)
+
+      asp:Label ID="PHistory"                    → @Model.ErrorMessage alert div
+      asp:GridView ID="PHistoryGrid"             → HTML table rendered from Model.HistoryData
+        TemplateField HeaderText="No."           → row-number column (loop index + 1)
+        asp:Label ID="lblRowNumber"              → @(i + 1) in table cell
+
+    Code-behind logic moved to Controllers/PreviousHistoryController.cs.
+*@
+@model DBProject.Models.PreviousHistoryViewModel
+
+@{
+    ViewData["Title"] = "Previous History";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+@section head {
+    <title>Previous History</title>
+}
+
+<!-- Styling -->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:25%">History of Treated Patients</strong></h1>
+<br /><br />
+
+@* Replaces asp:Label ID="PHistory" used for error messages *@
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+else
+{
+    <table class="GridView-d table" cellpadding="4"
+           style="width:800px; color:black; border:1px solid #DEDFDE; border-style:none; border-width:1px;">
+        <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+            <tr>
+                @* Replaces asp:TemplateField HeaderText="No." *@
+                <th style="width:50px">No.</th>
+                @if (Model.HistoryData != null && Model.HistoryData.Columns != null)
+                {
+                    @foreach (System.Data.DataColumn col in Model.HistoryData.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.HistoryData != null)
+            {
+                @for (int i = 0; i < Model.HistoryData.Rows.Count; i++)
+                {
+                    var row = Model.HistoryData.Rows[i];
+                    <tr style="background-color:#F7F7DE;">
+                        @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                        <td style="width:50px">@(i + 1)</td>
+                        @foreach (System.Data.DataColumn col in Model.HistoryData.Columns)
+                        {
+                            <td>@row[col]</td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+<br /><br />

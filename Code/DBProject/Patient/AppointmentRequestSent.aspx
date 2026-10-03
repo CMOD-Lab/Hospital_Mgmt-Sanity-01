@@ -1,23 +1,23 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="AppointmentRequestSent.aspx.cs" Inherits="DBProject.AppointmentNotificationSent" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (AppointmentRequestSent.aspx) has been migrated to ASP.NET Core MVC.
 
+    Replacement files:
+      • Views/Patient/AppointmentRequestSent.cshtml  (Razor View)
+      • Controllers/AppointmentRequestSentController.cs (MVC Controller)
+      • Models/AppointmentRequestSentViewModel.cs   (ViewModel)
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    Web Forms patterns removed / replaced:
+      Line 1 – <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                        AutoEventWireup="true" CodeBehind="AppointmentRequestSent.aspx.cs"
+                        Inherits="DBProject.AppointmentNotificationSent" %>
+               → @{ Layout = "~/Views/Shared/_PatientLayout.cshtml"; } in Razor View
 
-        <title>Send Appointment Request</title>
+      <asp:Content ContentPlaceHolderID="head">       → @section head { ... } in Razor View
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block in Razor View
+      asp:Button OnClick="sendARequest"               → HTML <form> POST to SendRequest action
+      asp:Label ID="Message"                          → @Model.Message display div
 
-</asp:Content>
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <br /><br /><br /><br />
-    <h3><strong>Click on this button to send an appointment request to the Doctor</strong> </h3>
-   
-    <asp:Button runat ="server" OnClick="sendARequest" Text ="Send Request" Font-Bold ="true" />
-
-    <br /><br />
-    <asp:Label ID="Message" runat="server"></asp:Label>
-    <br /><br />
-
-</asp:Content>
+    This .aspx file is retained for reference only.
+    The active view is Views/Patient/AppointmentRequestSent.cshtml.
+--%>

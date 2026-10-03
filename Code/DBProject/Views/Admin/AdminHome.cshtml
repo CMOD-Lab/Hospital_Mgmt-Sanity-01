@@ -1,0 +1,98 @@
+@* 
+    ASP.NET Core MVC Razor View for Admin Home (cr-dotnet-0026).
+    Migrated from AdminHome.aspx (Web Forms) to AdminHome.cshtml (Razor View).
+    Uses AdminHomeViewModel to display clinic statistics, appointments, and department info.
+*@
+@model DBProject.Models.AdminHomeViewModel
+@{
+    ViewData["Title"] = "Admin Home";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<br />
+<h1 style="font-family: 'Times New Roman', Times, serif; border-radius:5px; text-decoration: underline; background-color: #CCCCCC">
+    <strong style="margin:37%">Clinic Stats</strong>
+</h1>
+<br /><br />
+
+<div style="margin-left: 70px">
+
+    <h4><strong>Total Number of Registered Doctors: </strong></h4>
+    <span style="font-weight:bold; font-size:medium">@Model.TotalDoctors</span>
+    <br /><br />
+
+    <h4><strong>Total Registered Patients: </strong></h4>
+    <span style="font-weight:bold; font-size:medium">@Model.TotalPatients</span>
+    <br /><br />
+
+    <h4><strong>Total Income: </strong></h4>
+    <span style="font-weight:bold; font-size:medium">@Model.TotalIncome</span>
+    <br /><br />
+
+    <h3><strong style="margin:5%">Current Appointments</strong></h3>
+
+    @if (Model.Appointments != null && Model.Appointments.Rows.Count > 0)
+    {
+        <table class="table table-bordered" style="background-color:white; border-color:#DEDFDE; color:black;">
+            <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Appointments.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.Appointments.Rows)
+                {
+                    <tr style="background-color:#F7F7DE;">
+                        @foreach (var item in row.ItemArray)
+                        {
+                            <td>@item</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No current appointments.</p>
+    }
+
+</div>
+
+<div style="margin:20%">
+
+    <h2><strong style="margin:20%">Department Information</strong></h2>
+
+    @if (Model.Departments != null && Model.Departments.Rows.Count > 0)
+    {
+        <table class="table table-bordered" style="background-color:white; border-color:#DEDFDE; color:black; height:50px;">
+            <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Departments.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.Departments.Rows)
+                {
+                    <tr style="background-color:#F7F7DE;">
+                        @foreach (var item in row.ItemArray)
+                        {
+                            <td>@item</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No department information available.</p>
+    }
+
+</div>

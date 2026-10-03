@@ -1,35 +1,24 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="PatientNotifications.aspx.cs" Inherits="DBProject.PatientNotifications" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (PatientNotifications.aspx) has been migrated to ASP.NET Core MVC Razor View.
 
+    Replacement:
+      PatientNotifications.aspx    → Views/Patient/PatientNotifications.cshtml
+      PatientNotifications.aspx.cs → Controllers/PatientNotificationsController.cs
 
+    Web Forms patterns removed / replaced (cr-dotnet-0026):
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientNotifications.aspx.cs"
+                       Inherits="DBProject.PatientNotifications" %>
+              → (no directive; standard Razor view file)
 
+      <asp:Content ContentPlaceHolderID="head">       → @section head { ... }
+      <asp:Content ContentPlaceHolderID="ContentPlaceHolder1"> → main content block (@RenderBody)
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+      asp:Label ID="Notify"   → @Model.NotifyMessage
+      asp:Label ID="NDoctor"  → @Model.DoctorMessage
+      asp:Label ID="NTimings" → @Model.TimingsMessage
 
-    <title>Notifications</title>
-
-</asp:Content>
-
-
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-
-    <h1><strong style="margin:37%">Notifications</strong></h1>
-    <br /><br />
-
-    <div style="margin-left: 70px">
-
-    <asp:Label ID="Notify" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <asp:Label ID="NDoctor" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <asp:Label ID="NTimings" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    </div>
-
-</asp:Content>
+    Active Razor view is at Views/Patient/PatientNotifications.cshtml.
+    Active MVC controller is at Controllers/PatientNotificationsController.cs.
+--%>

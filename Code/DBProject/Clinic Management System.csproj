@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DBProject</RootNamespace>
     <AssemblyName>DBProject</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -95,6 +95,58 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Dapper: lightweight ORM used with Amazon RDS Proxy for cloud-native connection pooling -->
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <!--
+      cr-dotnet-0010 – Web.config Transformation Elimination:
+      AWS SDK packages required for AWS Systems Manager Parameter Store integration.
+      GetConnectionString() in myDAL.cs reads the connection string from SSM at runtime,
+      replacing build-time Web.config transformations (Web.Debug.config / Web.Release.config).
+      IAM role must grant ssm:GetParameter on /HospitalMgmt/ConnectionStrings/sqlCon1.
+    -->
+    <Reference Include="AWSSDK.Core">
+      <HintPath>..\packages\AWSSDK.Core.3.7.300.2\lib\net45\AWSSDK.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AWSSDK.SimpleSystemsManagement">
+      <HintPath>..\packages\AWSSDK.SimpleSystemsManagement.3.7.300.2\lib\net45\AWSSDK.SimpleSystemsManagement.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <!--
+      cr-dotnet-0045 – Session State Provider (Amazon ElastiCache for Redis):
+      The following packages replace InProc HttpSessionState with a distributed
+      Redis-backed session store using Amazon ElastiCache for Redis.
+      Required for stateless horizontal scaling across multiple ECS tasks.
+    -->
+    <!-- Microsoft.Extensions.Caching.StackExchangeRedis: Redis distributed cache provider -->
+    <Reference Include="Microsoft.Extensions.Caching.StackExchangeRedis">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.StackExchangeRedis.7.0.0\lib\net7.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <!-- StackExchange.Redis: Redis client library -->
+    <Reference Include="StackExchange.Redis">
+      <HintPath>..\packages\StackExchange.Redis.2.6.122\lib\net6.0\StackExchange.Redis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <!--
+      cr-dotnet-1034 – Async GridView Data Binding with RDS via Entity Framework Core:
+      The following packages replace synchronous Web Forms GridView DataBind() patterns
+      with async Task-based EF Core data access connected to Amazon RDS.
+      Prevents thread pool exhaustion under cloud load; enables efficient auto-scaling.
+    -->
+    <!-- Microsoft.EntityFrameworkCore: EF Core ORM for async data access -->
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.7.0.0\lib\net7.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <!-- Microsoft.EntityFrameworkCore.SqlServer: EF Core SQL Server provider for Amazon RDS -->
+    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.SqlServer.7.0.0\lib\net7.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Content Include="Admin\AddStaff.aspx" />
     <Content Include="Admin\AdminHome.aspx" />
     <Content Include="Doctor\PatientHistory.aspx" />
@@ -312,6 +364,21 @@
     <Compile Include="Patient\ViewDoctors.aspx.designer.cs">
       <DependentUpon>ViewDoctors.aspx</DependentUpon>
     </Compile>
+    <!-- cr-dotnet-0045: ASP.NET Core entry point with Redis session configuration -->
+    <Compile Include="Program.cs" />
+    <!-- cr-dotnet-0045: Controllers updated to use Redis-backed distributed session -->
+    <Compile Include="Controllers\PendingAppointmentController.cs" />
+    <Compile Include="Controllers\PreviousHistoryController.cs" />
+    <Compile Include="Controllers\AppointmentRequestSentController.cs" />
+    <Compile Include="Controllers\AppointmentTakerController.cs" />
+    <Compile Include="Controllers\BillsHistoryController.cs" />
+    <!-- cr-dotnet-0045: Application settings with Redis connection string placeholder -->
+    <Content Include="appsettings.json" />
+    <!--
+      cr-dotnet-1041: Custom HttpModule that injects Content-Security-Policy and
+      complementary security headers into every HTTP response.
+    -->
+    <Compile Include="Modules\ContentSecurityPolicyModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\bootstrap\" />

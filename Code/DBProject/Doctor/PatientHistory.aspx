@@ -1,53 +1,37 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="PatientHistory.aspx.cs" Inherits="doctor.patienthistory" %>
+<%--
+    MIGRATION NOTE (cr-dotnet-0026 – Web Forms Usage):
+    This file (PatientHistory.aspx) has been migrated to ASP.NET Core MVC Razor View.
 
+    Replacement file:
+      • Views/Doctor/PatientHistory.cshtml  – Razor View (replaces this .aspx)
 
+    Web Forms page directives and server controls replaced:
+      Line 1: <%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master"
+                       AutoEventWireup="true" CodeBehind="PatientHistory.aspx.cs"
+                       Inherits="doctor.patienthistory" %>
+              → Standard Razor View with @{ Layout = "~/Views/Shared/_DoctorLayout.cshtml"; }
 
+      <asp:Content ContentPlaceHolderID="head">   → @section head { <title>Patient History</title> }
+      <asp:Content ContentPlaceHolderID="Cp1">    → main Razor content block
 
+      Line 23 – asp:GridView ID="patientsgrid"
+        AutoGenerateSelectButton="True"           → HTML table with per-row Select form
+        OnRowCommand="patientsgrid_RowCommand"    → POST to /PatientHistory/Select
+        DataSource / DataBind                     → Model.Patients (DataTable)
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title>Patient History</title>
-</asp:Content>
+    MIGRATION NOTE (cr-dotnet-1034 – Synchronous Data Binding in GridView Controls):
+      Line 23 – asp:GridView ID="patientsgrid" with synchronous DataBind()
+              → Replaced with async Task<IActionResult> Index() in PatientHistoryController.cs
+                using async EF Core data access (search_patient_DAL_Async) connected to
+                Amazon RDS, preventing thread pool exhaustion under cloud load.
 
+      Line 41 – patientsgrid.DataSource = dt; patientsgrid.DataBind();
+              → Replaced with async ViewModel population:
+                  var (found, dt) = await objmydal.search_patient_DAL_Async(did);
+                  vm.Patients = dt;
+                No synchronous DataBind() – non-blocking async pattern enables
+                efficient auto-scaling in cloud deployments.
 
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
-
-    
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-     <h1><strong style="margin:25%">Today's Appointments</strong></h1>
-    <br /><br />
-    <div style="margin-left:150px">
-
-    <asp:GridView ID="patientsgrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False"
-        AutoGenerateSelectButton="True" 
-        OnRowCommand="patientsgrid_RowCommand" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
-     
-        
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-    </asp:GridView>
-
-        </div>
-
-    
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-</asp:Content>
-
-
+    The active view is now Views/Doctor/PatientHistory.cshtml.
+    The active controller is Controllers/PatientHistoryController.cs.
+--%>
