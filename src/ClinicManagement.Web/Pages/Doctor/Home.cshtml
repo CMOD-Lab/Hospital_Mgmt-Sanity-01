@@ -1,0 +1,110 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.HomeModel
+@{
+    ViewData["Title"] = "Doctor Home";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user-md me-2"></i>Welcome, Dr. @HttpContext.Session.GetString("UserName")</h2>
+    </div>
+</div>
+
+@if (Model.DoctorInfo != null)
+{
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-md fa-4x text-primary mb-3"></i>
+                    <h5>@Model.DoctorInfo.Name</h5>
+                    <p class="text-muted">@Model.DoctorInfo.Specialization</p>
+                    <p class="text-muted">@Model.DoctorInfo.DepartmentName</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">Doctor Information</h5></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Phone:</strong> @Model.DoctorInfo.Phone</p>
+                            <p><strong>Gender:</strong> @Model.DoctorInfo.Gender</p>
+                            <p><strong>Age:</strong> @Model.DoctorInfo.Age years</p>
+                            <p><strong>Experience:</strong> @Model.DoctorInfo.Experience years</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Qualification:</strong> @Model.DoctorInfo.Qualification</p>
+                            <p><strong>Charges/Visit:</strong> $@Model.DoctorInfo.ChargesPerVisit</p>
+                            <p><strong>Patients Treated:</strong> @Model.DoctorInfo.PatientsTreated</p>
+                            <p><strong>Repute Index:</strong> @Model.DoctorInfo.ReputeIndex.ToString("F1")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Appointments</h5></div>
+            <div class="card-body">
+                @if (Model.TodaysAppointments.Any())
+                {
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appt in Model.TodaysAppointments)
+                            {
+                                <tr>
+                                    <td>@appt.PatientName</td>
+                                    <td>@appt.Timings</td>
+                                    <td><span class="badge bg-success">@appt.Status</span></td>
+                                    <td>
+                                        <a asp-page="/Doctor/HistoryUpdate" asp-route-appointmentId="@appt.AppointmentId"
+                                           class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit me-1"></i>Update
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted text-center">No appointments scheduled for today.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0"><i class="fas fa-tools me-2"></i>Quick Actions</h5></div>
+            <div class="card-body">
+                <a asp-page="/Doctor/PendingAppointments" class="btn btn-warning me-2">
+                    <i class="fas fa-clock me-1"></i>Pending Appointments
+                </a>
+                <a asp-page="/Doctor/PatientHistory" class="btn btn-info me-2">
+                    <i class="fas fa-history me-1"></i>Patient History
+                </a>
+                <a asp-page="/Doctor/Bill" class="btn btn-success">
+                    <i class="fas fa-file-invoice-dollar me-1"></i>Generate Bills
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

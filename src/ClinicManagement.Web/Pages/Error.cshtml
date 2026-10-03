@@ -1,0 +1,18 @@
+@page
+@model ClinicManagement.Web.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="text-center mt-5">
+    <i class="fas fa-exclamation-triangle fa-5x text-danger mb-4"></i>
+    <h1 class="display-4">Oops! Something went wrong.</h1>
+    <p class="lead">An error occurred while processing your request.</p>
+    @if (Model.ShowRequestId)
+    {
+        <p><strong>Request ID:</strong> <code>@Model.RequestId</code></p>
+    }
+    <a asp-page="/Account/Login" class="btn btn-primary mt-3">
+        <i class="fas fa-home me-1"></i>Go to Login
+    </a>
+</div>

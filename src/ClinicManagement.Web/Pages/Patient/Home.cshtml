@@ -1,0 +1,80 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.HomeModel
+@{
+    ViewData["Title"] = "Patient Home";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user me-2"></i>Welcome, @HttpContext.Session.GetString("UserName")</h2>
+    </div>
+</div>
+
+@if (Model.PatientInfo != null)
+{
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                    <h5>@Model.PatientInfo.Name</h5>
+                    <p class="text-muted">Patient ID: @Model.PatientInfo.PatientId</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">Personal Information</h5></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Phone:</strong> @Model.PatientInfo.Phone</p>
+                            <p><strong>Gender:</strong> @Model.PatientInfo.Gender</p>
+                            <p><strong>Age:</strong> @Model.PatientInfo.Age years</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Address:</strong> @Model.PatientInfo.Address</p>
+                            <p><strong>Date of Birth:</strong> @Model.PatientInfo.BirthDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.CurrentAppointment != null)
+{
+    <div class="alert alert-info">
+        <h5><i class="fas fa-calendar-check me-2"></i>Today's Appointment</h5>
+        <p class="mb-0">
+            <strong>Doctor:</strong> @Model.CurrentAppointment.DoctorName |
+            <strong>Time:</strong> @Model.CurrentAppointment.Timings
+        </p>
+    </div>
+}
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0"><i class="fas fa-tools me-2"></i>Quick Actions</h5></div>
+            <div class="card-body">
+                <a asp-page="/Patient/ViewDoctors" class="btn btn-primary me-2">
+                    <i class="fas fa-user-md me-1"></i>View Doctors
+                </a>
+                <a asp-page="/Patient/CurrentAppointment" class="btn btn-info me-2">
+                    <i class="fas fa-calendar-check me-1"></i>Current Appointment
+                </a>
+                <a asp-page="/Patient/BillsHistory" class="btn btn-warning me-2">
+                    <i class="fas fa-file-invoice me-1"></i>Bills History
+                </a>
+                <a asp-page="/Patient/TreatmentHistory" class="btn btn-success me-2">
+                    <i class="fas fa-history me-1"></i>Treatment History
+                </a>
+                <a asp-page="/Patient/Notifications" class="btn btn-secondary">
+                    <i class="fas fa-bell me-1"></i>Notifications
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

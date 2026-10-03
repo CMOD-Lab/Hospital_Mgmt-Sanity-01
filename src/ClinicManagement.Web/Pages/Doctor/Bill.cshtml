@@ -1,0 +1,72 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.BillModel
+@{
+    ViewData["Title"] = "Billing";
+}
+
+<h2 class="mb-4"><i class="fas fa-file-invoice-dollar me-2"></i>Patient Billing</h2>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-@(Model.IsError ? "danger" : "success") alert-dismissible fade show">
+        @Model.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Disease</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appt in Model.CompletedAppointments)
+                {
+                    <tr>
+                        <td>@appt.PatientName</td>
+                        <td>@appt.AppointmentDate.ToString("MMM dd, yyyy")</td>
+                        <td>@(appt.Disease ?? "-")</td>
+                        <td>-</td>
+                        <td>
+                            <span class="badge @(appt.IsPaid ? "bg-success" : "bg-warning")">
+                                @(appt.IsPaid ? "Paid" : "Unpaid")
+                            </span>
+                        </td>
+                        <td>
+                            @if (!appt.IsPaid)
+                            {
+                                <form method="post" asp-page-handler="MarkPaid" class="d-inline">
+                                    <input type="hidden" name="appointmentId" value="@appt.AppointmentId" />
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check me-1"></i>Mark Paid
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form method="post" asp-page-handler="MarkUnpaid" class="d-inline">
+                                    <input type="hidden" name="appointmentId" value="@appt.AppointmentId" />
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-times me-1"></i>Mark Unpaid
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.CompletedAppointments.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted">No completed appointments found.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

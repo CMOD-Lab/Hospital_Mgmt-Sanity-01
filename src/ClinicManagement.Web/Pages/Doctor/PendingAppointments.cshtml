@@ -1,0 +1,64 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.PendingAppointmentsModel
+@{
+    ViewData["Title"] = "Pending Appointments";
+}
+
+<h2 class="mb-4"><i class="fas fa-clock me-2"></i>Pending Appointments</h2>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-@(Model.IsError ? "danger" : "success") alert-dismissible fade show">
+        @Model.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        @if (Model.PendingAppointments.Any())
+        {
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Time Slot</th>
+                        <th>Requested On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appt in Model.PendingAppointments)
+                    {
+                        <tr>
+                            <td>@appt.AppointmentId</td>
+                            <td>@appt.PatientName</td>
+                            <td>@appt.Timings</td>
+                            <td>@appt.AppointmentDate.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <form method="post" asp-page-handler="Approve" class="d-inline">
+                                    <input type="hidden" name="id" value="@appt.AppointmentId" />
+                                    <button type="submit" class="btn btn-success btn-sm me-1">
+                                        <i class="fas fa-check me-1"></i>Approve
+                                    </button>
+                                </form>
+                                <form method="post" asp-page-handler="Reject" class="d-inline">
+                                    <input type="hidden" name="id" value="@appt.AppointmentId" />
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Reject this appointment?')">
+                                        <i class="fas fa-times me-1"></i>Reject
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted text-center">No pending appointments.</p>
+        }
+    </div>
+</div>
