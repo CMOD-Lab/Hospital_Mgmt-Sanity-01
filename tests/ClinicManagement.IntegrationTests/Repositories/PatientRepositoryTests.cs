@@ -6,7 +6,6 @@ using ClinicManagement.Infrastructure.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace ClinicManagement.IntegrationTests.Repositories;
 
