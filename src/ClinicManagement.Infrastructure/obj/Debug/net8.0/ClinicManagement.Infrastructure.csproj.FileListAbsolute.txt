@@ -16,5 +16,3 @@
 /modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Infrastructure/obj/Debug/net8.0/refint/ClinicManagement.Infrastructure.dll
 /modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Infrastructure/obj/Debug/net8.0/ClinicManagement.Infrastructure.pdb
 /modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Infrastructure/obj/Debug/net8.0/ref/ClinicManagement.Infrastructure.dll
-/modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Infrastructure/bin/Debug/net8.0/ClinicManagement.Infrastructure.runtimeconfig.json
-/modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Infrastructure/obj/Debug/net8.0/ClinicManagement.Infrastructure.genruntimeconfig.cache

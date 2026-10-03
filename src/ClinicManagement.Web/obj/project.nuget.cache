@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "BGUtV1UGXjk=",
+  "dgSpecHash": "dVnXg/p1Q/8=",
   "success": true,
   "projectFilePath": "/modernize-data/studio-data/TNT1001/APP787820/transformed-code/109/studio-workspace/Hospital_MgmtMupgrade/src/ClinicManagement.Web/ClinicManagement.Web.csproj",
   "expectedPackageFiles": [
-    "/app/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
+    "/app/.nuget/packages/automapper/13.0.1/automapper.13.0.1.nupkg.sha512",
     "/app/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
-    "/app/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
     "/app/.nuget/packages/microsoft.entityframeworkcore/8.0.0/microsoft.entityframeworkcore.8.0.0.nupkg.sha512",
     "/app/.nuget/packages/microsoft.entityframeworkcore.abstractions/8.0.0/microsoft.entityframeworkcore.abstractions.8.0.0.nupkg.sha512",
     "/app/.nuget/packages/microsoft.entityframeworkcore.analyzers/8.0.0/microsoft.entityframeworkcore.analyzers.8.0.0.nupkg.sha512",

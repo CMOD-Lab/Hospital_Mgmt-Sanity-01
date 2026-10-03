@@ -1,14 +1,15 @@
 using ClinicManagement.Domain.Entities;
 using ClinicManagement.Domain.Enums;
+using Xunit;
 
 namespace ClinicManagement.UnitTests.Services;
 
 /// <summary>
 /// Unit tests for domain entities and enums.
-/// Note: To run tests, install xunit and Microsoft.NET.Test.Sdk packages.
 /// </summary>
 public class DomainEntityTests
 {
+    [Fact]
     public void Patient_ShouldHaveCorrectDefaults()
     {
         var patient = new Patient
@@ -25,6 +26,7 @@ public class DomainEntityTests
         if (patient.Appointments == null) throw new Exception("Appointments should not be null");
     }
 
+    [Fact]
     public void Doctor_ShouldHaveCorrectStatus()
     {
         var doctor = new Doctor
@@ -44,6 +46,7 @@ public class DomainEntityTests
         if (doctor.ChargesPerVisit != 500.0) throw new Exception("ChargesPerVisit should be 500.0");
     }
 
+    [Fact]
     public void Appointment_ShouldHaveCorrectStatus()
     {
         var appointment = new Appointment
@@ -61,6 +64,7 @@ public class DomainEntityTests
             throw new Exception("FeedbackStatus should be Pending");
     }
 
+    [Fact]
     public void LoginTable_ShouldStoreUserType()
     {
         var login = new LoginTable
