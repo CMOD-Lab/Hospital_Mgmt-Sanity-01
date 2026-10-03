@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
+using DBProject;
 
 
 namespace DBProject
@@ -14,7 +15,7 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["idoriginal"] = "";
+            RedisSessionHelper.SetValue(Session, "idoriginal", "");
         }
 
         //-----------------------Function1--------------------------//
@@ -33,7 +34,7 @@ namespace DBProject
 
             if (status == 0)
             {
-                Session["idoriginal"] = id;
+                RedisSessionHelper.SetValue(Session, "idoriginal", id);
 
                 if (type == 1)
                 {
@@ -106,7 +107,7 @@ namespace DBProject
 
             else if (status == 1)
             {
-                Session["idoriginal"] = id;
+                RedisSessionHelper.SetValue(Session, "idoriginal", id);
 
               //Response.Write("<script>alert('Registration Successful !');</script>");
 

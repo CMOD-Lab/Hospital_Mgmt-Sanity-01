@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hospitalmgmtapp-service
+  namespace: hospitalmgmtapp
+  labels:
+    app: hospitalmgmtapp
+    environment: production
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: hospitalmgmtapp

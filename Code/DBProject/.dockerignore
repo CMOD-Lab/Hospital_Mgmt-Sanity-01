@@ -1,0 +1,80 @@
+# =============================================================
+# .dockerignore for ASP.NET Web Forms Application (HospitalMgmtApp)
+# Excludes source code artifacts, PDB files, build outputs, and
+# temp files from the Docker build context to reduce image size
+# and improve build performance on Amazon EKS.
+# =============================================================
+
+# ----- Version Control -----
+.git
+.gitignore
+.gitattributes
+
+# ----- IDE and Editor Files -----
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings
+.idea/
+*.swp
+*.swo
+*~
+
+# ----- Build Output Directories -----
+**/obj/
+**/bin/Debug/
+**/bin/Release/
+
+# ----- PDB / Debug Symbol Files -----
+**/*.pdb
+**/*.mdb
+
+# ----- Temporary and Cache Files -----
+**/*.tmp
+**/*.cache
+**/*.log
+**/*.bak
+**/*.orig
+**/Thumbs.db
+**/.DS_Store
+
+# ----- NuGet Package Cache -----
+**/packages/
+!**/packages.config
+
+# ----- Test Projects -----
+**/*Tests*/
+**/*Test*/
+**/*.Tests.csproj
+**/*.Test.csproj
+
+# ----- Documentation -----
+README.md
+CHANGELOG.md
+LICENSE
+docs/
+
+# ----- CI/CD Pipeline Files -----
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+Jenkinsfile
+.travis.yml
+
+# ----- Docker Files (avoid recursive copy) -----
+Dockerfile*
+.dockerignore
+
+# ----- Roslyn Compiler Artifacts -----
+**/bin/roslyn/
+
+# ----- XML Documentation Files -----
+**/*.xml
+# Re-include required config files
+!**/Web.config
+!**/Web.Release.config
+!**/Web.Debug.config
+!**/ApplicationInsights.config
+!**/packages.config

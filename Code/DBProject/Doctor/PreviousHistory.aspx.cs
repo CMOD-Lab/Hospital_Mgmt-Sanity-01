@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
+using DBProject;
 
 
 
@@ -28,7 +29,7 @@ namespace DBProject.Doctor
             DataTable DT = new DataTable();
 
 
-            int id = (int)Session["idoriginal"];
+            int id = (int)RedisSessionHelper.GetValue<int>(Session, "idoriginal");
 
 
             int status = objmyDAl.getPHistory(id, ref DT);
@@ -51,9 +52,6 @@ namespace DBProject.Doctor
 
 
         //-----------------------Add a new function here------------------//
-
-
-
 
 
     }
