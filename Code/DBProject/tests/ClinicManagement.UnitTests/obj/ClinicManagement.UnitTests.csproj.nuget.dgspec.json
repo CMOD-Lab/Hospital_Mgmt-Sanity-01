@@ -162,14 +162,14 @@
         }
       }
     },
-    "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/ClinicManagement.UnitTests.csproj": {
+    "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/ClinicManagement.UnitTests.csproj",
-        "projectName": "ClinicManagement.UnitTests",
-        "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/ClinicManagement.UnitTests.csproj",
+        "projectUniqueName": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj",
+        "projectName": "ClinicManagement.Infrastructure",
+        "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj",
         "packagesPath": "/app/.nuget/packages/",
-        "outputPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/obj/",
+        "outputPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/app/.nuget/NuGet/NuGet.Config"
@@ -212,9 +212,229 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.30, 8.0.30]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.30, 8.0.30]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/app/.dotnet/sdk/10.0.400/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Web/ClinicManagement.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Web/ClinicManagement.Web.csproj",
+        "projectName": "ClinicManagement.Web",
+        "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Web/ClinicManagement.Web.csproj",
+        "packagesPath": "/app/.nuget/packages/",
+        "outputPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Web/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/app/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/app/.nuget/packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "framework": "net8.0",
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Application/ClinicManagement.Application.csproj": {
+                "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Application/ClinicManagement.Application.csproj"
+              },
+              "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj": {
+                "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.400"
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.30, 8.0.30]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[8.0.30, 8.0.30]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.30, 8.0.30]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/app/.dotnet/sdk/10.0.400/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/ClinicManagement.UnitTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/ClinicManagement.UnitTests.csproj",
+        "projectName": "ClinicManagement.UnitTests",
+        "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/ClinicManagement.UnitTests.csproj",
+        "packagesPath": "/app/.nuget/packages/",
+        "outputPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/tests/ClinicManagement.UnitTests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/app/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/app/.nuget/packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "framework": "net8.0",
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Application/ClinicManagement.Application.csproj": {
+                "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Application/ClinicManagement.Application.csproj"
+              },
+              "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Domain/ClinicManagement.Domain.csproj": {
+                "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Domain/ClinicManagement.Domain.csproj"
+              },
+              "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Web/ClinicManagement.Web.csproj": {
+                "projectPath": "/modernize-data/studio-data/TNT1001/APP879376/transformed-code/122/studio-workspace/BE/Code/DBProject/src/ClinicManagement.Web/ClinicManagement.Web.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.400"
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "dependencies": {
             "FluentAssertions": {
               "target": "Package",
               "version": "[6.12.0, )"
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.AspNetCore.Mvc.RazorPages": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Testing": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
@@ -227,6 +447,12 @@
             "Moq": {
               "target": "Package",
               "version": "[4.20.70, )"
+            },
+            "coverlet.msbuild": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.1.0, )"
             },
             "xunit": {
               "target": "Package",
