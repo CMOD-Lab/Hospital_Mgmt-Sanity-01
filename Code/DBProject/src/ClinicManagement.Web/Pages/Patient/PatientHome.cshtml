@@ -1,0 +1,78 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.PatientHomeModel
+@{
+    ViewData["Title"] = "Patient Home";
+    Layout = "_PatientLayout";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-success"><i class="fas fa-home me-2"></i>Welcome, @Model.PatientName!</h2>
+            <hr />
+        </div>
+    </div>
+
+    @if (Model.Patient != null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tr><th>Name:</th><td>@Model.Patient.Name</td></tr>
+                            <tr><th>Phone:</th><td>@Model.Patient.Phone</td></tr>
+                            <tr><th>Address:</th><td>@Model.Patient.Address</td></tr>
+                            <tr><th>Date of Birth:</th><td>@Model.Patient.BirthDate</td></tr>
+                            <tr><th>Age:</th><td>@Model.Patient.Age years</td></tr>
+                            <tr><th>Gender:</th><td>@(Model.Patient.Gender == "M" ? "Male" : "Female")</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <a href="/Patient/TakeAppointment" class="card text-center text-decoration-none shadow h-100">
+                            <div class="card-body text-success">
+                                <i class="fas fa-calendar-plus fa-3x mb-2"></i>
+                                <p class="mb-0 fw-bold">Take Appointment</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/Patient/CurrentAppointment" class="card text-center text-decoration-none shadow h-100">
+                            <div class="card-body text-info">
+                                <i class="fas fa-calendar-check fa-3x mb-2"></i>
+                                <p class="mb-0 fw-bold">Current Appointment</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/Patient/TreatmentHistory" class="card text-center text-decoration-none shadow h-100">
+                            <div class="card-body text-warning">
+                                <i class="fas fa-history fa-3x mb-2"></i>
+                                <p class="mb-0 fw-bold">Treatment History</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/Patient/BillsHistory" class="card text-center text-decoration-none shadow h-100">
+                            <div class="card-body text-danger">
+                                <i class="fas fa-file-invoice-dollar fa-3x mb-2"></i>
+                                <p class="mb-0 fw-bold">Bills History</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">Unable to load patient information. Please try again.</div>
+    }
+</div>

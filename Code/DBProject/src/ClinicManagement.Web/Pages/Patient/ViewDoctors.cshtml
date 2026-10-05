@@ -1,0 +1,52 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.ViewDoctorsModel
+@{
+    ViewData["Title"] = "View Doctors";
+    Layout = "_PatientLayout";
+}
+
+<div class="container">
+    <h2 class="text-success mb-4"><i class="fas fa-user-md me-2"></i>View Doctors</h2>
+
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" value="@Model.SearchQuery" class="form-control" placeholder="Search by doctor name..." />
+            <button type="submit" class="btn btn-success"><i class="fas fa-search me-1"></i>Search</button>
+        </div>
+    </form>
+
+    @if (Model.Doctors.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover shadow">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var doc in Model.Doctors)
+                    {
+                        <tr>
+                            <td>@doc.DoctorId</td>
+                            <td>@doc.Name</td>
+                            <td>@doc.DepartmentName</td>
+                            <td>
+                                <a href="/Patient/DoctorProfile?doctorId=@doc.DoctorId" class="btn btn-sm btn-info">
+                                    <i class="fas fa-user-md me-1"></i>View Profile
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">No doctors found.</div>
+    }
+</div>

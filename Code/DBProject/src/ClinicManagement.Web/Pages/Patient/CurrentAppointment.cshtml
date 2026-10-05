@@ -1,0 +1,36 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.CurrentAppointmentModel
+@{
+    ViewData["Title"] = "Current Appointment";
+    Layout = "_PatientLayout";
+}
+
+<div class="container">
+    <h2 class="text-success mb-4"><i class="fas fa-calendar-check me-2"></i>Current Appointment</h2>
+
+    @if (Model.Appointment != null)
+    {
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Today's Appointment</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr><th>Doctor:</th><td>@Model.Appointment.DoctorName</td></tr>
+                    <tr><th>Time:</th><td>@Model.Appointment.Timings</td></tr>
+                    <tr><th>Date:</th><td>@Model.Appointment.Date?.ToString("yyyy-MM-dd")</td></tr>
+                    <tr><th>Status:</th><td><span class="badge bg-success">Approved</span></td></tr>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No current appointment for today.
+        </div>
+        <a href="/Patient/TakeAppointment" class="btn btn-success">
+            <i class="fas fa-calendar-plus me-2"></i>Book an Appointment
+        </a>
+    }
+</div>

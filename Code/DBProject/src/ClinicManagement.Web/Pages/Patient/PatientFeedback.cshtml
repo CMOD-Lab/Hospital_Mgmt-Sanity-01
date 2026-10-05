@@ -1,0 +1,37 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.PatientFeedbackModel
+@{
+    ViewData["Title"] = "Patient Feedback";
+    Layout = "_PatientLayout";
+}
+
+<div class="container">
+    <h2 class="text-success mb-4"><i class="fas fa-star me-2"></i>Patient Feedback</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.Success ? "alert-success" : "alert-info")">@Model.Message</div>
+    }
+
+    @if (Model.PendingFeedback != null)
+    {
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-star me-2"></i>Pending Feedback</h5>
+            </div>
+            <div class="card-body">
+                <p>You have a pending feedback for your appointment with <strong>Dr. @Model.PendingFeedback.DoctorName</strong> at <strong>@Model.PendingFeedback.Timings</strong>.</p>
+                <form method="post">
+                    <input type="hidden" name="appointmentId" value="@Model.PendingFeedback.AppointId" />
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-star me-2"></i>Submit Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+    else if (string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">No pending feedback at this time.</div>
+    }
+</div>

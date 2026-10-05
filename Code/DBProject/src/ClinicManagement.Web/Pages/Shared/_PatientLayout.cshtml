@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Clinic Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/Patient/PatientHome">
+                <i class="fas fa-user-injured me-2"></i>Patient Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/Patient/PatientHome"><i class="fas fa-home me-1"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Patient/TakeAppointment"><i class="fas fa-calendar-plus me-1"></i>Take Appointment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Patient/CurrentAppointment"><i class="fas fa-calendar-check me-1"></i>Current Appointment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Patient/TreatmentHistory"><i class="fas fa-history me-1"></i>Treatment History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Patient/BillsHistory"><i class="fas fa-file-invoice-dollar me-1"></i>Bills History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Patient/PatientNotifications"><i class="fas fa-bell me-1"></i>Notifications</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Patient/PatientFeedback"><i class="fas fa-star me-1"></i>Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link text-warning" href="/SignUp"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        @RenderBody()
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">&copy; @DateTime.Now.Year - Clinic Management System</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

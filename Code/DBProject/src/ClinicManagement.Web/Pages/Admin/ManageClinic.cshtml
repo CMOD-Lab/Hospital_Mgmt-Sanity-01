@@ -1,0 +1,126 @@
+@page
+@model ClinicManagement.Web.Pages.Admin.ManageClinicModel
+@{
+    ViewData["Title"] = "Manage Clinic";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="fas fa-clinic-medical me-2"></i>Manage Clinic</h2>
+
+    <!-- Doctors Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-user-md me-2"></i>Doctors</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="doctorSearch" value="@Model.DoctorSearch" class="form-control" placeholder="Search doctors..." />
+                    <button type="submit" class="btn btn-dark"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div class="alert @(Model.Success ? "alert-success" : "alert-danger")">@Model.Message</div>
+            }
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-dark">
+                        <tr><th>ID</th><th>Name</th><th>Department</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var doc in Model.Doctors)
+                        {
+                            <tr>
+                                <td>@doc.DoctorId</td>
+                                <td>@doc.Name</td>
+                                <td>@doc.DepartmentName</td>
+                                <td>
+                                    <form method="post" asp-page-handler="DeleteDoctor" class="d-inline">
+                                        <input type="hidden" name="doctorId" value="@doc.DoctorId" />
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this doctor?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patients Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-users me-2"></i>Patients</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="patientSearch" value="@Model.PatientSearch" class="form-control" placeholder="Search patients..." />
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-primary">
+                        <tr><th>ID</th><th>Name</th><th>Phone</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Patients)
+                        {
+                            <tr>
+                                <td>@p.PatientId</td>
+                                <td>@p.Name</td>
+                                <td>@p.Phone</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Section -->
+    <div class="card shadow">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="fas fa-id-badge me-2"></i>Other Staff</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="staffSearch" value="@Model.StaffSearch" class="form-control" placeholder="Search staff..." />
+                    <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-secondary">
+                        <tr><th>ID</th><th>Name</th><th>Designation</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.Staff)
+                        {
+                            <tr>
+                                <td>@s.StaffId</td>
+                                <td>@s.Name</td>
+                                <td>@s.Designation</td>
+                                <td>
+                                    <form method="post" asp-page-handler="DeleteStaff" class="d-inline">
+                                        <input type="hidden" name="staffId" value="@s.StaffId" />
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this staff member?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
