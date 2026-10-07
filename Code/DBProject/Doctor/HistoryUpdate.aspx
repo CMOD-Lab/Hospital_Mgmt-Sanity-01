@@ -1,24 +1,41 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="HistoryUpdate.aspx.cs" Inherits="doctor.Historyupdate" %>
+@page "/Doctor/HistoryUpdate"
+@model doctor.HistoryUpdateModel
+@{
+    ViewData["Title"] = "Update History";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
 
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+@section head {
+    <title>Update History</title>
+}
 
-<title>Update History</title>
+<h1>Update history</h1>
 
-</asp:Content>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <script>alert('@Model.ErrorMessage');</script>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <script>alert('@Model.SuccessMessage');</script>
+}
 
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
+<form method="post">
+    <h4>Disease:</h4>
+    <input type="text" name="Disease" value="@Model.Disease" class="form-control" />
 
-<h1>Update history  </h1>
+    <h4>Progress:</h4>
+    <input type="text" name="Progress" value="@Model.Progress" class="form-control" />
 
-<h4>Disease:</h4><asp:TextBox ID="Disease" runat="server"></asp:TextBox>
-   <h4>Progress:</h4> <asp:TextBox ID="progress" runat="server"></asp:TextBox>
-    <h4>Prescription</h4><asp:TextBox ID="Prescription" runat="server"></asp:TextBox>
-    <br />
-      <br />
-      <br />
+    <h4>Prescription</h4>
+    <input type="text" name="Prescription" value="@Model.Prescription" class="form-control" />
 
-    <asp:Button ID="submit" runat="server" Text="Accept & Save" Onclick="saveindatabase" Font-Bold="true" />  
-    <asp:Button ID="Bill" runat="server" Text="Generate Bill" OnClick="generate_bill" Font-Bold ="true" />
+    <br /><br /><br />
 
-</asp:Content>
+    <button type="submit" asp-page-handler="SaveInDatabase" style="font-weight:bold" class="btn btn-primary">Accept &amp; Save</button>
+    &nbsp;&nbsp;
+    <button type="submit" asp-page-handler="GenerateBill" style="font-weight:bold" class="btn btn-default">Generate Bill</button>
+</form>

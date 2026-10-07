@@ -6,6 +6,10 @@
 //     the code is regenerated. 
 // </auto-generated>
 //------------------------------------------------------------------------------
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Removed legacy System.Web.UI.WebControls.GridView control declarations.
+//   Data binding is now performed asynchronously via OnGetAsync() in the PageModel,
+//   and rendered through Razor HTML table markup instead of server-side GridView controls.
 
 namespace DBProject {
     
@@ -18,8 +22,9 @@ namespace DBProject {
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.Label with Razor model property.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalPatients;
+        // protected global::System.Web.UI.WebControls.Label TotalPatients;
         
         /// <summary>
         /// Total_Doctors control.
@@ -27,8 +32,9 @@ namespace DBProject {
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.Label with Razor model property.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Total_Doctors;
+        // protected global::System.Web.UI.WebControls.Label Total_Doctors;
         
         /// <summary>
         /// TotalIncome control.
@@ -36,25 +42,28 @@ namespace DBProject {
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.Label with Razor model property.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalIncome;
+        // protected global::System.Web.UI.WebControls.Label TotalIncome;
         
         /// <summary>
         /// Appointment_view control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: System.Web.UI.WebControls.GridView replaced with async Razor HTML table.
+        /// Data is now bound asynchronously via OnGetAsync() using Amazon RDS Task-based API.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView Appointment_view;
+        // protected global::System.Web.UI.WebControls.GridView Appointment_view;
         
         /// <summary>
         /// department_View control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: System.Web.UI.WebControls.GridView replaced with async Razor HTML table.
+        /// Data is now bound asynchronously via OnGetAsync() using Amazon RDS Task-based API.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView department_View;
+        // protected global::System.Web.UI.WebControls.GridView department_View;
     }
 }

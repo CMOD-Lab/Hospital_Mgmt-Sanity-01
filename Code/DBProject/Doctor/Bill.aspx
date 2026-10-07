@@ -1,43 +1,34 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="Bill.aspx.cs" Inherits="doctor.bill" %>
+@page "/Doctor/Bill"
+@model doctor.BillModel
+@{
+    ViewData["Title"] = "Generate Bill";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
 
-<title>Generate Bill</title>
+@section head {
+    <title>Generate Bill</title>
+}
 
-</asp:Content>
+<div>
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <script>alert('@Model.ErrorMessage');</script>
+    }
 
+    <h1>Your Bill For this Appointment is :
+        <span style="font-weight:bold; font-size:medium">@Model.BillAmount</span>
+    </h1>
 
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 
-<asp:Content ID="Content4" ContentPlaceHolderID="Cp3" runat="server">
+    <form method="post">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="submit" asp-page-handler="BillPaid" style="font-weight:bold" class="btn">Bill Paid</button>
 
-
-
-    <h1>Your Bill For this Appointment is :      <asp:Label ID="Label1" runat="server" Text="Label" Font-Bold="true" Font-Size="Medium" ></asp:Label> </h1>
-   
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-     <br />
-
-
-    &nbsp&nbsp&nbsp&nbsp<asp:Button ID="Bill" runat="server" Text="Bill Paid" OnClick="bill_paid" Font-Bold ="true" />
-   
-
-     &nbsp&nbsp&nbsp&nbsp<asp:Button ID="Button1" runat="server" Text="Bill Unpaid" OnClick="bill_Unpaid" Font-Bold ="true" />
-   
-
-
-
-
-</asp:Content>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="submit" asp-page-handler="BillUnpaid" style="font-weight:bold" class="btn">Bill Unpaid</button>
+    </form>
+</div>

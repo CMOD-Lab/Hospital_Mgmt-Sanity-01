@@ -1,60 +1,68 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="PatientFeedback.aspx.cs" Inherits="DBProject.PatientFeedback" %>
+@page "/Patient/PatientFeedback"
+@model DBProject.Patient.PatientFeedbackModel
+@{
+    ViewData["Title"] = "Feedback";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
 
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
 
-
-
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+@section head {
     <title>Feedback</title>
+}
 
-</asp:Content>
+<h1><strong style="margin:37%">Feedback</strong></h1>
+<br /><br />
 
+<div style="margin-left: 70px">
 
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-
-    <h1><strong style="margin:37%">Feedback</strong></h1>
-    <br /><br />
-
-    <div style="margin-left: 70px">
-
-    <asp:Label ID="Feedback" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <asp:Label ID="FDoctor" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <asp:Label ID="FTimings" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <br /><br />
-    <asp:Label ID="Message" runat="server" Visible="false"  Font-Bold="true" Font-Size="Medium">Dear Patient, How was your treatment experience with our specialized Doctor on a rating of 1 - 5:</asp:Label>
-
-
-    <div  style="margin-left: 790px">
-        <asp:DropDownList ID="List"  runat="server" Visible="false" Font-Bold ="true"  >
-            <asp:ListItem>1</asp:ListItem>
-            <asp:ListItem>2</asp:ListItem>
-            <asp:ListItem>3</asp:ListItem>
-            <asp:ListItem>4</asp:ListItem>
-            <asp:ListItem>5</asp:ListItem>
-        </asp:DropDownList>
-
+    @if (!string.IsNullOrEmpty(Model.FeedbackStatus))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FeedbackStatus</p>
         <br /><br />
+    }
 
-        <asp:Button ID="button1" runat="server" Visible="false" OnClick="giveFeedback"  Text ="Give Feedback" Font-Bold ="true" />
-       
+    @if (!string.IsNullOrEmpty(Model.FDoctorInfo))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FDoctorInfo</p>
         <br /><br />
-        <asp:Label ID="F" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
+    }
 
-     </div>
+    @if (!string.IsNullOrEmpty(Model.FTimings))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FTimings</p>
+        <br /><br />
+    }
 
+    @if (Model.ShowFeedbackForm)
+    {
+        <br /><br />
+        <p style="font-weight:bold; font-size:medium;">Dear Patient, How was your treatment experience with our specialized Doctor on a rating of 1 - 5:</p>
 
-     <br /><br />
-    </div>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div style="margin-left: 790px">
+                <select name="SelectedRating" style="font-weight:bold;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
 
-</asp:Content>
+                <br /><br />
+
+                <button type="submit" asp-page-handler="GiveFeedback" style="font-weight:bold;">Give Feedback</button>
+
+                <br /><br />
+                @if (!string.IsNullOrEmpty(Model.FeedbackResult))
+                {
+                    <p style="font-weight:bold; font-size:medium;">@Model.FeedbackResult</p>
+                }
+            </div>
+        </form>
+    }
+
+    <br /><br />
+</div>

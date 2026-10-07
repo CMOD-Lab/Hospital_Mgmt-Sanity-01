@@ -1,88 +1,127 @@
-﻿using System;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using DBProject.DAL;
 
-namespace DB_Project
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+
+namespace DBProject.Admin
 {
-	public partial class DoctorRegistrationForm : System.Web.UI.Page
-	{
-		protected void Page_Load(object sender, EventArgs e)
-		{
+    public class DoctorRegistrationFormModel : PageModel
+    {
+        [BindProperty]
+        [Required(ErrorMessage = "* Required")]
+        public string Name { get; set; }
 
-		}
+        [BindProperty]
+        [Required(ErrorMessage = "*Required")]
+        [RegularExpression(@"((?:0[1-9])|(?:1[0-2]))\/((?:0[0-9])|(?:[1-2][0-9])|(?:3[0-1]))\/(\d{4})", ErrorMessage = "Birth Date Format Not Correct")]
+        public string BirthDate { get; set; }
 
+        [BindProperty]
+        [Required(ErrorMessage = "*Required")]
+        [EmailAddress(ErrorMessage = "Incorrect Email Format")]
+        public string Email { get; set; }
 
+        [BindProperty]
+        [Required(ErrorMessage = "*Required")]
+        public string Password { get; set; }
 
+        [BindProperty]
+        [Compare("Password", ErrorMessage = "Passwords Do not Match")]
+        public string ConfirmPassword { get; set; }
 
-		protected void ValidateDoctorEmail(object sender, ServerValidateEventArgs args)
-		{
-			myDAL objmyDAL = new myDAL();
+        [BindProperty]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Numbers Only !")]
+        public string Phone { get; set; }
 
+        [BindProperty]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Numbers Only !")]
+        public string Salary { get; set; }
 
-			if (objmyDAL.DoctorEmailAlreadyExist(Email.Text) == 1)
-			{
-				args.IsValid = false;
-				Msg.Visible = false;
-				Msg.Text = "";
-				DoctorValidate.ErrorMessage = "This Email Already exist , kindly choose a different one !";
-			}
-			else
-			{
-				args.IsValid = true;
-			}
+        [BindProperty]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Numbers Only !")]
+        public string ChargesPerVisit { get; set; }
 
-		}
+        [BindProperty]
+        [Range(0, 5, ErrorMessage = "Experience Range should be (0-5)")]
+        public string Exp { get; set; }
 
+        [BindProperty]
+        public int Department { get; set; }
 
-		protected void DoctorRegister(object sender, EventArgs e)
-		{
+        [BindProperty]
+        public string Qualification { get; set; }
 
-			if (Page.IsValid)
-			{
-				myDAL objmyDAL = new myDAL();
+        [BindProperty]
+        public string Spec { get; set; }
 
-				int exp = Convert.ToInt32(Exp.Text);
-				int salary = Convert.ToInt32(Salary.Text);
-				int chargesPerVisit = Convert.ToInt32(Charges_per_visit.Text);
-				int dept = Convert.ToInt32(Department.SelectedValue);
-				string gender = Request.Form["Gender"].ToString();
+        [BindProperty]
+        public string Address { get; set; }
 
-				objmyDAL.AddDoctor(Name.Text, Email.Text, Password.Text, BirthDate.Text, dept, Phone.Text, gender[0], Address.Text, exp, salary, chargesPerVisit, spec.Text, Qualification.Text);
-				Response.BufferOutput = true;
-				Msg.Visible = true;
-				Msg.Text = "doctor Added Succesfully";
-				flushInformation();
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
+        public string EmailError { get; set; }
+        public string DepartmentError { get; set; }
 
+        public void OnGet()
+        {
+        }
 
-			}
-		}
+        public IActionResult OnPost()
+        {
+            myDAL objmyDAL = new myDAL();
 
-		protected void flushInformation()
-		{
-			Name.Text = "";
-			Email.Text = "";
-			Password.Text = "";
-			BirthDate.Text = "";
-			Department.Text = "Select Depatment";
-			Phone.Text = "";
-			Address.Text = "";
-			Exp.Text = "";
-			Salary.Text = "";
-			Charges_per_visit.Text = "";
-			spec.Text = "";
-			Qualification.Text = "";
-		}
+            // Validate doctor email uniqueness
+            if (objmyDAL.DoctorEmailAlreadyExist(Email) == 1)
+            {
+                EmailError = "This Email Already exist , kindly choose a different one !";
+                ModelState.AddModelError("Email", EmailError);
+            }
 
+            // Validate department selection
+            if (Department == 0)
+            {
+                DepartmentError = "Please Select Department";
+                ModelState.AddModelError("Department", DepartmentError);
+            }
 
-		protected void DepartmentValidate(object sender, ServerValidateEventArgs args)
-		{
-			int dept = Convert.ToInt32(Department.SelectedValue);
-			if (dept == 0)
-			{
-				DV.ErrorMessage = "Please Select Department";
-				args.IsValid = false;
-			}
-		}
-	}
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            int exp = Convert.ToInt32(Exp);
+            int salary = Convert.ToInt32(Salary);
+            int chargesPerVisit = Convert.ToInt32(ChargesPerVisit);
+            string genderForm = Request.Form["Gender"].ToString();
+            char gender = genderForm.Length > 0 ? genderForm[0] : 'M';
+
+            objmyDAL.AddDoctor(Name, Email, Password, BirthDate, Department, Phone, gender, Address, exp, salary, chargesPerVisit, Spec, Qualification);
+
+            IsSuccess = true;
+            Message = "doctor Added Succesfully";
+            FlushInformation();
+
+            return Page();
+        }
+
+        private void FlushInformation()
+        {
+            Name = "";
+            Email = "";
+            Password = "";
+            BirthDate = "";
+            Department = 0;
+            Phone = "";
+            Address = "";
+            Exp = "";
+            Salary = "";
+            ChargesPerVisit = "";
+            Spec = "";
+            Qualification = "";
+        }
+    }
 }

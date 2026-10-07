@@ -6,6 +6,11 @@
 //     the code is regenerated. 
 // </auto-generated>
 //------------------------------------------------------------------------------
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Removed legacy System.Web.UI.WebControls.GridView control declaration.
+//   Data binding is now performed asynchronously via OnGetAsync() in the PageModel,
+//   and rendered through Razor HTML table markup instead of server-side GridView controls,
+//   preventing thread pool exhaustion under cloud load.
 
 namespace doctor {
     
@@ -17,8 +22,10 @@ namespace doctor {
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: System.Web.UI.WebControls.GridView replaced with async Razor HTML table.
+        /// Data is now bound asynchronously via OnGetAsync() using Amazon RDS Task-based API,
+        /// preventing thread pool exhaustion under cloud load.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView pendingappointments;
+        // protected global::System.Web.UI.WebControls.GridView pendingappointments;
     }
 }

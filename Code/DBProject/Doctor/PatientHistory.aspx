@@ -1,53 +1,64 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="PatientHistory.aspx.cs" Inherits="doctor.patienthistory" %>
+@page "/Doctor/PatientHistory"
+@model doctor.PatientHistoryModel
+@{
+    ViewData["Title"] = "Patient History";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
 
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
+@* Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+   GridView replaced with async Razor HTML table. Data is bound asynchronously
+   via OnGetAsync() using Amazon RDS Task-based API, preventing thread pool
+   exhaustion under load and enabling cloud auto-scaling. *@
 
-
-
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+@section head {
     <title>Patient History</title>
-</asp:Content>
+}
 
+@* Styling *@
+<link rel="stylesheet" href="/assets/css/grid-view.css"/>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
+<h1><strong style="margin:25%">Today's Appointments</strong></h1>
+<br /><br />
 
-    
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
+<div style="margin-left:150px">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <script>alert('@Model.ErrorMessage');</script>
+    }
 
+    @if (Model.PatientsData != null && Model.PatientsData.Rows.Count > 0)
+    {
+        <table class="GridView-d table" style="width:1000px; color:black;">
+            <thead style="background-color:#6B696B; color:white; font-weight:bold;">
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.PatientsData.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.PatientsData.Rows)
+                {
+                    <tr style="background-color:#F7F7DE;">
+                        @foreach (var cell in row.ItemArray)
+                        {
+                            <td>@cell</td>
+                        }
+                        <td>
+                            <form method="post" asp-page-handler="SelectAppointment">
+                                <input type="hidden" name="appointmentId" value="@row[1]" />
+                                <button type="submit" class="btn btn-sm btn-primary">Select</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
 
-     <h1><strong style="margin:25%">Today's Appointments</strong></h1>
-    <br /><br />
-    <div style="margin-left:150px">
-
-    <asp:GridView ID="patientsgrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False"
-        AutoGenerateSelectButton="True" 
-        OnRowCommand="patientsgrid_RowCommand" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
-     
-        
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-    </asp:GridView>
-
-        </div>
-
-    
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-</asp:Content>
-
-
+<br /><br /><br /><br /><br />

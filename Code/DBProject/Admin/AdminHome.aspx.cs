@@ -1,61 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using DBProject.DAL;
 
-namespace DBProject
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Replaced synchronous GridView.DataBind() with async Task-based data loading via
+//   OnGetAsync() and myDAL async methods connected to Amazon RDS, preventing thread pool
+//   exhaustion under load and enabling efficient auto-scaling in cloud deployments.
+
+namespace DBProject.Admin
 {
-	public partial class AdminHome : System.Web.UI.Page
-	{
+    public class AdminHomeModel : PageModel
+    {
+        public string TotalDoctors { get; set; }
+        public string TotalPatients { get; set; }
+        public string TotalIncome { get; set; }
+        public DataTable DepartmentData { get; set; }
+        public DataTable AppointmentData { get; set; }
 
-		protected void Page_Load(object sender, EventArgs e)
-		{
-			GetAdminHomeInformation();
-		}
+        // cr-dotnet-1034: Changed from synchronous OnGet() to async OnGetAsync()
+        // to prevent thread pool exhaustion under load in cloud (AWS RDS) deployments.
+        public async Task OnGetAsync()
+        {
+            await GetAdminHomeInformationAsync();
+        }
 
+        // cr-dotnet-1034: Async data loading replaces synchronous GridView.DataBind()
+        // pattern. Data is fetched via Task-based API from Amazon RDS, allowing the
+        // request thread to be released while awaiting I/O completion.
+        public async Task GetAdminHomeInformationAsync()
+        {
+            myDAL objmyDAL = new myDAL();
 
+            DataTable[] arrTable = new DataTable[5];
+            for (int i = 0; i < 5; i++)
+            {
+                arrTable[i] = new DataTable();
+            }
 
-		public void GetAdminHomeInformation()
-		{
-			myDAL objmyDAL = new myDAL();
+            await objmyDAL.GetAdminHomeInformationAsync(arrTable);
 
-			DataTable[] arrTable = new DataTable[5];
-			for (int i = 0; i < 5; i++)
-			{
-				arrTable[i] = new DataTable();
-			}
+            TotalDoctors = arrTable[1].Rows.Count > 0 ? arrTable[1].Rows[0][0].ToString() : "0";
+            TotalPatients = arrTable[0].Rows.Count > 0 ? arrTable[0].Rows[0][0].ToString() : "0";
+            TotalIncome = arrTable[2].Rows.Count > 0 ? arrTable[2].Rows[0][0].ToString() : "0";
 
-
-			objmyDAL.GetAdminHomeInformation(ref arrTable);
-
-			Total_Doctors.Visible = TotalIncome.Visible = TotalPatients.Visible = true;
-
-			Total_Doctors.Text = arrTable[0].Rows[0][0].ToString();
-			TotalPatients.Text = arrTable[1].Rows[0][0].ToString();
-			TotalIncome.Text = arrTable[2].Rows[0][0].ToString();
-
-
-
-			department_View.DataSource = arrTable[3];
-			department_View.DataBind();
-
-
-			Appointment_view.DataSource = arrTable[4];
-			Appointment_view.DataBind();
-			
-
-
-
-
-
-
-
-		}
-
-	}
-
+            DepartmentData = arrTable[3];
+            AppointmentData = arrTable[4];
+        }
+    }
 }

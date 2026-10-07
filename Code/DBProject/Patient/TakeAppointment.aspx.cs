@@ -1,77 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+using System;
 using System.Data;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
+using DBProject.DAL;
+using DBProject.Infrastructure;
 
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-0126: Heavy Coupling to Stateful Middleware
+//   Replaced IIS in-process HttpSessionState (sticky-session) with Amazon ElastiCache for Redis
+//   via RedisSessionHelper (IDistributedCache) to enable stateless horizontal scaling.
+//   Session data now persists across pod restarts and scales horizontally without sticky routing.
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Replaced synchronous OnGet/OnPost with async Task-based OnGetAsync/OnPostSelectDeptAsync
+//   using async DAL methods (getdeptInfoAsync) connected to Amazon RDS via Dapper async APIs,
+//   preventing thread pool exhaustion under load and enabling efficient auto-scaling.
 
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class TakeAppointment : System.Web.UI.Page
+    public class TakeAppointmentModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            Session["deptOriginal"] = "";
-            deptInfo(sender, e);
+        private readonly IDistributedCache _distributedCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public TakeAppointmentModel(IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor)
+        {
+            _distributedCache = distributedCache;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public string TDept { get; set; }
+        public DataTable Departments { get; set; }
+
+        // cr-dotnet-1034: Converted from synchronous OnGet() to async Task OnGetAsync()
+        // Uses async DAL method to prevent thread pool exhaustion under cloud load.
+        public async Task OnGetAsync()
+        {
+            // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+            // instead of IIS in-process HttpSessionState to support horizontal scaling.
+            // Original: Session["deptOriginal"] = "";
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
+
+            session.SetString("deptOriginal", "");
+            await DeptInfoAsync();
         }
 
         //---------------Function Called whenever a Department is selected from the Grid View----//
-        protected void TDeptGrid_RowCommand(object sender, GridViewCommandEventArgs e)
+        // cr-dotnet-1034: Converted from synchronous OnPostSelectDept to async Task<IActionResult> OnPostSelectDeptAsync
+        public async Task<IActionResult> OnPostSelectDeptAsync(string deptName)
         {
-            if (e.CommandName == "Select")
-            {
-                Int16 num = Convert.ToInt16(e.CommandArgument);
+            // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+            // instead of IIS in-process HttpSessionState to support horizontal scaling.
+            // Original: Session["deptOriginal"] = deptName;
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
 
-                string deptName = TDeptGrid.Rows[num].Cells[2].Text;
-
-                Session["deptOriginal"] = deptName;
-
-                Response.BufferOutput = true;
-                Response.Redirect("ViewDoctors.aspx");
-
-                return;
-            }
+            session.SetString("deptOriginal", deptName ?? "");
+            return RedirectToPage("/Patient/ViewDoctors");
         }
-
-
 
         //-----------------------Function1--------------------------//
 
-        protected void deptInfo(object sender, EventArgs e)
+        // cr-dotnet-1034: Converted from synchronous DeptInfo() to async Task DeptInfoAsync()
+        // Calls getdeptInfoAsync on the DAL to avoid blocking the thread pool on I/O.
+        private async Task DeptInfoAsync()
         {
             myDAL objmyDAl = new myDAL();
 
-            DataTable DT = new DataTable();
-
-
-            int status = objmyDAl.getdeptInfo(ref DT);
-
+            var (status, DT) = await objmyDAl.getdeptInfoAsync();
 
             if (status == -1)
             {
-                TDept.Text = "There was some error in retrieving the Departments Information.";
+                TDept = "There was some error in retrieving the Departments Information.";
             }
-
             else
             {
-                TDept.Text = "Following are the departments available at our Clinic : ";
-                TDeptGrid.DataSource = DT;
-                TDeptGrid.DataBind();
+                TDept       = "Following are the departments available at our Clinic : ";
+                Departments = DT;
             }
-
-            return;
         }
 
-
         //-----------------------Add a new function here------------------//
-
-
-
-
-
     }
 }

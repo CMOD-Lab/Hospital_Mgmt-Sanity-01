@@ -1,33 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+using System;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
+using DBProject.DAL;
+using DBProject.Infrastructure;
 
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-0045: Session State Provider
+//   Replaced in-process HttpSessionState with Amazon ElastiCache for Redis via
+//   RedisSessionHelper (IDistributedCache) to enable stateless horizontal scaling.
 
-
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class DoctorProfile : System.Web.UI.Page
+    public class DoctorProfileModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        private readonly IDistributedCache _distributedCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public DoctorProfileModel(IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor)
         {
-            doctorInfo(sender, e);
+            _distributedCache = distributedCache;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        public string DName { get; set; }
+        public string DPhone { get; set; }
+        public string DQualification { get; set; }
+        public string DSpecialization { get; set; }
+        public string DWork { get; set; }
+        public string DAge { get; set; }
+        public string DGender { get; set; }
+        public string DDept { get; set; }
+        public string DCharges { get; set; }
+        public string DRI { get; set; }
+        public string DPT { get; set; }
+        public string ErrorMessage { get; set; }
 
-
-        //-----------------------Function1--------------------------//
-
-        protected void doctorInfo(object sender, EventArgs e)
+        public void OnGet()
         {
+            LoadDoctorInfo();
+        }
+
+        public IActionResult OnPostTakeAppointment()
+        {
+            return RedirectToPage("/Patient/AppointmentTaker");
+        }
+
+        private void LoadDoctorInfo()
+        {
+            // cr-dotnet-0045: Use Redis-backed distributed session (ElastiCache)
+            // instead of in-process HttpSessionState to support horizontal scaling.
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
+
             myDAL objmyDAl = new myDAL();
 
-            string dID1 = (string) Session["dID"];
-
+            string dID1 = session.GetString("dID");
             int dID = Convert.ToInt32(dID1);
 
             string name = "";
@@ -42,47 +72,28 @@ namespace DBProject
             int workE = 0;
             int age = 0;
 
-            string deptName = (string)Session["deptOriginal"];
+            string deptName = session.GetString("deptOriginal");
 
             int status = objmyDAl.doctorInfoDisplayer(dID, ref name, ref phone, ref gender, ref charges_Per_Visit, ref ReputeIndex, ref PatientsTreated, ref qualification, ref specialization, ref workE, ref age);
 
             if (status == -1)
             {
-                Response.Write("<script>alert('There was some error in retrieving the Doctor's Info.');</script>");
+                ErrorMessage = "There was some error in retrieving the Doctor's Info.";
             }
-
-            else if (status == 0)
+            else
             {
-                DName.Text = name;
-                DPhone.Text = phone;
-                DQualification.Text = qualification;
-                DSpecialization.Text = specialization;
-                DWork.Text = workE.ToString();
-                DAge.Text = age.ToString();
-                DGender.Text = gender;
-                DDept.Text = deptName;
-                DCharges.Text = charges_Per_Visit.ToString();
-                DRI.Text = ReputeIndex.ToString(); 
-                DPT.Text = PatientsTreated.ToString();
+                DName = name;
+                DPhone = phone;
+                DQualification = qualification;
+                DSpecialization = specialization;
+                DWork = workE.ToString();
+                DAge = age.ToString();
+                DGender = gender;
+                DDept = deptName;
+                DCharges = charges_Per_Visit.ToString();
+                DRI = ReputeIndex.ToString();
+                DPT = PatientsTreated.ToString();
             }
-
-            return;
         }
-
-
-        //-----------------------Function2------------------//
-
-        protected void RedirectToAppointmentTaker(object sender, EventArgs e)
-        {
-            Response.BufferOutput = true;
-            Response.Redirect("AppointmentTaker.aspx");
-        }
-        
-
-
-
-        //-----------------------Add a new function here------------------//
-
-
     }
 }

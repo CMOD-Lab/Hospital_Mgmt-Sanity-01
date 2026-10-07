@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DBProject</RootNamespace>
     <AssemblyName>DBProject</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -213,6 +213,7 @@
       <DependentUpon>CurrentAppointment.aspx</DependentUpon>
     </Compile>
     <Compile Include="DAL\myDAL.cs" />
+    <Compile Include="Infrastructure\CspHttpModule.cs" />
     <Compile Include="Doctor\DoctorHome.aspx.cs">
       <DependentUpon>DoctorHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

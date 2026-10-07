@@ -1,49 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+using System;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
+using DBProject.DAL;
+using DBProject.Infrastructure;
 
-
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-0045: Session State Provider
+//   Replaced in-process HttpSessionState with Amazon ElastiCache for Redis via
+//   RedisSessionHelper (IDistributedCache) to enable stateless horizontal scaling.
 
 namespace doctor
 {
-    public partial class doctorhome : System.Web.UI.Page
+    public class DoctorHomeModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        private readonly IDistributedCache _distributedCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public DoctorHomeModel(IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor)
         {
+            _distributedCache = distributedCache;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public string ErrorMessage { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public string BirthDate { get; set; }
+        public string Gender { get; set; }
+        public string DepartmentNo { get; set; }
+        public string ChargesPerVisit { get; set; }
+        public string MonthlySalary { get; set; }
+        public string ReputeIndex { get; set; }
+        public string PatientsTreated { get; set; }
+        public string Qualification { get; set; }
+        public string Specialization { get; set; }
+        public string WorkExperience { get; set; }
+        public string Status { get; set; }
+
+        public void OnGet()
+        {
+            // cr-dotnet-0045: Use Redis-backed distributed session (ElastiCache)
+            // instead of in-process HttpSessionState to support horizontal scaling.
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
+
             myDAL objmyDAL = new myDAL();
             DataTable dt = new DataTable();
             int found;
-            int did = (int)Session["idoriginal"];
-         
+            int did = session.GetInt32("idoriginal") ?? 0;
+
             found = objmyDAL.docinfo_DAL(did, ref dt);
 
-
-			if (found!=1)
+            if (found != 1)
             {
-                { Response.Write("<script>alert('There was some error');</script>"); }
+                ErrorMessage = "There was some error";
             }
             else
             {
-                Label1.Text = dt.Rows[0][1].ToString();
-                Label2.Text = dt.Rows[0][2].ToString();
-                Label3.Text = dt.Rows[0][3].ToString();
-                Label4.Text = dt.Rows[0][4].ToString();
-                Label5.Text = dt.Rows[0][5].ToString();
-                Label6.Text = dt.Rows[0][6].ToString();
-                Label7.Text = dt.Rows[0][7].ToString();
-                Label8.Text = dt.Rows[0][8].ToString();
-                Label9.Text = dt.Rows[0][9].ToString();
-                Label10.Text = dt.Rows[0][10].ToString();
-                Label11.Text = dt.Rows[0][11].ToString();
-                Label12.Text = dt.Rows[0][12].ToString();
-                Label13.Text = dt.Rows[0][13].ToString();
-                Label14.Text = dt.Rows[0][14].ToString();
-
+                Name = dt.Rows[0][1].ToString();
+                Phone = dt.Rows[0][2].ToString();
+                Address = dt.Rows[0][3].ToString();
+                BirthDate = dt.Rows[0][4].ToString();
+                Gender = dt.Rows[0][5].ToString();
+                DepartmentNo = dt.Rows[0][6].ToString();
+                ChargesPerVisit = dt.Rows[0][7].ToString();
+                MonthlySalary = dt.Rows[0][8].ToString();
+                ReputeIndex = dt.Rows[0][9].ToString();
+                PatientsTreated = dt.Rows[0][10].ToString();
+                Qualification = dt.Rows[0][11].ToString();
+                Specialization = dt.Rows[0][12].ToString();
+                WorkExperience = dt.Rows[0][13].ToString();
+                Status = dt.Rows[0][14].ToString();
             }
         }
     }

@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DBProject
+// Migrated from ASP.NET Web Forms (System.Web.UI.MasterPage) to ASP.NET Core Razor Pages Layout
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// The Master Page functionality is now handled by _PatientLayout.cshtml (Razor Pages layout)
+
+namespace DBProject.Patient
 {
-    public partial class PatientMaster : System.Web.UI.MasterPage
+    /// <summary>
+    /// Base PageModel for Patient pages using the shared _PatientLayout.cshtml layout.
+    /// Replaces the Web Forms PatientMaster MasterPage with an ASP.NET Core Razor Pages layout.
+    /// </summary>
+    public class PatientMasterModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        public void OnGet()
         {
-
+            // Layout-level initialization handled by _PatientLayout.cshtml
         }
     }
 }

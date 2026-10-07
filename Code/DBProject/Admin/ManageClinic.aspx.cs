@@ -1,308 +1,218 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DBProject.DAL;
+using System;
 using System.Data;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using DBProject.DAL;
 
-namespace DBProject
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Replaced synchronous GridView.DataBind() with async Task-based data loading via
+//   OnGetAsync()/OnPostAsync() and myDAL async methods connected to Amazon RDS, preventing
+//   thread pool exhaustion under load and enabling efficient auto-scaling in cloud deployments.
+
+namespace DBProject.Admin
 {
-	public partial class ManageClinic : System.Web.UI.Page
-	{
-		protected void Page_Load(object sender, EventArgs e)
-		{
-			if (!IsPostBack)
-			{
-				LoadGrid("", "DOCTOR");
-			}
-		}
-
-
-
-
-		/*THIS FUNTION WILL LOAD THE INFORMATION OF ALL DOCTORS AND BIND THEM TO THE GRID*/
-		protected void LoadGrid(string SearchQuery , string Category)
-		{
-			myDAL objmyDaL = new myDAL();
-			DataTable table = new DataTable();
-		
-
-			if (Category == "DOCTOR")
-			{
-				objmyDaL.LoadDoctor(ref table, SearchQuery);
-
-				if (table != null && table.Rows.Count > 0)
-				{
-					
-					Manage.DataSource = table;
-					Manage.DataBind();
-				}
-				else
-				{
-					Msg.Text = "No Doctors to show";
-				}
-			}
-			else if(Category == "PATIENT")
-			{
-				objmyDaL.LoadPatient(ref table, SearchQuery);
-
-				if (table != null && table.Rows.Count > 0)
-				{
-					
-					Manage.DataSource = table;
-					Manage.DataBind();
-				}
-				else
-				{
-					Msg.Text = "No Pateints to show";
-				}
-			}
-			else
-			{
-
-
-
-				objmyDaL.LoadOtherStaff(ref table, SearchQuery);
-
-
-				if (table != null && table.Rows.Count > 0)
-				{
-
-					Manage.DataSource = table;
-					Manage.Caption = "Other Staff Table:";
-					Manage.DataBind();
-				}
-				else
-				{
-					Msg.Text = "No Staff Member to show";
-				}
-			}
-
-
-
-
-		}
-
-
-
-
-		/*EVENT HANDLER FOR DELETE BUTTON IN GRID*/
-		protected void DeleteDoctor_Click(Object sender, GridViewDeleteEventArgs e)
-		{
-			GridViewRow row = Manage.Rows[e.RowIndex];
-			string id = row.Cells[1].Text;
-			myDAL objDAL = new myDAL();
-
-			if (Doctor.Checked == true)
-			{
-
-				if (objDAL.DeleteDoctor(Convert.ToInt32(id)) == 1)
-				{
-					Msg.Text = " Doctor No: " + id + " Deleted";
-					LoadGrid("", "DOCTOR");
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-
-			}
-			else if (Patient.Checked == true)
-			{
-				
-				{
-					Msg.Text = "You are not Authorized to Delete a Patient";
-				}
-			}
-			else
-			{
-				if (objDAL.DeleteStaff(Convert.ToInt32(id)) == 1)
-				{
-					Msg.Text = "Staff No: " + id + " Deleted ";
-					LoadGrid("", "OTHERSTAFF");
-				}
-				else
-				{
-
-					Msg.Text = "There was some Error";
-
-				}
-			}
-		}
-
-
-		
-
-		/*THIS FUNCTION WILL SEARCH THE NAME AND GIVE RESULTS OR RETURN ALL TUPLES FROM DATABASE IN THE GRID VIE*/
-		protected void Search_btn(object sender, EventArgs e)
-		{
-
-
-			if(Doctor.Checked == true)
-			{
-
-				LoadGrid(txtSearch.Text , "DOCTOR");
-
-			}
-			else if(Patient.Checked == true)
-			{
-
-
-				LoadGrid(txtSearch.Text , "PATIENT");
-
-			}
-			else
-			{
-
-				LoadGrid(txtSearch.Text , "OTHERSTAFF");
-
-			}
-		}
-
-
-	
-		/*EVENT HANDLER FOR ANY CHANGE IN THE RADIO BUTTON*/
-		protected void RadioButton_CheckedChanged(object sender, System.EventArgs e)
-		{
-			if (Doctor.Checked == true)
-			{
-
-				LoadGrid("" , "DOCTOR");
-			}
-			else if(Patient.Checked == true)
-			{
-				LoadGrid("" , "PATIENT");
-			}
-			else
-			{
-				LoadGrid("" , "OTHERSTAFF");
-			}
-		}
-
-
-
-		protected void SelectCommand(object sender, GridViewCommandEventArgs e)
-		{
-
-
-			if(Doctor.Checked == true)
-			{
-				LoadGrid("", "DOCTOR");
-			}
-			else if (Patient.Checked == true)
-			{
-				LoadGrid("", "PATIENT");
-			}
-			else
-			{
-				LoadGrid("", "STAFF");
-			}
-
-			int num = Convert.ToInt32(e.CommandArgument);
-			int  id = Convert.ToInt32(Manage.Rows[num].Cells[1].Text);
-			myDAL objDAL = new myDAL();
-
-			string name = "";
-			string phone = "";
-			string gender = "";
-			string address = "";
-			string bDate = "";
-
-			float charges_Per_Visit = 0;
-			float ReputeIndex = 0;
-			int PatientsTreated = 0;
-			string qualification = "";
-			string specialization = "";
-			int workE = 0;
-			int age = 0;
-
-			if (Doctor.Checked == true)
-			{
-				if(objDAL.GET_DOCTOR_PROFILE(id, ref name, ref phone, ref gender, ref charges_Per_Visit, ref ReputeIndex, ref PatientsTreated, ref qualification, ref specialization, ref workE, ref age) == 1)
-				{
-
-
-					mydiv.InnerHtml = "<p><b>Name:</b></p>" + name +  
-										" <p><b>phone:</b></p>" +phone+
-										"<p><b>gender:</b></p>" +gender+
-										"<p><b>Qualification:</b></p>" +qualification+
-										"<p><b> Age:</b></p>" +age+
-										"<p><b>Charges:</b></p> " +charges_Per_Visit+
-										"<p><b>Repute index:</b></p>"+ReputeIndex;
-					
-
-
-
-
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-				
-			}
-			else if(Patient.Checked == true)
-			{
-
-				
-
-				if (objDAL.GETPATIENT(id, ref name, ref  phone, ref  address, ref  bDate, ref age, ref  gender) == 0)
-				{
-
-
-
-					mydiv.InnerHtml = "<p><b>Name:</b></p>" + name +
-										" <p><b>phone:</b></p>" + phone +
-										"<p><b>gender:</b></p>" + gender +
-										"<p><b>Address:</b></p>" + address +
-										"<p><b> Age:</b></p>" + age ;
-					
-
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-
-
-
-
-			}
-			else
-			{
-				string designation = "";
-				int s = 0;
-				
-				if(objDAL.GETSATFF(id , ref name , ref phone , ref address , ref gender , ref designation , ref s ) == 1)
-				{
-
-
-					mydiv.InnerHtml = "<p><b>Name:</b></p>" + name +
-										" <p><b>phone:</b></p>" + phone +
-										"<p><b>gender:</b></p>" + gender +
-										"<p><b>Address:</b></p>" + address +
-										"<p><b> salary:</b></p>" + s;
-
-
-				}
-				else
-				{
-					Msg.Text = "there was some error";
-				}
-
-
-
-			}
-
-
-
-			
-			
-
-		}
-
-
-	}
+    public class ManageClinicModel : PageModel
+    {
+        [BindProperty]
+        public string SearchQuery { get; set; } = "";
+
+        [BindProperty]
+        public string SelectedCategory { get; set; } = "D";
+
+        public DataTable GridData { get; set; }
+        public string GridCaption { get; set; } = "Doctors Table";
+        public string Message { get; set; }
+        public string DetailHtml { get; set; }
+
+        // cr-dotnet-1034: Changed from synchronous OnGet() to async OnGetAsync()
+        // to prevent thread pool exhaustion under load in cloud (AWS RDS) deployments.
+        public async Task OnGetAsync()
+        {
+            SelectedCategory = "D";
+            await LoadGridAsync("", "DOCTOR");
+        }
+
+        // cr-dotnet-1034: Changed from synchronous OnPost() to async OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
+        {
+            string category = Request.Form["Category"].ToString();
+            if (!string.IsNullOrEmpty(category))
+                SelectedCategory = category;
+
+            string catKey = SelectedCategory == "D" ? "DOCTOR" : SelectedCategory == "P" ? "PATIENT" : "OTHERSTAFF";
+            await LoadGridAsync("", catKey);
+            return Page();
+        }
+
+        // cr-dotnet-1034: Changed from synchronous OnPostSearch() to async OnPostSearchAsync()
+        public async Task<IActionResult> OnPostSearchAsync()
+        {
+            string category = Request.Form["Category"].ToString();
+            if (!string.IsNullOrEmpty(category))
+                SelectedCategory = category;
+
+            string catKey = SelectedCategory == "D" ? "DOCTOR" : SelectedCategory == "P" ? "PATIENT" : "OTHERSTAFF";
+            await LoadGridAsync(SearchQuery ?? "", catKey);
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int rowIndex)
+        {
+            string category = Request.Form["Category"].ToString();
+            if (!string.IsNullOrEmpty(category))
+                SelectedCategory = category;
+
+            string catKey = SelectedCategory == "D" ? "DOCTOR" : SelectedCategory == "P" ? "PATIENT" : "OTHERSTAFF";
+            await LoadGridAsync(SearchQuery ?? "", catKey);
+
+            if (GridData != null && rowIndex < GridData.Rows.Count)
+            {
+                string id = GridData.Rows[rowIndex][0].ToString();
+                myDAL objDAL = new myDAL();
+
+                if (SelectedCategory == "D")
+                {
+                    if (objDAL.DeleteDoctor(Convert.ToInt32(id)) == 1)
+                    {
+                        Message = " Doctor No: " + id + " Deleted";
+                        await LoadGridAsync("", "DOCTOR");
+                    }
+                    else
+                    {
+                        Message = "there was some error";
+                    }
+                }
+                else if (SelectedCategory == "P")
+                {
+                    Message = "You are not Authorized to Delete a Patient";
+                }
+                else
+                {
+                    if (objDAL.DeleteStaff(Convert.ToInt32(id)) == 1)
+                    {
+                        Message = "Staff No: " + id + " Deleted ";
+                        await LoadGridAsync("", "OTHERSTAFF");
+                    }
+                    else
+                    {
+                        Message = "There was some Error";
+                    }
+                }
+            }
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostSelectAsync(int rowIndex)
+        {
+            string category = Request.Form["Category"].ToString();
+            if (!string.IsNullOrEmpty(category))
+                SelectedCategory = category;
+
+            string catKey = SelectedCategory == "D" ? "DOCTOR" : SelectedCategory == "P" ? "PATIENT" : "OTHERSTAFF";
+            await LoadGridAsync(SearchQuery ?? "", catKey);
+
+            if (GridData != null && rowIndex < GridData.Rows.Count)
+            {
+                int id = Convert.ToInt32(GridData.Rows[rowIndex][0].ToString());
+                myDAL objDAL = new myDAL();
+
+                string name = "", phone = "", gender = "", address = "", bDate = "";
+                float charges_Per_Visit = 0, ReputeIndex = 0;
+                int PatientsTreated = 0, workE = 0, age = 0;
+                string qualification = "", specialization = "";
+
+                if (SelectedCategory == "D")
+                {
+                    if (objDAL.GET_DOCTOR_PROFILE(id, ref name, ref phone, ref gender, ref charges_Per_Visit, ref ReputeIndex, ref PatientsTreated, ref qualification, ref specialization, ref workE, ref age) == 1)
+                    {
+                        DetailHtml = "<p><b>Name:</b></p>" + name +
+                                     " <p><b>phone:</b></p>" + phone +
+                                     "<p><b>gender:</b></p>" + gender +
+                                     "<p><b>Qualification:</b></p>" + qualification +
+                                     "<p><b> Age:</b></p>" + age +
+                                     "<p><b>Charges:</b></p> " + charges_Per_Visit +
+                                     "<p><b>Repute index:</b></p>" + ReputeIndex;
+                    }
+                    else
+                    {
+                        Message = "there was some error";
+                    }
+                }
+                else if (SelectedCategory == "P")
+                {
+                    if (objDAL.GETPATIENT(id, ref name, ref phone, ref address, ref bDate, ref age, ref gender) == 0)
+                    {
+                        DetailHtml = "<p><b>Name:</b></p>" + name +
+                                     " <p><b>phone:</b></p>" + phone +
+                                     "<p><b>gender:</b></p>" + gender +
+                                     "<p><b>Address:</b></p>" + address +
+                                     "<p><b> Age:</b></p>" + age;
+                    }
+                    else
+                    {
+                        Message = "there was some error";
+                    }
+                }
+                else
+                {
+                    string designation = "";
+                    int sal = 0;
+                    if (objDAL.GETSATFF(id, ref name, ref phone, ref address, ref gender, ref designation, ref sal) == 1)
+                    {
+                        DetailHtml = "<p><b>Name:</b></p>" + name +
+                                     " <p><b>phone:</b></p>" + phone +
+                                     "<p><b>gender:</b></p>" + gender +
+                                     "<p><b>Address:</b></p>" + address +
+                                     "<p><b> salary:</b></p>" + sal;
+                    }
+                    else
+                    {
+                        Message = "there was some error";
+                    }
+                }
+            }
+
+            return Page();
+        }
+
+        // cr-dotnet-1034: Async grid loading replaces synchronous GridView.DataBind().
+        // Data is fetched via Task-based API from Amazon RDS, allowing the request thread
+        // to be released while awaiting I/O completion.
+        private async Task LoadGridAsync(string searchQuery, string category)
+        {
+            myDAL objmyDaL = new myDAL();
+
+            if (category == "DOCTOR")
+            {
+                GridCaption = "Doctors Table";
+                DataTable table = await objmyDaL.LoadDoctorAsync(searchQuery);
+                if (table != null && table.Rows.Count > 0)
+                    GridData = table;
+                else
+                    Message = "No Doctors to show";
+            }
+            else if (category == "PATIENT")
+            {
+                GridCaption = "Patients Table";
+                DataTable table = await objmyDaL.LoadPatientAsync(searchQuery);
+                if (table != null && table.Rows.Count > 0)
+                    GridData = table;
+                else
+                    Message = "No Pateints to show";
+            }
+            else
+            {
+                GridCaption = "Other Staff Table:";
+                DataTable table = await objmyDaL.LoadOtherStaffAsync(searchQuery);
+                if (table != null && table.Rows.Count > 0)
+                    GridData = table;
+                else
+                    Message = "No Staff Member to show";
+            }
+        }
+    }
 }

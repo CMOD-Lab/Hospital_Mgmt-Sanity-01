@@ -1,62 +1,67 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="ViewDoctors.aspx.cs" Inherits="DBProject.ViewDoctors" %>
+@page "/Patient/ViewDoctors"
+@model DBProject.Patient.ViewDoctorsModel
+@{
+    ViewData["Title"] = "Doctors";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
 
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
+@* Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls - replaced with async Razor Pages model binding *@
+@* OnGetAsync() / OnPostSelectDoctorAsync() use async DAL (getDeptDoctorInfoAsync) connected to Amazon RDS *@
+@* preventing thread pool exhaustion under load and enabling efficient auto-scaling. *@
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+@section head {
+    <title>Doctors</title>
+}
 
-            <title>Doctors</title>
+@* Styling *@
+<link rel="stylesheet" href="/assets/css/grid-view.css"/>
 
-</asp:Content>
+<h1><strong style="margin:23%">Select a Doctor to view his Profile</strong></h1>
+<br /><br />
 
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-
-       
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-
-    <h1><strong style="margin:23%">Select a Doctor to view his Profile</strong></h1>
+@if (!string.IsNullOrEmpty(Model.TDoctor))
+{
+    <span>@Model.TDoctor</span>
     <br /><br />
+}
 
-    <asp:Label ID="TDoctor" runat="server"></asp:Label>
-    <br /><br />
+@if (Model.Doctors != null && Model.Doctors.Rows.Count > 0)
+{
+    <table class="GridView-d" cellpadding="4" style="color:black; width:1000px; border:1px solid #DEDFDE;">
+        <thead>
+            <tr style="background-color:#6B696B; color:white; font-weight:bold;">
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.Doctors.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowIndex = 0; }
+            @foreach (System.Data.DataRow row in Model.Doctors.Rows)
+            {
+                <tr style="background-color:#F7F7DE;">
+                    <td style="width:50px;">@(rowIndex + 1)</td>
+                    @foreach (var cell in row.ItemArray)
+                    {
+                        <td>@cell</td>
+                    }
+                    <td>
+                        <form method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="dID" value="@row[0]" />
+                            <button type="submit" asp-page-handler="SelectDoctor">Select</button>
+                        </form>
+                    </td>
+                </tr>
+                rowIndex++;
+            }
+        </tbody>
+    </table>
+}
 
-    <asp:GridView ID="TDoctorGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False"
-        AutoGenerateSelectButton="True" 
-        OnRowCommand="TDoctorGrid_RowCommand" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px"
-     
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-            <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-
-
-    </asp:GridView>
-
-    <br /><br />
-
-
-</asp:Content>
+<br /><br />

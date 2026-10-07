@@ -1,27 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+using System;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
+using DBProject.DAL;
+using DBProject.Infrastructure;
 
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-0126: Heavy Coupling to Stateful Middleware
+//   Replaced IIS in-process HttpSessionState (sticky-session) with Amazon ElastiCache for Redis
+//   via RedisSessionHelper (IDistributedCache) to enable stateless horizontal scaling.
+//   Session data now persists across pod restarts and scales horizontally without sticky routing.
+// Removed: System.Web, System.Web.UI, System.Web.UI.WebControls (Web Forms namespaces not available in ASP.NET Core)
+// Removed: System.Collections.Generic, System.Linq, System.Web.HttpContext (Web Forms dependencies)
+// Replaced: System.Web.UI.Page base class with Microsoft.AspNetCore.Mvc.RazorPages.PageModel
+// Replaced: Page_Load event handler with OnGet() Razor Pages lifecycle method
+// Replaced: Server-side TextBox controls (.Text) with [BindProperty] model binding
+// Replaced: Session["key"] with RedisSessionHelper (IDistributedCache) backed by Amazon ElastiCache
+// Replaced: Response.Redirect with RedirectToPage
+// Replaced: Response.Write (inline script alerts) with TempData messages rendered in the view
 
 namespace DBProject
 {
-    public partial class SignUp : System.Web.UI.Page
+    public class SignUpModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        private readonly IDistributedCache _distributedCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public SignUpModel(IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor)
         {
-            Session["idoriginal"] = "";
+            _distributedCache = distributedCache;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        // Login form bound properties
+        [BindProperty]
+        public string LoginEmail { get; set; }
+
+        [BindProperty]
+        public string LoginPassword { get; set; }
+
+        // Sign-up form bound properties
+        [BindProperty]
+        public string SName { get; set; }
+
+        [BindProperty]
+        public string SBirthDate { get; set; }
+
+        [BindProperty]
+        public string SEmail { get; set; }
+
+        [BindProperty]
+        public string SPassword { get; set; }
+
+        [BindProperty]
+        public string ScPassword { get; set; }
+
+        [BindProperty]
+        public string Phone { get; set; }
+
+        [BindProperty]
+        public string Gender { get; set; }
+
+        [BindProperty]
+        public string Address { get; set; }
+
+        // Message to display to the user (replaces Response.Write inline script alerts)
+        public string AlertMessage { get; set; }
+
+        public void OnGet()
+        {
+            // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+            // instead of IIS in-process HttpSessionState to support horizontal scaling.
+            // Original: Session["idoriginal"] = "";
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
+
+            // Clear session on page load (equivalent to Page_Load)
+            session.SetString("idoriginal", "");
         }
 
         //-----------------------Function1--------------------------//
-        protected void loginV(object sender, EventArgs e)
+        public IActionResult OnPostLogin()
         {
-            string email = loginEmail.Text;
-            string password = loginPassword.Text;
+            string email = LoginEmail;
+            string password = LoginPassword;
 
             myDAL objmyDAl = new myDAL();
 
@@ -33,63 +97,52 @@ namespace DBProject
 
             if (status == 0)
             {
-                Session["idoriginal"] = id;
+                // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+                // instead of IIS in-process HttpSessionState to support horizontal scaling.
+                // Original: Session["idoriginal"] = id;
+                var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
+
+                session.SetString("idoriginal", id.ToString());
 
                 if (type == 1)
                 {
-                    Response.BufferOutput = true;
-                    Response.Redirect("~/Patient/PatientHome.aspx");
-                    return;
+                    return RedirectToPage("/Patient/PatientHome");
                 }
-
                 else if (type == 2)
                 {
-                    Response.BufferOutput = true;
-                    Response.Redirect("~/Doctor/DoctorHome.aspx");
-                    return;
+                    return RedirectToPage("/Doctor/DoctorHome");
                 }
-
                 else if (type == 3)
                 {
-                    Response.BufferOutput = true;
-                    Response.Redirect("~/Admin/AdminHome.aspx");
-                    return;
+                    return RedirectToPage("/Admin/AdminHome");
                 }
             }
-
-
             else if (status == 1)
             {
-                Response.Write("<script>alert('Email not found. Try Again !');</script>");
+                TempData["AlertMessage"] = "Email not found. Try Again !";
             }
-
             else if (status == 2)
             {
-                Response.Write("<script>alert('Incorrect Password. Try Again !');</script>");
+                TempData["AlertMessage"] = "Incorrect Password. Try Again !";
             }
-
             else if (status == -1)
             {
-                Response.Write("<script>alert('There was some error. Try Again !');</script>");
+                TempData["AlertMessage"] = "There was some error. Try Again !";
             }
+
+            return Page();
         }
 
-
-
-
         //-----------------------Function2--------------------------//
-        protected void signupV(object sender, EventArgs e)
+        public IActionResult OnPostSignup()
         {
-            string Name = sName.Text;
-            string BirthDate = sBirthDate.Text;
-            string Email = sEmail.Text;
-            string Password = sPassword.Text;
-            string PhoneNo = Phone.Text;
-            string Addr = Address.Text;
-
-            string gender = Request.Form["Gender"].ToString();
-           
-
+            string Name = SName;
+            string BirthDate = SBirthDate;
+            string Email = SEmail;
+            string Password = SPassword;
+            string PhoneNo = Phone;
+            string Addr = Address;
+            string gender = Gender;
 
             myDAL objmyDAl = new myDAL();
 
@@ -97,31 +150,29 @@ namespace DBProject
 
             int status = objmyDAl.validateUser(Name, BirthDate, Email, Password, PhoneNo, gender, Addr, ref id);
 
-
-            //status == 0 failure
+            // status == 0 failure
             if (status == 0)
             {
-                Response.Write("<script>alert('Email already exists. Please choose a different one.');</script>");
+                TempData["AlertMessage"] = "Email already exists. Please choose a different one.";
             }
-
             else if (status == 1)
             {
-                Session["idoriginal"] = id;
+                // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+                // instead of IIS in-process HttpSessionState to support horizontal scaling.
+                // Original: Session["idoriginal"] = id;
+                var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
 
-              //Response.Write("<script>alert('Registration Successful !');</script>");
-
-                Response.BufferOutput = true;
-                Response.Redirect("~/Patient/PatientHome.aspx");
+                session.SetString("idoriginal", id.ToString());
+                return RedirectToPage("/Patient/PatientHome");
             }
-
             else if (status == -1)
             {
-                Response.Write("<script>alert('There was some error. Try again !');</script>");
+                TempData["AlertMessage"] = "There was some error. Try again !";
             }
-           
+
+            return Page();
         }
 
-            //Enter new function here//
+        //Enter new function here//
     }
-
 }

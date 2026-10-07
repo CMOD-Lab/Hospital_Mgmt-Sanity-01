@@ -1,31 +1,38 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="CurrentAppointment.aspx.cs" Inherits="DBProject.CurrentAppointment" %>
+@page "/Patient/CurrentAppointment"
+@model DBProject.Patient.CurrentAppointmentModel
+@{
+    ViewData["Title"] = "Current Appointment";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
 
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
 
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+@section head {
     <title>Current Appointment</title>
+}
 
-</asp:Content>
+<h1><strong style="margin:30%">Current Appointments</strong></h1>
+<br /><br />
 
+<div style="margin-left: 70px">
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    @if (!string.IsNullOrEmpty(Model.AppointmentStatus))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.AppointmentStatus</p>
+        <br /><br />
+    }
 
+    @if (!string.IsNullOrEmpty(Model.DoctorInfo))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.DoctorInfo</p>
+        <br /><br />
+    }
 
-    <h1><strong style="margin:30%">Current Appointments</strong></h1>
-    <br /><br />
+    @if (!string.IsNullOrEmpty(Model.TimingInfo))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.TimingInfo</p>
+        <br /><br />
+    }
 
-    <div style="margin-left: 70px">
-
-    <asp:Label ID="Appointment" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <asp:Label ID="ADoctor" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    <asp:Label ID="ATimings" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-    <br /><br />
-
-    </div>
-
-</asp:Content>
+</div>

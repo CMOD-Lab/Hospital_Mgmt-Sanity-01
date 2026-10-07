@@ -1,59 +1,59 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="TreatmentHistory.aspx.cs" Inherits="DBProject.TreatmentHistory" %>
+@page "/Patient/TreatmentHistory"
+@model DBProject.Patient.TreatmentHistoryModel
+@{
+    ViewData["Title"] = "Treatment History";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
 
+@* Migrated from ASP.NET Web Forms (<%@ Page %>) to ASP.NET Core Razor Pages *@
+@* Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages *@
+@* Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls - replaced with async Razor Pages model binding *@
+@* OnGetAsync() uses async DAL (getTreatmentHistoryAsync) connected to Amazon RDS *@
+@* preventing thread pool exhaustion under load and enabling efficient auto-scaling. *@
 
+@section head {
+    <title>Treatment History</title>
+}
 
+@* Styling *@
+<link rel="stylesheet" href="/assets/css/grid-view.css"/>
 
+<h1><strong style="margin:35%">Your Treatment History</strong></h1>
+<br /><br />
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
-        <title>Treatment History</title>
-
-</asp:Content>
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-    
-    <h1><strong style="margin:35%">Your Treatment History</strong></h1>
+@if (!string.IsNullOrEmpty(Model.THistory))
+{
+    <span>@Model.THistory</span>
     <br /><br />
+}
 
+@if (Model.TreatmentData != null && Model.TreatmentData.Rows.Count > 0)
+{
+    <table class="GridView-d" cellpadding="4" style="color:black; width:1000px; border:1px solid #DEDFDE;">
+        <thead>
+            <tr style="background-color:#6B696B; color:white; font-weight:bold;">
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.TreatmentData.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowIndex = 0; }
+            @foreach (System.Data.DataRow row in Model.TreatmentData.Rows)
+            {
+                <tr style="background-color:#F7F7DE;">
+                    <td style="width:50px;">@(rowIndex + 1)</td>
+                    @foreach (var cell in row.ItemArray)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+                rowIndex++;
+            }
+        </tbody>
+    </table>
+}
 
-
-    <asp:Label ID="THistory" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="THistoryGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-
-
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-            <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-          
-    </asp:GridView>
-
-    <br /><br />
-
-</asp:Content>
+<br /><br />

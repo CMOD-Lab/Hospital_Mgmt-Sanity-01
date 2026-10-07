@@ -1,31 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+using System;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
+using DBProject.DAL;
+using DBProject.Infrastructure;
 
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-0045: Session State Provider
+//   Replaced in-process HttpSessionState with Amazon ElastiCache for Redis via
+//   RedisSessionHelper (IDistributedCache) to enable stateless horizontal scaling.
 
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class CurrentAppointment : System.Web.UI.Page
+    public class CurrentAppointmentModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        private readonly IDistributedCache _distributedCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public CurrentAppointmentModel(IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor)
         {
-            appointmentToday(sender, e);
+            _distributedCache = distributedCache;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        public string AppointmentStatus { get; set; }
+        public string DoctorInfo { get; set; }
+        public string TimingInfo { get; set; }
 
-
-        //-----------------------Function1--------------------------//
-
-        protected void appointmentToday(object sender, EventArgs e)
+        public void OnGet()
         {
+            LoadAppointmentToday();
+        }
+
+        private void LoadAppointmentToday()
+        {
+            // cr-dotnet-0045: Use Redis-backed distributed session (ElastiCache)
+            // instead of in-process HttpSessionState to support horizontal scaling.
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
+
             myDAL objmyDAl = new myDAL();
 
-            int pid = (int)Session["idoriginal"];
+            int pid = session.GetInt32("idoriginal") ?? 0;
 
             string dName = "";
             string timings = "";
@@ -34,46 +52,31 @@ namespace DBProject
 
             if (status == -1)
             {
-                Appointment.Text = "There was some error in retrieving the Patient's appointment.";
+                AppointmentStatus = "There was some error in retrieving the Patient's appointment.";
             }
-
             else if (status == 0)
             {
-                Appointment.Text = "You have no appointment today with any doctor.";
+                AppointmentStatus = "You have no appointment today with any doctor.";
             }
-
             else
             {
                 if (status == 3)
                 {
-                    ADoctor.Text = "You had an outdated appointment with Doctor " + dName + " to which he didn't respond. So that appointment is discarded.";
-                    ATimings.Text = "The Appointment Timings were : " + timings;
+                    DoctorInfo = "You had an outdated appointment with Doctor " + dName + " to which he didn't respond. So that appointment is discarded.";
+                    TimingInfo = "The Appointment Timings were : " + timings;
                     return;
                 }
-
                 else if (status == 2)
                 {
-                    ADoctor.Text = "You have sent an appointment request to Doctor " + dName + " which isn't approved by him yet.";
+                    DoctorInfo = "You have sent an appointment request to Doctor " + dName + " which isn't approved by him yet.";
                 }
-
                 else
                 {
-                    ADoctor.Text = "Today you have an appointment with Doctor " + dName;
+                    DoctorInfo = "Today you have an appointment with Doctor " + dName;
                 }
 
-                ATimings.Text = "The Appointment Timings are : " + timings;
+                TimingInfo = "The Appointment Timings are : " + timings;
             }
-
-            return;
         }
-
-
-        //-----------------------Add a new function here------------------//
-
-
-
-
-
-
     }
 }

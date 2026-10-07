@@ -6,6 +6,11 @@
 //     the code is regenerated. 
 // </auto-generated>
 //------------------------------------------------------------------------------
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Removed legacy System.Web.UI.WebControls.GridView control declaration.
+//   Data binding is now performed asynchronously via OnGetAsync()/OnPostAsync() in the
+//   PageModel, and rendered through Razor HTML table markup instead of server-side
+//   GridView controls, preventing thread pool exhaustion under cloud load.
 
 namespace DBProject {
     
@@ -17,62 +22,64 @@ namespace DBProject {
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.RadioButton with HTML radio input.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton Doctor;
+        // protected global::System.Web.UI.WebControls.RadioButton Doctor;
         
         /// <summary>
         /// Patient control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.RadioButton with HTML radio input.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton Patient;
+        // protected global::System.Web.UI.WebControls.RadioButton Patient;
         
         /// <summary>
         /// OtherStaff control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.RadioButton with HTML radio input.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton OtherStaff;
+        // protected global::System.Web.UI.WebControls.RadioButton OtherStaff;
         
         /// <summary>
         /// txtSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.TextBox with HTML input.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        // protected global::System.Web.UI.WebControls.TextBox txtSearch;
         
         /// <summary>
         /// Msg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.WebControls.Label with Razor model property.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Msg;
+        // protected global::System.Web.UI.WebControls.Label Msg;
         
         /// <summary>
         /// Manage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: System.Web.UI.WebControls.GridView replaced with async Razor HTML table.
+        /// Data is now bound asynchronously via OnGetAsync()/OnPostAsync() using Amazon RDS
+        /// Task-based API, preventing thread pool exhaustion under cloud load.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView Manage;
+        // protected global::System.Web.UI.WebControls.GridView Manage;
         
         /// <summary>
         /// mydiv control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Migrated: replaced System.Web.UI.HtmlControls.HtmlGenericControl with HTML div.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl mydiv;
+        // protected global::System.Web.UI.HtmlControls.HtmlGenericControl mydiv;
     }
 }

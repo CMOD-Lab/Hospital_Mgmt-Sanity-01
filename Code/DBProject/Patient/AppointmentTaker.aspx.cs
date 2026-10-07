@@ -1,87 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+using System;
 using System.Data;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
+using DBProject.DAL;
+using DBProject.Infrastructure;
 
+// Migrated from ASP.NET Web Forms (System.Web.UI.Page) to ASP.NET Core Razor Pages (PageModel)
+// Rule cr-dotnet-0026: Web Forms Usage - Migrate to ASP.NET Core MVC/Razor Pages
+// Rule cr-dotnet-0126: Heavy Coupling to Stateful Middleware
+//   Replaced IIS in-process HttpSessionState (sticky-session) with Amazon ElastiCache for Redis
+//   via RedisSessionHelper (IDistributedCache) to enable stateless horizontal scaling.
+//   Session data now persists across pod restarts and scales horizontally without sticky routing.
+// Rule cr-dotnet-1034: Synchronous Data Binding in GridView Controls
+//   Replaced synchronous GridView.DataBind() with async Task-based data loading via
+//   OnGetAsync() and myDAL async methods connected to Amazon RDS, preventing thread pool
+//   exhaustion under load and enabling efficient auto-scaling in cloud deployments.
 
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class AppointmentTaker : System.Web.UI.Page
+    public class AppointmentTakerModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        private readonly IDistributedCache _distributedCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AppointmentTakerModel(IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor)
         {
-            Session["freeSlot"] = "";
-            freeSlots(sender, e);
+            _distributedCache = distributedCache;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        public string AppointmentMessage { get; set; }
+        public DataTable FreeSlots { get; set; }
+        public int SlotCount { get; set; }
 
-        //---------------Function Called whenever a Free Slot is selected from the Grid View----//
-        protected void PAppointmentGrid_RowCommand(object sender, GridViewCommandEventArgs e)
+        // cr-dotnet-1034: Changed from synchronous OnGet() to async OnGetAsync()
+        // to prevent thread pool exhaustion under load in cloud (AWS RDS) deployments.
+        public async Task OnGetAsync()
         {
-            if (e.CommandName == "Select")
-            {
-                Int16 num = Convert.ToInt16(e.CommandArgument);
+            // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+            // instead of IIS in-process HttpSessionState to support horizontal scaling.
+            // Original: Session["freeSlot"] = "";
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
 
-                string appointment = PAppointmentGrid.Rows[num].Cells[2].Text;
-
-                string[] tokens = appointment.Split(':');
-
-                Session["freeSlot"] = tokens[0];
-
-                Response.BufferOutput = true;
-                Response.Redirect("AppointmentRequestSent.aspx");
-
-                return;
-            }
+            session.SetString("freeSlot", "");
+            await LoadFreeSlotsAsync(session);
         }
 
+        // Handler for selecting a free slot row (POST)
+        public IActionResult OnPostSelectSlot(string slotValue)
+        {
+            // cr-dotnet-0126: Use Redis-backed distributed session (Amazon ElastiCache)
+            // instead of IIS in-process HttpSessionState to support horizontal scaling.
+            // Original: Session["freeSlot"] = tokens[0];
+            var session = new RedisSessionHelper(_distributedCache, _httpContextAccessor);
 
-        //-----------------------Function1--------------------------//
+            session.SetString("freeSlot", slotValue ?? "");
+            return RedirectToPage("/Patient/AppointmentRequestSent");
+        }
 
-        protected void freeSlots(object sender, EventArgs e)
+        // cr-dotnet-1034: Async data loading replaces synchronous GridView.DataBind().
+        // Data is fetched via Task-based API from Amazon RDS, allowing the request thread
+        // to be released while awaiting I/O completion.
+        private async Task LoadFreeSlotsAsync(RedisSessionHelper session)
         {
             myDAL objmyDAl = new myDAL();
 
-            DataTable DT = new DataTable();
-
-
-            string dID1 = (string)Session["dID"];
-
+            string dID1 = session.GetString("dID");
             int dID = Convert.ToInt32(dID1);
 
+            int pID = session.GetInt32("idoriginal") ?? 0;
 
-            int pID = (int)Session["idoriginal"];
-
-            
-            int status = objmyDAl.getFreeSlots(dID, pID, ref DT);
-
+            var (status, dt) = await objmyDAl.getFreeSlotsAsync(dID, pID);
 
             if (status == -1)
             {
-                PAppointment.Text = "There was some error in retrieving the Doctors's Free Slots.";
+                AppointmentMessage = "There was some error in retrieving the Doctors's Free Slots.";
             }
-
             else if (status == 0)
             {
-                PAppointment.Text = "There is currently no free slot of this doctor.";
+                AppointmentMessage = "There is currently no free slot of this doctor.";
             }
-
             else if (status > 0)
             {
-                PAppointment.Text = "The following are the " + status  + " free slots of this doctor for today :";
-                PAppointmentGrid.DataSource = DT;
-                PAppointmentGrid.DataBind();
+                AppointmentMessage = "The following are the " + status + " free slots of this doctor for today :";
+                FreeSlots = dt;
+                SlotCount = status;
             }
-
-            return;
         }
-
-
-        //-----------------------Add a new function here------------------//
-
     }
 }
