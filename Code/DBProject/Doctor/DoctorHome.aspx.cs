@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +18,7 @@ namespace doctor
             myDAL objmyDAL = new myDAL();
             DataTable dt = new DataTable();
             int found;
-            int did = (int)Session["idoriginal"];
+            int did = (int)HttpContext.Current.Session["idoriginal"];
          
             found = objmyDAL.docinfo_DAL(did, ref dt);
 

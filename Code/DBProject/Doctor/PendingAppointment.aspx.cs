@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -22,7 +22,7 @@ namespace doctor
         {
                 myDAL objDAL = new myDAL();
                 
-               int did = (int)Session["idoriginal"];
+               int did = (int)HttpContext.Current.Session["idoriginal"];
 
                     DataTable DT = new DataTable();
 

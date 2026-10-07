@@ -14,8 +14,11 @@ namespace DBProject.DAL
 	public class myDAL
     {
 		//connection string of the server database
+        // Migrated from Web.config XDT transform to environment variable for container compatibility (cz-dotnet-0055)
+        // Set DB_CONNECTION_STRING env var (e.g. via Kubernetes ConfigMap/Secret) to provide the connection string at runtime.
         private static readonly string connString =
-            System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+            System.Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+            ?? System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"]?.ConnectionString;
 
 
 

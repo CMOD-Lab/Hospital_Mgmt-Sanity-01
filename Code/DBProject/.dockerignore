@@ -1,0 +1,67 @@
+# ============================================================
+# .dockerignore for Clinic Management System (ASP.NET Web Forms)
+# Excludes build artifacts, IDE files, and non-runtime assets
+# to reduce Docker build context size for EKS deployment.
+# ============================================================
+
+# ----- Build Output & Intermediate Directories -----
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+
+# ----- NuGet Packages (restored during build stage) -----
+**/packages/
+**/*.nupkg
+**/*.nuspec
+**/.nuget/
+
+# ----- IDE & Editor Files -----
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/*.suo
+**/*.cache
+
+# ----- PDB / Debug Symbol Files -----
+**/*.pdb
+**/*.mdb
+
+# ----- Temporary & OS Files -----
+**/Thumbs.db
+**/*.DS_Store
+**/desktop.ini
+**/*.tmp
+**/*.temp
+**/*.log
+**/*.bak
+**/*.orig
+
+# ----- Test Projects & Test Artifacts -----
+**/*Test*/
+**/*Tests*/
+**/TestResults/
+**/coverage/
+
+# ----- Documentation & Non-Runtime Assets -----
+README.md
+LICENSE
+*.pdf
+images/
+Database\ Files/
+*.sql
+
+# ----- Git Metadata -----
+.git/
+.gitignore
+.gitattributes
+
+# ----- CI/CD & Infrastructure Files -----
+docker-compose*.yml
+scripts/
+docs/
+kubernetes/
+
+# ----- Roslyn Compiler Binaries (in SDK; not needed in runtime) -----
+**/roslyn/

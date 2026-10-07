@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  dbproject:
+    image: dbproject:latest
+    build:
+      context: .
+      dockerfile: Code/DBProject/Dockerfile
+    container_name: dbproject
+    ports:
+      - "80:80"
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING:-}
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-}
+      - APPINSIGHTS_INSTRUMENTATIONKEY=${APPINSIGHTS_INSTRUMENTATIONKEY:-}
+      - ASPNET_ENVIRONMENT=Production
+    volumes:
+      - app-logs:C:/inetpub/logs
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "powershell", "-Command",
+             "try { $r = Invoke-WebRequest -Uri http://localhost/Health.aspx -UseBasicParsing -TimeoutSec 5; if ($r.StatusCode -eq 200) { exit 0 } else { exit 1 } } catch { exit 1 }"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 90s
+
+volumes:
+  app-logs:
+
+networks:
+  app-network:
+    driver: bridge

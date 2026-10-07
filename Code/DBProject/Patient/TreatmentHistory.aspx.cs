@@ -28,7 +28,8 @@ namespace DBProject
             DataTable DT = new DataTable();
 
 
-            int id = (int)Session["idoriginal"];
+            // Distributed Redis-backed session (ElastiCache on EKS) - replaces InProc session
+            int id = (int)HttpContext.Current.Session["idoriginal"];
 
 
             int status = objmyDAl.getTreatmentHistory(id, ref DT);

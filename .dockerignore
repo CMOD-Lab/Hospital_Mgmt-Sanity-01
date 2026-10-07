@@ -1,0 +1,82 @@
+# ============================================================
+# .dockerignore for Clinic Management System (ASP.NET Web Forms)
+# Rule: cz-dotnet-1040 - Unoptimized Web Forms Container Image Size
+# Excludes source code, PDB files, and temp artifacts from the
+# Windows container image to reduce image size for EKS deployment.
+# ============================================================
+
+# ----- Source Code (compiled by build stage; not needed in runtime image) -----
+**/*.cs
+**/*.vb
+**/*.csproj
+**/*.vbproj
+**/*.sln
+**/*.user
+**/*.suo
+**/*.cache
+
+# ----- PDB / Debug Symbol Files -----
+**/*.pdb
+**/*.mdb
+
+# ----- Build Output & Intermediate Directories -----
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+
+# ----- NuGet Packages (restored during build stage) -----
+**/packages/
+**/*.nupkg
+**/*.nuspec
+**/nuget.config
+**/.nuget/
+
+# ----- Temporary & IDE Files -----
+**/.vs/
+**/.vscode/
+**/.idea/
+**/Thumbs.db
+**/*.DS_Store
+**/desktop.ini
+**/*.tmp
+**/*.temp
+**/*.log
+**/*.bak
+**/*.orig
+
+# ----- Test Projects & Test Artifacts -----
+**/*Test*/
+**/*Tests*/
+**/*.Test.*/
+**/*.Tests.*/
+**/TestResults/
+**/coverage/
+
+# ----- Documentation & Non-Runtime Assets -----
+README.md
+LICENSE
+*.pdf
+images/
+Database\ Files/
+*.sql
+
+# ----- Git Metadata -----
+.git/
+.gitignore
+.gitattributes
+
+# ----- CI/CD & Infrastructure Files (not needed in image) -----
+Dockerfile
+.dockerignore
+docker-compose*.yml
+*.sh
+*.ps1
+*.cmd
+*.bat
+
+# ----- Roslyn Compiler Binaries (already in SDK; not needed in runtime) -----
+**/roslyn/
+
+# ----- Application Insights Config (managed via env vars in container) -----
+**/ApplicationInsights.config

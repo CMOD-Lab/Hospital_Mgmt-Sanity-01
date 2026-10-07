@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -25,15 +25,15 @@ namespace DBProject
             myDAL objmyDAl = new myDAL();
 
             
-            string dID1 = (string)Session["dID"];
+            string dID1 = (string)HttpContext.Current.Session["dID"];
 
             int dID = Convert.ToInt32(dID1);
 
 
-            int pID = (int)Session["idoriginal"];
+            int pID = (int)HttpContext.Current.Session["idoriginal"];
 
 
-            string temp = (string)Session["freeSlot"];
+            string temp = (string)HttpContext.Current.Session["freeSlot"];
 
             int freeSlot = Convert.ToInt32(temp);
 

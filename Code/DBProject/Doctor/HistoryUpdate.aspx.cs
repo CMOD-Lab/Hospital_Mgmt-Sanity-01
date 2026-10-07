@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,12 +20,12 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
             int found;
-            int did = (int)Session["idoriginal"];
+            int did = (int)HttpContext.Current.Session["idoriginal"];
             string disease= Disease.Text;
             string progres = progress.Text;
             string prescrip = Prescription.Text;
 
-            int appid = (int)Session["appointid"];
+            int appid = (int)HttpContext.Current.Session["appointid"];
 
             
             found = objmyDAL.update_prescription_DAL(did,appid,disease,progres,prescrip);
