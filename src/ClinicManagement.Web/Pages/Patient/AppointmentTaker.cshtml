@@ -1,0 +1,51 @@
+@page "{doctorId:int}"
+@model ClinicManagement.Web.Pages.Patient.AppointmentTakerModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-calendar-plus me-2"></i>Book Appointment</h2>
+        <hr />
+        <a asp-page="/Patient/ViewDoctors" class="btn btn-secondary mb-3">
+            <i class="fas fa-arrow-left me-1"></i>Back to Doctors
+        </a>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Available Appointment Slots</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.FreeSlots.Any())
+        {
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Select a Time Slot</label>
+                    <select name="slotId" class="form-select">
+                        @foreach (var slot in Model.FreeSlots)
+                        {
+                            <option value="@slot.SlotId">@slot.Timings</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check me-1"></i>Book Appointment
+                </button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>No available slots at this time. Please try again later.
+            </div>
+        }
+    </div>
+</div>

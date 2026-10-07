@@ -1,0 +1,169 @@
+@page
+@model ClinicManagement.Web.Pages.Admin.ManageClinicModel
+@{
+    ViewData["Title"] = "Manage Clinic";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-clinic-medical me-2"></i>Manage Clinic</h2>
+        <hr />
+        <a asp-page="/Admin/AdminHome" class="btn btn-secondary mb-3">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" id="manageTabs" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#doctors">
+            <i class="fas fa-user-md me-1"></i>Doctors
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#patients">
+            <i class="fas fa-users me-1"></i>Patients
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#staff">
+            <i class="fas fa-user-tie me-1"></i>Staff
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- Doctors Tab -->
+    <div class="tab-pane fade show active" id="doctors">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <form method="get" class="d-flex gap-2">
+                    <input type="hidden" name="tab" value="doctors" />
+                    <input type="text" name="doctorSearch" value="@Model.DoctorSearch" class="form-control" placeholder="Search doctors..." />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var doctor in Model.Doctors)
+                            {
+                                <tr>
+                                    <td>@doctor.DoctorID</td>
+                                    <td>@doctor.Name</td>
+                                    <td>@doctor.Department</td>
+                                    <td>
+                                        <form method="post" asp-page-handler="DeleteDoctor" class="d-inline">
+                                            <input type="hidden" name="id" value="@doctor.DoctorID" />
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Are you sure you want to remove this doctor?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patients Tab -->
+    <div class="tab-pane fade" id="patients">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <form method="get" class="d-flex gap-2">
+                    <input type="hidden" name="tab" value="patients" />
+                    <input type="text" name="patientSearch" value="@Model.PatientSearch" class="form-control" placeholder="Search patients..." />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var patient in Model.Patients)
+                            {
+                                <tr>
+                                    <td>@patient.PatientID</td>
+                                    <td>@patient.Name</td>
+                                    <td>@patient.Phone</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Tab -->
+    <div class="tab-pane fade" id="staff">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <form method="get" class="d-flex gap-2">
+                    <input type="hidden" name="tab" value="staff" />
+                    <input type="text" name="staffSearch" value="@Model.StaffSearch" class="form-control" placeholder="Search staff..." />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Designation</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var staff in Model.Staff)
+                            {
+                                <tr>
+                                    <td>@staff.StaffID</td>
+                                    <td>@staff.Name</td>
+                                    <td>@staff.Designation</td>
+                                    <td>
+                                        <form method="post" asp-page-handler="DeleteStaff" class="d-inline">
+                                            <input type="hidden" name="id" value="@staff.StaffID" />
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this staff member?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

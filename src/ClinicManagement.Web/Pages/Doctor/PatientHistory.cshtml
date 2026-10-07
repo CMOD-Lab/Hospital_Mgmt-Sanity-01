@@ -1,0 +1,57 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.PatientHistoryModel
+@{
+    ViewData["Title"] = "Patient History";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-history me-2"></i>Patient History</h2>
+        <hr />
+        <a asp-page="/Doctor/DoctorHome" class="btn btn-secondary mb-3">
+            <i class="fas fa-arrow-left me-1"></i>Back to Home
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Disease</th>
+                        <th>Progress</th>
+                        <th>Prescription</th>
+                        <th>Bill Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in Model.PatientHistory)
+                    {
+                        <tr>
+                            <td>@history.AppointID</td>
+                            <td>@history.PatientName</td>
+                            <td>@history.Date</td>
+                            <td>@history.Disease</td>
+                            <td>@history.Progress</td>
+                            <td>@history.Prescription</td>
+                            <td>
+                                <span class="badge @(history.BillStatus == "Paid" ? "bg-success" : "bg-warning")">
+                                    @history.BillStatus
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.PatientHistory.Any())
+        {
+            <div class="alert alert-info">No patient history found.</div>
+        }
+    </div>
+</div>

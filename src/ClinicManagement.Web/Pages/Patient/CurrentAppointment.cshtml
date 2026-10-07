@@ -1,0 +1,34 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.CurrentAppointmentModel
+@{
+    ViewData["Title"] = "Current Appointment";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-calendar-check me-2"></i>Current Appointment</h2>
+        <hr />
+        <a asp-page="/Patient/PatientHome" class="btn btn-secondary mb-3">
+            <i class="fas fa-arrow-left me-1"></i>Back to Home
+        </a>
+    </div>
+</div>
+
+@if (Model.CurrentAppointment != null)
+{
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Today's Appointment</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Doctor:</strong> @Model.CurrentAppointment.DoctorName</p>
+            <p><strong>Time:</strong> @Model.CurrentAppointment.Timings</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>You have no current appointment today.
+    </div>
+}

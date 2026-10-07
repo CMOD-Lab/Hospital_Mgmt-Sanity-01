@@ -1,0 +1,91 @@
+@page
+@model ClinicManagement.Web.Pages.Doctor.DoctorHomeModel
+@{
+    ViewData["Title"] = "Doctor Home";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user-md me-2"></i>Doctor Dashboard</h2>
+        <hr />
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+@if (Model.DoctorInfo != null)
+{
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>My Profile</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Name:</strong> @Model.DoctorInfo.Name</p>
+                    <p><strong>Department:</strong> @Model.DoctorInfo.Department</p>
+                    <p><strong>Phone:</strong> @Model.DoctorInfo.Phone</p>
+                    <p><strong>Gender:</strong> @Model.DoctorInfo.Gender</p>
+                    <p><strong>Birth Date:</strong> @Model.DoctorInfo.BirthDate</p>
+                    <p><strong>Address:</strong> @Model.DoctorInfo.Address</p>
+                    <p><strong>Qualification:</strong> @Model.DoctorInfo.Qualification</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Specialization:</strong> @Model.DoctorInfo.Specialization</p>
+                    <p><strong>Work Experience:</strong> @Model.DoctorInfo.WorkExperience years</p>
+                    <p><strong>Charges Per Visit:</strong> $@Model.DoctorInfo.ChargesPerVisit</p>
+                    <p><strong>Monthly Salary:</strong> $@Model.DoctorInfo.MonthlySalary?.ToString("N2")</p>
+                    <p><strong>Repute Index:</strong> @Model.DoctorInfo.ReputeIndex?.ToString("F1")</p>
+                    <p><strong>Patients Treated:</strong> @Model.DoctorInfo.PatientsTreated</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Navigation Cards -->
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <a asp-page="/Doctor/PendingAppointment" class="text-decoration-none">
+            <div class="card border-warning h-100 shadow-sm">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                    <h6>Pending Appointments</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-3">
+        <a asp-page="/Doctor/PatientHistory" class="text-decoration-none">
+            <div class="card border-info h-100 shadow-sm">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-history fa-2x text-info mb-2"></i>
+                    <h6>Patient History</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-3">
+        <a asp-page="/Doctor/Bill" class="text-decoration-none">
+            <div class="card border-success h-100 shadow-sm">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-file-invoice-dollar fa-2x text-success mb-2"></i>
+                    <h6>Billing</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-3">
+        <a asp-page="/SignUp" class="text-decoration-none">
+            <div class="card border-danger h-100 shadow-sm">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-sign-out-alt fa-2x text-danger mb-2"></i>
+                    <h6>Logout</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

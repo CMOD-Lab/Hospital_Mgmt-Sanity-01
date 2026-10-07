@@ -1,0 +1,48 @@
+@page "{doctorId:int}"
+@model ClinicManagement.Web.Pages.Patient.DoctorProfileModel
+@{
+    ViewData["Title"] = "Doctor Profile";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user-md me-2"></i>Doctor Profile</h2>
+        <hr />
+        <a asp-page="/Patient/ViewDoctors" class="btn btn-secondary mb-3">
+            <i class="fas fa-arrow-left me-1"></i>Back to Doctors
+        </a>
+    </div>
+</div>
+
+@if (Model.DoctorProfile != null)
+{
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">@Model.DoctorProfile.Name</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Phone:</strong> @Model.DoctorProfile.Phone</p>
+                    <p><strong>Gender:</strong> @Model.DoctorProfile.Gender</p>
+                    <p><strong>Age:</strong> @Model.DoctorProfile.Age years</p>
+                    <p><strong>Work Experience:</strong> @Model.DoctorProfile.WorkExperience years</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Qualification:</strong> @Model.DoctorProfile.Qualification</p>
+                    <p><strong>Specialization:</strong> @Model.DoctorProfile.Specialization</p>
+                    <p><strong>Charges Per Visit:</strong> $@Model.DoctorProfile.ChargesPerVisit</p>
+                    <p><strong>Repute Index:</strong> @Model.DoctorProfile.ReputeIndex.ToString("F1")</p>
+                    <p><strong>Patients Treated:</strong> @Model.DoctorProfile.PatientsTreated</p>
+                </div>
+            </div>
+            <a asp-page="/Patient/AppointmentTaker" asp-route-doctorId="@Model.DoctorProfile.DoctorID" class="btn btn-success">
+                <i class="fas fa-calendar-plus me-1"></i>Book Appointment
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">Doctor profile not found.</div>
+}

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "kkzZXLuQ4rY=",
+  "success": true,
+  "projectFilePath": "/modernize-data/studio-data/TNT1001/APP869998/transformed-code/155/studio-workspace/testHospital/src/ClinicManagement.Domain/ClinicManagement.Domain.csproj",
+  "expectedPackageFiles": [
+    "/app/.nuget/packages/microsoft.netcore.app.ref/8.0.30/microsoft.netcore.app.ref.8.0.30.nupkg.sha512",
+    "/app/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.30/microsoft.aspnetcore.app.ref.8.0.30.nupkg.sha512"
+  ],
+  "logs": []
+}

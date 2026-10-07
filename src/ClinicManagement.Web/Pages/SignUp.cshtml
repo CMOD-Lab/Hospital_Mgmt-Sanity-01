@@ -1,0 +1,126 @@
+@page
+@model ClinicManagement.Web.Pages.SignUpModel
+@{
+    ViewData["Title"] = "Login / Sign Up";
+    Layout = "_LoginLayout";
+}
+
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2><i class="fas fa-hospital-alt me-2"></i>Clinic Management System</h2>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @Model.SuccessMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <ul class="nav nav-tabs mb-4" id="authTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button">
+                                <i class="fas fa-user-plus me-1"></i>Sign Up
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="authTabsContent">
+                        <!-- Login Tab -->
+                        <div class="tab-pane fade show active" id="login" role="tabpanel">
+                            <form method="post" asp-page-handler="Login">
+                                <div class="mb-3">
+                                    <label asp-for="LoginInput.Email" class="form-label">Email Address</label>
+                                    <input asp-for="LoginInput.Email" class="form-control" placeholder="Enter your email" />
+                                    <span asp-validation-for="LoginInput.Email" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="LoginInput.Password" class="form-label">Password</label>
+                                    <input asp-for="LoginInput.Password" type="password" class="form-control" placeholder="Enter your password" />
+                                    <span asp-validation-for="LoginInput.Password" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Sign Up Tab -->
+                        <div class="tab-pane fade" id="signup" role="tabpanel">
+                            <form method="post" asp-page-handler="SignUp">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SignUpInput.Name" class="form-label">Full Name</label>
+                                        <input asp-for="SignUpInput.Name" class="form-control" placeholder="Enter your full name" />
+                                        <span asp-validation-for="SignUpInput.Name" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SignUpInput.BirthDate" class="form-label">Birth Date</label>
+                                        <input asp-for="SignUpInput.BirthDate" type="date" class="form-control" />
+                                        <span asp-validation-for="SignUpInput.BirthDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SignUpInput.Email" class="form-label">Email Address</label>
+                                        <input asp-for="SignUpInput.Email" class="form-control" placeholder="Enter your email" />
+                                        <span asp-validation-for="SignUpInput.Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SignUpInput.Password" class="form-label">Password</label>
+                                        <input asp-for="SignUpInput.Password" type="password" class="form-control" placeholder="Create a password" />
+                                        <span asp-validation-for="SignUpInput.Password" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SignUpInput.PhoneNo" class="form-label">Phone Number</label>
+                                        <input asp-for="SignUpInput.PhoneNo" class="form-control" placeholder="Enter phone number" />
+                                        <span asp-validation-for="SignUpInput.PhoneNo" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Gender</label>
+                                        <select asp-for="SignUpInput.Gender" class="form-select">
+                                            <option value="">Select Gender</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                        <span asp-validation-for="SignUpInput.Gender" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="SignUpInput.Address" class="form-label">Address</label>
+                                    <textarea asp-for="SignUpInput.Address" class="form-control" rows="2" placeholder="Enter your address"></textarea>
+                                    <span asp-validation-for="SignUpInput.Address" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-user-plus me-1"></i>Register as Patient
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

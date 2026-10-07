@@ -1,0 +1,69 @@
+@page
+@model ClinicManagement.Web.Pages.Patient.ViewDoctorsModel
+@{
+    ViewData["Title"] = "View Doctors";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user-md me-2"></i>View Doctors</h2>
+        <hr />
+        <a asp-page="/Patient/PatientHome" class="btn btn-secondary mb-3">
+            <i class="fas fa-arrow-left me-1"></i>Back to Home
+        </a>
+    </div>
+</div>
+
+<!-- Department Selection -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Select Department</h5>
+    </div>
+    <div class="card-body">
+        <form method="get">
+            <div class="row align-items-end">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Department</label>
+                    <select name="deptName" class="form-select" asp-items="Model.DepartmentSelectList">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i>Search Doctors
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Doctors List -->
+@if (Model.Doctors.Any())
+{
+    <div class="row">
+        @foreach (var doctor in Model.Doctors)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-user-md me-2 text-primary"></i>@doctor.Name</h5>
+                        <p class="card-text text-muted">@doctor.Department</p>
+                        <a asp-page="/Patient/DoctorProfile" asp-route-doctorId="@doctor.DoctorID" class="btn btn-outline-primary btn-sm">
+                            View Profile
+                        </a>
+                        <a asp-page="/Patient/AppointmentTaker" asp-route-doctorId="@doctor.DoctorID" class="btn btn-success btn-sm">
+                            Book Appointment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No doctors found for the selected department.
+    </div>
+}
