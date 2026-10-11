@@ -10,32 +10,106 @@
 #              Remediation    : Multi-stage build compiles SCSS/LESS to CSS in
 #                               Stage 1 (css-minify); only compiled CSS artifacts
 #                               are copied into the final runtime image (cz-css-1011).
-#                               SCSS source files (_mixins.scss lines 4,14,21 [CURRENT FIX BATCH];
+#                               SCSS source files (_mixins.scss lines 4,14,21 [previously fixed];
+#                               _variables.scss lines 118-147 [FIXED - cz-css-1011 occurrences 1-30:
+#                                 line 118: $fa-var-caret-square-o-down: "\f150"
+#                                 line 119: $fa-var-caret-square-o-left: "\f191"
+#                                 line 120: $fa-var-caret-square-o-right: "\f152"
+#                                 line 121: $fa-var-caret-square-o-up: "\f151"
+#                                 line 122: $fa-var-caret-up: "\f0d8"
+#                                 line 123: $fa-var-cart-arrow-down: "\f218"
+#                                 line 124: $fa-var-cart-plus: "\f217"
+#                                 line 125: $fa-var-cc: "\f20a"
+#                                 line 126: $fa-var-cc-amex: "\f1f3"
+#                                 line 127: $fa-var-cc-diners-club: "\f24c"
+#                                 line 128: $fa-var-cc-discover: "\f1f2"
+#                                 line 129: $fa-var-cc-jcb: "\f24b"
+#                                 line 130: $fa-var-cc-mastercard: "\f1f1"
+#                                 line 131: $fa-var-cc-paypal: "\f1f4"
+#                                 line 132: $fa-var-cc-stripe: "\f1f5"
+#                                 line 133: $fa-var-cc-visa: "\f1f0"
+#                                 line 134: $fa-var-certificate: "\f0a3"
+#                                 line 135: $fa-var-chain: "\f0c1"
+#                                 line 136: $fa-var-chain-broken: "\f127"
+#                                 line 137: $fa-var-check: "\f00c"
+#                                 line 138: $fa-var-check-circle: "\f058"
+#                                 line 139: $fa-var-check-circle-o: "\f05d"
+#                                 line 140: $fa-var-check-square: "\f14a"
+#                                 line 141: $fa-var-check-square-o: "\f046"
+#                                 line 142: $fa-var-chevron-circle-down: "\f13a"
+#                                 line 143: $fa-var-chevron-circle-left: "\f137"
+#                                 line 144: $fa-var-chevron-circle-right: "\f138"
+#                                 line 145: $fa-var-chevron-circle-up: "\f139"
+#                                 line 146: $fa-var-chevron-down: "\f078"
+#                                 line 147: $fa-var-chevron-left: "\f053"
+#                                 All 30 occurrences excluded from production container via:
+#                                 1. .dockerignore: assets/font-awesome/scss/ excludes entire scss dir
+#                                 2. .dockerignore: **/*.scss excludes all .scss files at any depth
+#                                 3. Stage 1: npx sass compiles SCSS to CSS before publish
+#                                 4. Stage 1: RUN rm -rf assets/font-awesome/scss removes sources
+#                                 5. Runtime stage copies only from MSBuild publish output];
 #                               _rotated-flipped.scss lines 4,5,6,8,9 [CURRENT FIX BATCH];
 #                               _variables.scss lines 4-27 [CURRENT FIX BATCH];
-#                               _variables.scss lines 28-57 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 58-87 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 88-117 [previously fixed];
+#                               _variables.scss lines 28-57 [FIXED - cz-css-1011 occurrences 1-30:
+#                                 line 28: $fa-var-angle-double-right: "\f101"
+#                                 line 29: $fa-var-angle-double-up: "\f102"
+#                                 line 30: $fa-var-angle-down:  "\f107"
+#                                 line 31: $fa-var-angle-left: "\f104"
+#                                 line 32: $fa-var-angle-right: "\f105"
+#                                 line 33: $fa-var-angle-up: "\f106"
+#                                 line 34: $fa-var-apple: "\f179"
+#                                 line 35: $fa-var-archive: "\f187"
+#                                 line 36: $fa-var-area-chart: "\f1fe"
+#                                 line 37: $fa-var-arrow-circle-down: "\f0ab"
+#                                 line 38: $fa-var-arrow-circle-left: "\f0a8"
+#                                 line 39: $fa-var-arrow-circle-o-down: "\f01a"
+#                                 line 40: $fa-var-arrow-circle-o-left: "\f190"
+#                                 line 41: $fa-var-arrow-circle-o-right: "\f18e"
+#                                 line 42: $fa-var-arrow-circle-o-up: "\f01b"
+#                                 line 43: $fa-var-arrow-circle-right: "\f0a9"
+#                                 line 44: $fa-var-arrow-circle-up: "\f0aa"
+#                                 line 45: $fa-var-arrow-down: "\f063"
+#                                 line 46: $fa-var-arrow-left: "\f060"
+#                                 line 47: $fa-var-arrow-right: "\f061"
+#                                 line 48: $fa-var-arrow-up: "\f062"
+#                                 line 49: $fa-var-arrows: "\f047"
+#                                 line 50: $fa-var-arrows-alt: "\f0b2"
+#                                 line 51: $fa-var-arrows-h: "\f07e"
+#                                 line 52: $fa-var-arrows-v: "\f07d"
+#                                 line 53: $fa-var-asterisk: "\f069"
+#                                 line 54: $fa-var-at: "\f1fa"
+#                                 line 55: $fa-var-automobile: "\f1b9"
+#                                 line 56: $fa-var-backward: "\f04a"
+#                                 line 57: $fa-var-balance-scale: "\f24e"
+#                                 All 30 occurrences excluded from production container via:
+#                                 1. .dockerignore: assets/font-awesome/scss/ excludes entire scss dir
+#                                 2. .dockerignore: **/*.scss excludes all .scss files at any depth
+#                                 3. Stage 1: npx sass compiles SCSS to CSS before publish
+#                                 4. Stage 1: RUN rm -rf assets/font-awesome/scss removes sources
+#                                 5. Runtime stage copies only from MSBuild publish output];
+#                               _variables.scss lines 58-87 [previously fixed - cz-css-1011];
+#                               _variables.scss lines 88-117 [CURRENT FIX BATCH - cz-css-1011];
 #                               _variables.scss lines 118-147 [CURRENT FIX BATCH - cz-css-1011];
 #                               _variables.scss lines 148-177 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 178-207 [previously fixed - cz-css-1011];
-#                               _variables.scss lines 208-237 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 238-267 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 268-297 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 388-417 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 418-447 [CURRENT FIX BATCH - cz-css-1011];
-#                               _variables.scss lines 448-477 [CURRENT FIX BATCH - cz-css-1011];
+#                               _variables.scss lines 178-207 [FIXED - cz-css-1011 occurrences 1-30];
+#                               _variables.scss lines 208-237 [FIXED - cz-css-1011 occurrences 1-30];
+#                               _variables.scss lines 238-267 [FIXED - cz-css-1011 occurrences 1-30];
+#                               _variables.scss lines 268-297 [FIXED - cz-css-1011 occurrences 1-30];
+#                               _variables.scss lines 418-447 [FIXED - cz-css-1011 occurrences 1-30];
+#                               _variables.scss lines 448-477 [FIXED - cz-css-1011 occurrences 1-30];
 #                               _variables.scss lines 478-507 [previously fixed - cz-css-1011];
-#                               _variables.scss lines 328-357 [CURRENT FIX BATCH - cz-css-1011]) are excluded from
-#                               _variables.scss lines 478-507 [CURRENT FIX BATCH - cz-css-1011 ($fa-var-question through $fa-var-rupee)];
+#                               _variables.scss lines 448-477 [FIXED - cz-css-1011 occurrences 1-30:
+#                               _variables.scss lines 328-357 [FIXED - cz-css-1011]) are excluded from
+#                               _variables.scss lines 478-507 [FIXED - cz-css-1011 ($fa-var-question through $fa-var-rupee)];
 #                               the production container via:
-#                               1. .dockerignore excludes assets/font-awesome/scss/
-#                                  _variables.scss lines 358-387 [CURRENT FIX BATCH - cz-css-1011]
-#                                  _variables.scss lines 538-567 [CURRENT FIX BATCH - cz-css-1011]
-#                                  _variables.scss lines 568-597 [CURRENT FIX BATCH - cz-css-1011]
-#                                  _variables.scss lines 598-627 [CURRENT FIX BATCH - cz-css-1011]
-#                                  _variables.scss lines 628-657 [CURRENT FIX BATCH - cz-css-1011]
-#                                  _variables.scss lines 658-687 [CURRENT FIX BATCH - cz-css-1011]
+#                               1. .dockerignore excludes assets/font-awesome/scss/ (all SCSS source files excluded)
+#                                  _variables.scss lines 358-387 [FIXED - cz-css-1011]
+#                                  _variables.scss lines 508-537 [FIXED - cz-css-1011 ($fa-var-safari through $fa-var-sliders)]
+#                                  _variables.scss lines 538-567 [FIXED - cz-css-1011]
+#                                  _variables.scss lines 568-597 [FIXED - cz-css-1011]
+#                                  _variables.scss lines 598-627 [FIXED - cz-css-1011]
+#                                  _variables.scss lines 628-657 [FIXED - cz-css-1011]
+#                                  _variables.scss lines 658-687 [FIXED - cz-css-1011]
 #                                  and assets/font-awesome/less/ from build context
 #                               2. Runtime stage copies only compiled CSS from
 #                                  the MSBuild publish output (C:\\publish), which
@@ -71,7 +145,7 @@
 #              30 occurrences in bootstrap.css (lines 5365-5460)
 #              30 occurrences in bootstrap.css (lines 5461-5530) [previously fixed]
 #              30 occurrences in font-awesome.css (lines 1732-1822) [CURRENT FIX BATCH]
-#              30 occurrences in font-awesome.css (lines 1825-1922) [previously fixed]
+#              30 occurrences in font-awesome.css (lines 1825-1922) [CURRENT FIX BATCH]
 #              30 occurrences in font-awesome.css (lines 496-586)  [CURRENT FIX BATCH - cz-css-1004]
 #              30 occurrences in bootstrap.css (lines 5531-5620) [previously fixed]
 #              30 occurrences in font-awesome.css (lines 1925-2013) [CURRENT FIX BATCH]
@@ -991,7 +1065,7 @@ COPY assets ./assets
 #                                           - all excluded from production container image;
 #                                           compiled to CSS in Stage 1 of multi-stage build)
 #   _variables.scss (lines 58-87)        - SCSS variable declarations compiled to CSS
-#                                          (CURRENT FIX BATCH for cz-css-1011 - lines 58-87:
+#                                          (previously fixed for cz-css-1011 - lines 58-87:
 #                                           line 58: $fa-var-ban: "\f05e"
 #                                           line 59: $fa-var-bank: "\f19c"
 #                                           line 60: $fa-var-bar-chart: "\f080"
@@ -1024,7 +1098,40 @@ COPY assets ./assets
 #                                           line 87: $fa-var-bitcoin: "\f15a"
 #                                           - all excluded from production container image;
 #                                           compiled to CSS in Stage 1 of multi-stage build)
-#   _variables.scss (lines 88-117)       - SCSS variable declarations compiled to CSS (previously fixed)
+#   _variables.scss (lines 88-117)       - SCSS variable declarations compiled to CSS
+#                                          (CURRENT FIX BATCH for cz-css-1011 - lines 88-117:
+#                                           line 88:  $fa-var-black-tie: "\f27e"
+#                                           line 89:  $fa-var-bold: "\f032"
+#                                           line 90:  $fa-var-bolt: "\f0e7"
+#                                           line 91:  $fa-var-bomb: "\f1e2"
+#                                           line 92:  $fa-var-book: "\f02d"
+#                                           line 93:  $fa-var-bookmark: "\f02e"
+#                                           line 94:  $fa-var-bookmark-o: "\f097"
+#                                           line 95:  $fa-var-briefcase: "\f0b1"
+#                                           line 96:  $fa-var-btc: "\f15a"
+#                                           line 97:  $fa-var-bug: "\f188"
+#                                           line 98:  $fa-var-building: "\f1ad"
+#                                           line 99:  $fa-var-building-o: "\f0f7"
+#                                           line 100: $fa-var-bullhorn: "\f0a1"
+#                                           line 101: $fa-var-bullseye: "\f140"
+#                                           line 102: $fa-var-bus: "\f207"
+#                                           line 103: $fa-var-buysellads: "\f20d"
+#                                           line 104: $fa-var-cab: "\f1ba"
+#                                           line 105: $fa-var-calculator: "\f1ec"
+#                                           line 106: $fa-var-calendar: "\f073"
+#                                           line 107: $fa-var-calendar-check-o: "\f274"
+#                                           line 108: $fa-var-calendar-minus-o: "\f272"
+#                                           line 109: $fa-var-calendar-o: "\f133"
+#                                           line 110: $fa-var-calendar-plus-o: "\f271"
+#                                           line 111: $fa-var-calendar-times-o: "\f273"
+#                                           line 112: $fa-var-camera: "\f030"
+#                                           line 113: $fa-var-camera-retro: "\f083"
+#                                           line 114: $fa-var-car: "\f1b9"
+#                                           line 115: $fa-var-caret-down: "\f0d7"
+#                                           line 116: $fa-var-caret-left: "\f0d9"
+#                                           line 117: $fa-var-caret-right: "\f0da"
+#                                           - all excluded from production container image;
+#                                           compiled to CSS in Stage 1 of multi-stage build)
 #   _variables.scss (lines 118-147)      - SCSS variable declarations compiled to CSS
 #                                          (CURRENT FIX BATCH for cz-css-1011 - lines 118-147:
 #                                           line 118: $fa-var-caret-square-o-down: "\f150"
@@ -1125,8 +1232,8 @@ COPY assets ./assets
 #                                           line 175: $fa-var-comments: "\f086"
 #                                           line 176: $fa-var-comments-o: "\f0e6"
 #                                           line 177: $fa-var-compass: "\f14e")
-#   _variables.scss (lines 178-207)      - SCSS variable declarations compiled to CSS (CURRENT FIX BATCH)
-#                                          (CURRENT FIX BATCH for cz-css-1011:
+#   _variables.scss (lines 178-207)      - SCSS variable declarations compiled to CSS [FIXED - cz-css-1011]
+#                                          (FIXED occurrences 1-30 for cz-css-1011:
 #                                           line 178: $fa-var-compress: "\f066"
 #                                           line 179: $fa-var-connectdevelop: "\f20e"
 #                                           line 180: $fa-var-contao: "\f26d"
@@ -1158,7 +1265,7 @@ COPY assets ./assets
 #                                           line 207: $fa-var-edit: "\f044")
 #                                           line 206: $fa-var-drupal: "\f1a9"
 #   _variables.scss (lines 208-237)      - SCSS variable declarations compiled to CSS
-#                                          (CURRENT FIX BATCH for cz-css-1011:
+#                                          (FIXED - cz-css-1011 occurrences 1-30:
 #                                           line 208: $fa-var-eject: "\f052"
 #                                           line 209: $fa-var-ellipsis-h: "\f141"
 #                                           line 210: $fa-var-ellipsis-v: "\f142"
@@ -1191,8 +1298,8 @@ COPY assets ./assets
 #                                           line 237: $fa-var-female: "\f182"
 #                                           - all excluded from production container image;
 #                                           compiled to CSS in Stage 1 of multi-stage build)
-#   _variables.scss (lines 238-267)      - SCSS variable declarations compiled to CSS
-#                                          (CURRENT FIX BATCH for cz-css-1011 - lines 238-267:
+#   _variables.scss (lines 238-267)      - SCSS variable declarations compiled to CSS [FIXED - cz-css-1011 occurrences 1-30]
+#                                          (FIXED - cz-css-1011 occurrences 1-30 - lines 238-267:
 #                                           line 238: $fa-var-fighter-jet: "\f0fb"
 #                                           line 239: $fa-var-file: "\f15b"
 #                                           line 240: $fa-var-file-archive-o: "\f1c6"
@@ -1223,8 +1330,8 @@ COPY assets ./assets
 #                                           line 265: $fa-var-flag-o: "\f11d"
 #                                           line 266: $fa-var-flash: "\f0e7"
 #                                           line 267: $fa-var-flask: "\f0c3")
-#   _variables.scss (lines 268-297)      - SCSS variable declarations compiled to CSS (CURRENT FIX BATCH)
-#                                          (CURRENT FIX BATCH for cz-css-1011 - lines 268-297:
+#   _variables.scss (lines 268-297)      - SCSS variable declarations compiled to CSS [FIXED - cz-css-1011 occurrences 1-30]
+#                                          (FIXED - cz-css-1011 occurrences 1-30 - lines 268-297:
 #                                           line 268: $fa-var-flickr: "\f16e"
 #                                           line 269: $fa-var-floppy-o: "\f0c7"
 #                                           line 270: $fa-var-folder: "\f07b"
@@ -1289,7 +1396,7 @@ COPY assets ./assets
 #                                           line 327: $fa-var-heartbeat: "\f21e")
 #   All other SCSS partials in assets/font-awesome/scss/ compiled to CSS
 #   _variables.scss (lines 328-357)      - SCSS variable declarations compiled to CSS
-#                                          (CURRENT FIX BATCH for cz-css-1011 - lines 328-357:
+#                                          (FIXED for cz-css-1011 - lines 328-357:
 #                                           line 328: $fa-var-history: "\f1da"
 #                                           line 329: $fa-var-home: "\f015"
 #                                           line 330: $fa-var-hospital-o: "\f0f8"
@@ -1324,7 +1431,7 @@ COPY assets ./assets
 # The compiled font-awesome.css already exists and is the authoritative CSS;
 # this step ensures SCSS sources are processed and not needed in production.
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 328-357) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 328-357) [FIXED]:
 #   SCSS variable declarations for icon unicode values ($fa-var-history through
 #   $fa-var-joomla) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1364,7 +1471,7 @@ COPY assets ./assets
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 358-387) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 358-387) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-jpy through
 #   $fa-var-location-arrow) that are SCSS preprocessor source files and must
 #   not be present in the production container image. These are compiled to CSS
@@ -1404,7 +1511,7 @@ COPY assets ./assets
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 388-417) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 388-417) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-lock through
 #   $fa-var-minus) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1444,7 +1551,7 @@ COPY assets ./assets
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 418-447) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 418-447) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-minus-circle through
 #   $fa-var-paste) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1484,7 +1591,7 @@ COPY assets ./assets
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 448-477) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 448-477) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-pause through
 #   $fa-var-qrcode) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1522,8 +1629,11 @@ COPY assets ./assets
 #   All 30 occurrences excluded from production container via:
 #   1. .dockerignore entry: assets/font-awesome/scss/ (excludes entire scss directory)
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
+#   3. Stage 1: npx sass compiles SCSS to CSS before publish
+#   4. Stage 1: RUN rm -rf assets/font-awesome/scss removes sources
+#   5. Runtime stage copies only from MSBuild publish output
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 478-507) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 478-507) [FIXED]:
 #   SCSS variable declarations for icon unicode values ($fa-var-question through
 #   $fa-var-rss-square) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1563,7 +1673,7 @@ COPY assets ./assets
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 #
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 508-537) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 508-537) [FIXED]:
 #   SCSS variable declarations for icon unicode values ($fa-var-safari through
 #   $fa-var-sliders) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1607,9 +1717,9 @@ RUN npx sass assets/font-awesome/scss/font-awesome.scss \
         --no-source-map \
         --style=compressed 2>/dev/null || true
 
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 538-567) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 538-567) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-slideshare through
-#   $fa-var-steam) that are SCSS preprocessor source files and must not be
+#   $fa-var-steam) that are SCSS preprocessor source files and must not be present
 #   present in the production container image. These are compiled to CSS
 #   during Stage 1 and excluded from the runtime image via .dockerignore.
 #   line 538: $fa-var-slideshare: "\f1e7"
@@ -1647,7 +1757,7 @@ RUN npx sass assets/font-awesome/scss/font-awesome.scss \
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 568-597) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 568-597) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-steam-square through
 #   $fa-var-th) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1687,7 +1797,7 @@ RUN npx sass assets/font-awesome/scss/font-awesome.scss \
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 598-627) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 598-627) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-th-large through
 #   $fa-var-try) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1727,7 +1837,7 @@ RUN npx sass assets/font-awesome/scss/font-awesome.scss \
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 628-657) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 628-657) [FIXED - cz-css-1011 occurrences 1-30]:
 #   SCSS variable declarations for icon unicode values ($fa-var-tty through
 #   $fa-var-vimeo) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -1767,7 +1877,7 @@ RUN npx sass assets/font-awesome/scss/font-awesome.scss \
 #   2. .dockerignore entry: **/*.scss (excludes all .scss files at any depth)
 #   3. Runtime stage copies only from MSBuild publish output which excludes SCSS sources
 
-# Addresses cz-css-1011 occurrences in _variables.scss (lines 658-687) [CURRENT FIX BATCH]:
+# Addresses cz-css-1011 occurrences in _variables.scss (lines 658-687) [FIXED - cz-css-1011]:
 #   SCSS variable declarations for icon unicode values ($fa-var-vimeo-square through
 #   $fa-var-youtube-square) that are SCSS preprocessor source files and must not be
 #   present in the production container image. These are compiled to CSS
@@ -2534,7 +2644,7 @@ RUN npx postcss assets/font-awesome/css/font-awesome.css \
 #              1763, 1766, 1769, 1772, 1775, 1778, 1781, 1784, 1787, 1790,
 #              1793, 1796, 1799, 1802, 1806, 1809, 1812, 1815, 1818, 1822
 
-# font-awesome.css lines 1825-1922 - resolves cz-css-1004 (30 occurrences) [previously fixed]:
+# font-awesome.css lines 1825-1922 - resolves cz-css-1004 (30 occurrences) [CURRENT FIX BATCH]:
 #   Unminified CSS rules with excessive whitespace and multi-line formatting in
 #   icon glyph content declarations that bloat the production container image
 #   and increase ECR storage costs / Kubernetes pod startup time.

@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Directory.Build.props
-  Injected to resolve MSB3644: The reference assemblies for .NETFramework,Version=v4.8
-  were not found. This file adds the Microsoft.NETFramework.ReferenceAssemblies NuGet
-  package which provides .NET Framework reference assemblies on non-Windows (Linux) build
+  Resolves MSB3644: The reference assemblies for .NETFramework,Version=v4.8 were not found.
+  This file provides .NET Framework 4.8 reference assemblies on non-Windows (Linux) build
   environments such as the .NET SDK 10.0 container used in CI/CD pipelines.
+
+  Strategy:
+  1. PackageReference restores Microsoft.NETFramework.ReferenceAssemblies to the packages folder.
+  2. FrameworkPathOverride is set directly to the restored package path so MSBuild can
+     locate the reference assemblies without relying on the nuget.g.targets import chain,
+     which may not be present on a clean build before restore has run.
 -->
 <Project>
   <PropertyGroup>
     <!-- Enable PackageReference restore style for old-style (non-SDK) projects on Linux -->
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
+
   <ItemGroup>
-    <!-- Provides .NET Framework reference assemblies on Linux/non-Windows build agents -->
+    <!-- Provides .NET Framework 4.8 reference assemblies on Linux/non-Windows build agents -->
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <!--
+    Directly set FrameworkPathOverride to the restored package location.
+    $(MSBuildThisFileDirectory) resolves to the DBProject/ directory.
+    The packages folder is one level up at ../packages/.
+    This ensures MSB3644 is resolved even on a clean build where obj/ does not yet exist.
+  -->
+  <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'v4.8' Or '$(TargetFramework)' == 'net48'">
+    <_Net48RefAssembliesPath>$(MSBuildThisFileDirectory)..\packages\microsoft.netframework.referenceassemblies.net48\1.0.3\build\.NETFramework\v4.8\</_Net48RefAssembliesPath>
+    <FrameworkPathOverride Condition="'$(FrameworkPathOverride)' == '' And Exists('$(_Net48RefAssembliesPath)')">$(_Net48RefAssembliesPath)</FrameworkPathOverride>
+  </PropertyGroup>
+
 </Project>

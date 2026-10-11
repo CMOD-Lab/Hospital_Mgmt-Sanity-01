@@ -70,3 +70,19 @@ D:/FAST/4th Semester (Spring 2017)/Database Systems (DB)/Github Project Code/Cod
 D:/FAST/4th Semester (Spring 2017)/Database Systems (DB)/Github Project Code/Code/DBProject/obj/Debug/DBProject.pdb
 /modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/obj/Debug/DBProject.dll
 /modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/obj/Debug/DBProject.pdb
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/ApplicationInsights.config
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Dockerfile
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/DBProject.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/DBProject.pdb
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.AI.Agent.Intercept.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.AI.DependencyCollector.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.AI.PerfCounterCollector.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.AI.ServerTelemetryChannel.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.AI.Web.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.AI.WindowsServer.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.ApplicationInsights.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/obj/Debug/Clinic Management System.csproj.AssemblyReference.cache
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/obj/Debug/Clinic Management System.csproj.CoreCompileInputs.cache
+/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/obj/Debug/Clinic M.C6172C23.Up2Date

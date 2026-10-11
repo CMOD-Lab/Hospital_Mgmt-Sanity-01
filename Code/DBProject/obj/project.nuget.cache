@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "a2to8efPQhM=",
+  "success": true,
+  "projectFilePath": "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/Clinic Management System.csproj",
+  "expectedPackageFiles": [
+    "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/packages/microsoft.netframework.referenceassemblies/1.0.3/microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/packages/microsoft.netframework.referenceassemblies.net48/1.0.3/microsoft.netframework.referenceassemblies.net48.1.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "restore": {
+    "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/Clinic Management System.csproj": {}
+  },
+  "projects": {
+    "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/Clinic Management System.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/Clinic Management System.csproj",
+        "projectName": "DBProject",
+        "projectPath": "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/Clinic Management System.csproj",
+        "packagesPath": "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/packages",
+        "outputPath": "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/DBProject/obj/",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "UsingMicrosoftNETSdk": false,
+        "configFilePaths": [
+          "/modernize-data/studio-data/TNT1001/APP815691/transformed-code/175/studio-workspace/Hospital_Mgmt-Sanity-01-rah/Code/NuGet.Config",
+          "/app/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "framework": "net48",
+            "projectReferences": {}
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "framework": "net48",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}

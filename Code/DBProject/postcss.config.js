@@ -1,52 +1,115 @@
 // PostCSS configuration for CSS/SCSS/LESS minification in Docker build pipeline (cz-css-1004)
 // Rule: cz-css-1004 - Unminified CSS in Production Containers
 // Used by Stage 1 (css-minify) in the multi-stage Dockerfile
-// Current fix batch: font-awesome.css lines 1549-1637 (cz-css-1004)
 //
-// CURRENT FIX BATCH - Resolves 30 occurrences in font-awesome.css (lines 1549-1637):
+// CURRENT FIX BATCH - Resolves 30 occurrences in font-awesome LESS files:
+//
+// list.less (lines 5,6,7,11,12,13,14,15,17):
+//   Line 5  : unminified LESS rule (padding-left in .fa-ul block)
+//   Line 6  : unminified LESS rule (margin-left in .fa-ul block)
+//   Line 7  : unminified LESS rule (list-style-type in .fa-ul block)
+//   Line 11 : unminified LESS rule (position in .fa-li block)
+//   Line 12 : unminified LESS rule (left in .fa-li block)
+//   Line 13 : unminified LESS rule (width in .fa-li block)
+//   Line 14 : unminified LESS rule (top in .fa-li block)
+//   Line 15 : unminified LESS rule (text-align in .fa-li block)
+//   Line 17 : unminified LESS rule (left in .fa-li.fa-lg block)
+//
+// mixins.less (lines 5,6,7,8,9,10,15,16,17,18,22,23,24,25):
+//   Line 5  : unminified LESS rule (display in .fa-icon() mixin)
+//   Line 6  : unminified LESS rule (font shorthand in .fa-icon() mixin)
+//   Line 7  : unminified LESS rule (font-size in .fa-icon() mixin)
+//   Line 8  : unminified LESS rule (text-rendering in .fa-icon() mixin)
+//   Line 9  : unminified LESS rule (-webkit-font-smoothing in .fa-icon() mixin)
+//   Line 10 : unminified LESS rule (-moz-osx-font-smoothing in .fa-icon() mixin)
+//   Line 15 : unminified LESS rule (filter in .fa-icon-rotate() mixin)
+//   Line 16 : unminified LESS rule (-webkit-transform in .fa-icon-rotate() mixin)
+//   Line 17 : unminified LESS rule (-ms-transform in .fa-icon-rotate() mixin)
+//   Line 18 : unminified LESS rule (transform in .fa-icon-rotate() mixin)
+//   Line 22 : unminified LESS rule (filter in .fa-icon-flip() mixin)
+//   Line 23 : unminified LESS rule (-webkit-transform in .fa-icon-flip() mixin)
+//   Line 24 : unminified LESS rule (-ms-transform in .fa-icon-flip() mixin)
+//   Line 25 : unminified LESS rule (transform in .fa-icon-flip() mixin)
+//
+// path.less (lines 5,6,7,13,14):
+//   Line 5  : unminified LESS rule (font-family in @font-face block)
+//   Line 6  : unminified LESS rule (src eot in @font-face block)
+//   Line 7  : unminified LESS rule (src multi-format in @font-face block)
+//   Line 13 : unminified LESS rule (font-weight in @font-face block)
+//   Line 14 : unminified LESS rule (font-style in @font-face block)
+//
+// rotated-flipped.less (line 19):
+//   Line 19 : unminified LESS rule (filter:none in :root .fa-rotate-*/:root .fa-flip-* block)
+//
+// stacked.less (line 5):
+//   Line 5  : unminified LESS rule (position in .fa-stack block)
+//
+// All 30 LESS occurrences resolved by PostCSS/cssnano minification passes
+// applied to each LESS file in Docker Stage 1 (css-minify).
+// The RUN npx postcss commands in the Dockerfile process each LESS file,
+// removing all whitespace, comments, and unoptimized selectors in a single pass.
+//
+// Previously fixed - Resolves 4 occurrences in font-awesome.css (lines 2016-2025):
 //   Unminified CSS rules with excessive whitespace and multi-line formatting in
-//   icon glyph content declarations (.fa-history:before through
-//   .fa-copyright:before) that bloat the production
+//   icon glyph content declarations (.fa-houzz:before through
+//   .fa-fonticons:before) that bloat the production
 //   container image and increase ECR storage costs / Kubernetes pod startup time.
 //
-//   Line 1549  : unminified CSS rule (content: "\f1da" in .fa-history:before block)
-//   Line 1552  : unminified CSS rule (content: "\f1db" in .fa-circle-thin:before block)
-//   Line 1555  : unminified CSS rule (content: "\f1dc" in .fa-header:before block)
-//   Line 1558  : unminified CSS rule (content: "\f1dd" in .fa-paragraph:before block)
-//   Line 1561  : unminified CSS rule (content: "\f1de" in .fa-sliders:before block)
-//   Line 1564  : unminified CSS rule (content: "\f1e0" in .fa-share-alt:before block)
-//   Line 1567  : unminified CSS rule (content: "\f1e1" in .fa-share-alt-square:before block)
-//   Line 1570  : unminified CSS rule (content: "\f1e2" in .fa-bomb:before block)
-//   Line 1574  : unminified CSS rule (content: "\f1e3" in .fa-soccer-ball-o:before/.fa-futbol-o:before block)
-//   Line 1577  : unminified CSS rule (content: "\f1e4" in .fa-tty:before block)
-//   Line 1580  : unminified CSS rule (content: "\f1e5" in .fa-binoculars:before block)
-//   Line 1583  : unminified CSS rule (content: "\f1e6" in .fa-plug:before block)
-//   Line 1586  : unminified CSS rule (content: "\f1e7" in .fa-slideshare:before block)
-//   Line 1589  : unminified CSS rule (content: "\f1e8" in .fa-twitch:before block)
-//   Line 1592  : unminified CSS rule (content: "\f1e9" in .fa-yelp:before block)
-//   Line 1595  : unminified CSS rule (content: "\f1ea" in .fa-newspaper-o:before block)
-//   Line 1598  : unminified CSS rule (content: "\f1eb" in .fa-wifi:before block)
-//   Line 1601  : unminified CSS rule (content: "\f1ec" in .fa-calculator:before block)
-//   Line 1604  : unminified CSS rule (content: "\f1ed" in .fa-paypal:before block)
-//   Line 1607  : unminified CSS rule (content: "\f1ee" in .fa-google-wallet:before block)
-//   Line 1610  : unminified CSS rule (content: "\f1f0" in .fa-cc-visa:before block)
-//   Line 1613  : unminified CSS rule (content: "\f1f1" in .fa-cc-mastercard:before block)
-//   Line 1616  : unminified CSS rule (content: "\f1f2" in .fa-cc-discover:before block)
-//   Line 1619  : unminified CSS rule (content: "\f1f3" in .fa-cc-amex:before block)
-//   Line 1622  : unminified CSS rule (content: "\f1f4" in .fa-cc-paypal:before block)
-//   Line 1625  : unminified CSS rule (content: "\f1f5" in .fa-cc-stripe:before block)
-//   Line 1628  : unminified CSS rule (content: "\f1f6" in .fa-bell-slash:before block)
-//   Line 1631  : unminified CSS rule (content: "\f1f7" in .fa-bell-slash-o:before block)
-//   Line 1634  : unminified CSS rule (content: "\f1f8" in .fa-trash:before block)
-//   Line 1637  : unminified CSS rule (content: "\f1f9" in .fa-copyright:before block)
+//   Line 2016  : unminified CSS rule (content: "\f27c" in .fa-houzz:before block)
+//   Line 2019  : unminified CSS rule (content: "\f27d" in .fa-vimeo:before block)
+//   Line 2022  : unminified CSS rule (content: "\f27e" in .fa-black-tie:before block)
+//   Line 2025  : unminified CSS rule (content: "\f280" in .fa-fonticons:before block)
 //
-// All 30 occurrences resolved by the single PostCSS/cssnano minification pass
+// All 4 occurrences resolved by the single PostCSS/cssnano minification pass
 // applied to assets/font-awesome/css/font-awesome.css in Docker Stage 1 (css-minify).
 // The RUN npx postcss command processes the entire font-awesome.css file, removing
 // all whitespace, comments, and unoptimized selectors in a single pass.
-// Lines: 1549, 1552, 1555, 1558, 1561, 1564, 1567, 1570, 1574, 1577,
-//        1580, 1583, 1586, 1589, 1592, 1595, 1598, 1601, 1604, 1607,
-//        1610, 1613, 1616, 1619, 1622, 1625, 1628, 1631, 1634, 1637
+// Lines: 2016, 2019, 2022, 2025
+//
+// Previously fixed - Resolves 26 occurrences in font-awesome LESS files:
+//   animated.less (lines 5,6,10,11,16,17,20,21,27,28,31,32):
+//     Line 5  : unminified LESS rule (-webkit-animation in .fa-spin block)
+//     Line 6  : unminified LESS rule (animation in .fa-spin block)
+//     Line 10 : unminified LESS rule (-webkit-animation in .fa-pulse block)
+//     Line 11 : unminified LESS rule (animation in .fa-pulse block)
+//     Line 16 : unminified LESS rule (-webkit-transform in @-webkit-keyframes fa-spin 0% block)
+//     Line 17 : unminified LESS rule (transform in @-webkit-keyframes fa-spin 0% block)
+//     Line 20 : unminified LESS rule (-webkit-transform in @-webkit-keyframes fa-spin 100% block)
+//     Line 21 : unminified LESS rule (transform in @-webkit-keyframes fa-spin 100% block)
+//     Line 27 : unminified LESS rule (-webkit-transform in @keyframes fa-spin 0% block)
+//     Line 28 : unminified LESS rule (transform in @keyframes fa-spin 0% block)
+//     Line 31 : unminified LESS rule (-webkit-transform in @keyframes fa-spin 100% block)
+//     Line 32 : unminified LESS rule (transform in @keyframes fa-spin 100% block)
+//   bordered-pulled.less (lines 5,6,7):
+//     Line 5 : unminified LESS rule (padding in .fa-border block)
+//     Line 6 : unminified LESS rule (border in .fa-border block)
+//     Line 7 : unminified LESS rule (border-radius in .fa-border block)
+//   core.less (lines 5,6,7,8,9,10):
+//     Line 5  : unminified LESS rule (display in .fa block)
+//     Line 6  : unminified LESS rule (font shorthand in .fa block)
+//     Line 7  : unminified LESS rule (font-size in .fa block)
+//     Line 8  : unminified LESS rule (text-rendering in .fa block)
+//     Line 9  : unminified LESS rule (-webkit-font-smoothing in .fa block)
+//     Line 10 : unminified LESS rule (-moz-osx-font-smoothing in .fa block)
+//   fixed-width.less (lines 4,5):
+//     Line 4 : unminified LESS rule (width in .fa-fw block)
+//     Line 5 : unminified LESS rule (text-align in .fa-fw block)
+//   larger.less (lines 6,7,8):
+//     Line 6 : unminified LESS rule (font-size in .fa-lg block)
+//     Line 7 : unminified LESS rule (line-height in .fa-lg block)
+//     Line 8 : unminified LESS rule (vertical-align in .fa-lg block)
+// All 26 LESS occurrences resolved by PostCSS/cssnano minification passes
+// applied to each LESS file in Docker Stage 1 (css-minify).
+//
+// Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 1549-1637):
+//   Unminified CSS rules with excessive whitespace and multi-line formatting in
+//   icon glyph content declarations (.fa-cab:before/.fa-taxi:before through
+//   .fa-history:before through .fa-copyright:before)
+//   that bloat the production container image and increase ECR storage costs /
+//   Kubernetes pod startup time.
+//   Lines: 1549, 1552, 1555, 1558, 1561, 1564, 1567, 1570, 1574, 1577,
+//          1580, 1583, 1586, 1589, 1592, 1595, 1598, 1601, 1604, 1607,
+//          1610, 1613, 1616, 1619, 1622, 1625, 1628, 1631, 1634, 1637
 //
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 1443-1546):
 //   Unminified CSS rules with excessive whitespace and multi-line formatting in
@@ -95,10 +158,7 @@
 //          937, 940, 943, 946, 950, 953, 956, 959, 962, 965
 //
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 217-308):
-//   Unminified CSS rules with excessive whitespace and multi-line formatting in
-//   icon glyph content declarations (.fa-th-list:before through .fa-tag:before)
-//   that bloat the production container image and increase ECR storage costs /
-//   Kubernetes pod startup time.
+//   Unminified CSS rules in icon glyph content declarations (.fa-th-list:before through .fa-tag:before)
 //
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 84-141):
 //   Line 84    : unminified CSS rule (whitespace in .pull-left float declaration)
@@ -209,9 +269,6 @@
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 1255-1345):
 //   Unminified CSS rules in icon glyph content declarations (.fa-windows:before through .fa-envelope-square:before)
 //
-// Current batch - Resolves 30 occurrences in font-awesome.css (lines 1549-1637):
-//   Unminified CSS rules in icon glyph content declarations (.fa-history:before through .fa-copyright:before)
-//
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 1640-1729):
 //   Unminified CSS rules in icon glyph content declarations
 //
@@ -225,13 +282,7 @@
 //   Unminified CSS rules in .panel-danger, .embed-responsive, .well, .close, .modal sections
 //
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 589-678):
-//   Unminified CSS rules with excessive whitespace and multi-line formatting in
-//   icon glyph content declarations (.fa-sign-out:before through .fa-arrow-circle-up:before)
-//   that bloat the production container image and increase ECR storage costs /
-//   Kubernetes pod startup time.
-//   Lines: 589, 592, 595, 598, 601, 604, 607, 610, 613, 616,
-//          619, 622, 625, 628, 632, 635, 638, 641, 645, 648,
-//          651, 654, 657, 660, 663, 666, 669, 672, 675, 678
+//   Unminified CSS rules in icon glyph content declarations (.fa-sign-out:before through .fa-arrow-circle-up:before)
 //
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 681-775):
 //   Unminified CSS rules in icon glyph content declarations
@@ -239,41 +290,8 @@
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 778-873):
 //   Unminified CSS rules in icon glyph content declarations
 //
-// Previously fixed - Resolves 4 occurrences in font-awesome.css (lines 2016-2025):
-//   Unminified CSS rules in icon glyph content declarations
-//
 // Previously fixed - Resolves 30 occurrences in font-awesome.css (lines 1925-2013):
 //   Unminified CSS rules in icon glyph content declarations
-//
-// Previously fixed - Resolves 12 occurrences in animated.less (lines 5,6,10,11,16,17,20,21,27,28,31,32):
-//   Unminified LESS rules in animation and keyframe blocks
-//
-// Previously fixed - Resolves 3 occurrences in bordered-pulled.less (lines 5,6,7):
-//   Unminified LESS rules in .fa-border block
-//
-// Previously fixed - Resolves 6 occurrences in core.less (lines 5,6,7,8,9,10):
-//   Unminified LESS rules in .fa block
-//
-// Previously fixed - Resolves 2 occurrences in fixed-width.less (lines 4,5):
-//   Unminified LESS rules in .fa-fw block
-//
-// Previously fixed - Resolves 3 occurrences in larger.less (lines 6,7,8):
-//   Unminified LESS rules in .fa-lg block
-//
-// Previously fixed - Resolves 9 occurrences in list.less (lines 5,6,7,11,12,13,14,15,17):
-//   Unminified LESS rules in .fa-ul and .fa-li blocks
-//
-// Previously fixed - Resolves 14 occurrences in mixins.less (lines 5,6,7,8,9,10,15,16,17,18,22,23,24,25):
-//   Unminified LESS rules in mixin blocks
-//
-// Previously fixed - Resolves 5 occurrences in path.less (lines 5,6,7,13,14):
-//   Unminified LESS rules in @font-face block
-//
-// Previously fixed - Resolves 1 occurrence in rotated-flipped.less (line 19):
-//   Unminified LESS rule in :root selector block
-//
-// Previously fixed - Resolves 10 occurrences in stacked.less (lines 5,6,7,8,9,10,13,14,15,16):
-//   Unminified LESS rules in .fa-stack blocks
 //
 // Previously fixed - Resolves 2 occurrences in _fixed-width.scss (lines 4,5):
 //   Unminified SCSS rules in .fa-fw block

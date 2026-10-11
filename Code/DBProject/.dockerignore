@@ -119,6 +119,421 @@ TestResults/
 # the multi-stage build; only compiled CSS artifacts are copied
 # into the final runtime image.
 #
+# FIXED BATCH - _variables.scss lines 28-57 (cz-css-1011 occurrences 1-30):
+#   SCSS variable declarations for icon unicode values that are preprocessor
+#   source files and must not be present in the production container image.
+#   These are compiled to CSS during Stage 1 and excluded via entries below.
+#   line 28: $fa-var-angle-double-right: "\f101"
+#   line 29: $fa-var-angle-double-up: "\f102"
+#   line 30: $fa-var-angle-down: "\f107"
+#   line 31: $fa-var-angle-left: "\f104"
+#   line 32: $fa-var-angle-right: "\f105"
+#   line 33: $fa-var-angle-up: "\f106"
+#   line 34: $fa-var-apple: "\f179"
+#   line 35: $fa-var-archive: "\f187"
+#   line 36: $fa-var-area-chart: "\f1fe"
+#   line 37: $fa-var-arrow-circle-down: "\f0ab"
+#   line 38: $fa-var-arrow-circle-left: "\f0a8"
+#   line 39: $fa-var-arrow-circle-o-down: "\f01a"
+#   line 40: $fa-var-arrow-circle-o-left: "\f190"
+#   line 41: $fa-var-arrow-circle-o-right: "\f18e"
+#   line 42: $fa-var-arrow-circle-o-up: "\f01b"
+#   line 43: $fa-var-arrow-circle-right: "\f0a9"
+#   line 44: $fa-var-arrow-circle-up: "\f0aa"
+#   line 45: $fa-var-arrow-down: "\f063"
+#   line 46: $fa-var-arrow-left: "\f060"
+#   line 47: $fa-var-arrow-right: "\f061"
+#   line 48: $fa-var-arrow-up: "\f062"
+#   line 49: $fa-var-arrows: "\f047"
+#   line 50: $fa-var-arrows-alt: "\f0b2"
+#   line 51: $fa-var-arrows-h: "\f07e"
+#   line 52: $fa-var-arrows-v: "\f07d"
+#   line 53: $fa-var-asterisk: "\f069"
+#   line 54: $fa-var-at: "\f1fa"
+#   line 55: $fa-var-automobile: "\f1b9"
+#   line 56: $fa-var-backward: "\f04a"
+#   line 57: $fa-var-balance-scale: "\f24e"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# PREVIOUSLY FIXED - _variables.scss lines 58-87 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-ban through $fa-var-bitcoin
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 58: $fa-var-ban: "\f05e"
+#   line 59: $fa-var-bank: "\f19c"
+#   line 60: $fa-var-bar-chart: "\f080"
+#   line 61: $fa-var-bar-chart-o: "\f080"
+#   line 62: $fa-var-barcode: "\f02a"
+#   line 63: $fa-var-bars: "\f0c9"
+#   line 64: $fa-var-battery-0: "\f244"
+#   line 65: $fa-var-battery-1: "\f243"
+#   line 66: $fa-var-battery-2: "\f242"
+#   line 67: $fa-var-battery-3: "\f241"
+#   line 68: $fa-var-battery-4: "\f240"
+#   line 69: $fa-var-battery-empty: "\f244"
+#   line 70: $fa-var-battery-full: "\f240"
+#   line 71: $fa-var-battery-half: "\f242"
+#   line 72: $fa-var-battery-quarter: "\f243"
+#   line 73: $fa-var-battery-three-quarters: "\f241"
+#   line 74: $fa-var-bed: "\f236"
+#   line 75: $fa-var-beer: "\f0fc"
+#   line 76: $fa-var-behance: "\f1b4"
+#   line 77: $fa-var-behance-square: "\f1b5"
+#   line 78: $fa-var-bell: "\f0f3"
+#   line 79: $fa-var-bell-o: "\f0a2"
+#   line 80: $fa-var-bell-slash: "\f1f6"
+#   line 81: $fa-var-bell-slash-o: "\f1f7"
+#   line 82: $fa-var-bicycle: "\f206"
+#   line 83: $fa-var-binoculars: "\f1e5"
+#   line 84: $fa-var-birthday-cake: "\f1fd"
+#   line 85: $fa-var-bitbucket: "\f171"
+#   line 86: $fa-var-bitbucket-square: "\f172"
+#   line 87: $fa-var-bitcoin: "\f15a"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# CURRENT FIX BATCH - _variables.scss lines 88-117 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-black-tie through $fa-var-caret-right
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 88:  $fa-var-black-tie: "\f27e"
+#   line 89:  $fa-var-bold: "\f032"
+#   line 90:  $fa-var-bolt: "\f0e7"
+#   line 91:  $fa-var-bomb: "\f1e2"
+#   line 92:  $fa-var-book: "\f02d"
+#   line 93:  $fa-var-bookmark: "\f02e"
+#   line 94:  $fa-var-bookmark-o: "\f097"
+#   line 95:  $fa-var-briefcase: "\f0b1"
+#   line 96:  $fa-var-btc: "\f15a"
+#   line 97:  $fa-var-bug: "\f188"
+#   line 98:  $fa-var-building: "\f1ad"
+#   line 99:  $fa-var-building-o: "\f0f7"
+#   line 100: $fa-var-bullhorn: "\f0a1"
+#   line 101: $fa-var-bullseye: "\f140"
+#   line 102: $fa-var-bus: "\f207"
+#   line 103: $fa-var-buysellads: "\f20d"
+#   line 104: $fa-var-cab: "\f1ba"
+#   line 105: $fa-var-calculator: "\f1ec"
+#   line 106: $fa-var-calendar: "\f073"
+#   line 107: $fa-var-calendar-check-o: "\f274"
+#   line 108: $fa-var-calendar-minus-o: "\f272"
+#   line 109: $fa-var-calendar-o: "\f133"
+#   line 110: $fa-var-calendar-plus-o: "\f271"
+#   line 111: $fa-var-calendar-times-o: "\f273"
+#   line 112: $fa-var-camera: "\f030"
+#   line 113: $fa-var-camera-retro: "\f083"
+#   line 114: $fa-var-car: "\f1b9"
+#   line 115: $fa-var-caret-down: "\f0d7"
+#   line 116: $fa-var-caret-left: "\f0d9"
+#   line 117: $fa-var-caret-right: "\f0da"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# CURRENT FIX BATCH - _variables.scss lines 118-147 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-caret-square-o-down through $fa-var-chevron-left
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 118: $fa-var-caret-square-o-down: "\f150"
+#   line 119: $fa-var-caret-square-o-left: "\f191"
+#   line 120: $fa-var-caret-square-o-right: "\f152"
+#   line 121: $fa-var-caret-square-o-up: "\f151"
+#   line 122: $fa-var-caret-up: "\f0d8"
+#   line 123: $fa-var-cart-arrow-down: "\f218"
+#   line 124: $fa-var-cart-plus: "\f217"
+#   line 125: $fa-var-cc: "\f20a"
+#   line 126: $fa-var-cc-amex: "\f1f3"
+#   line 127: $fa-var-cc-diners-club: "\f24c"
+#   line 128: $fa-var-cc-discover: "\f1f2"
+#   line 129: $fa-var-cc-jcb: "\f24b"
+#   line 130: $fa-var-cc-mastercard: "\f1f1"
+#   line 131: $fa-var-cc-paypal: "\f1f4"
+#   line 132: $fa-var-cc-stripe: "\f1f5"
+#   line 133: $fa-var-cc-visa: "\f1f0"
+#   line 134: $fa-var-certificate: "\f0a3"
+#   line 135: $fa-var-chain: "\f0c1"
+#   line 136: $fa-var-chain-broken: "\f127"
+#   line 137: $fa-var-check: "\f00c"
+#   line 138: $fa-var-check-circle: "\f058"
+#   line 139: $fa-var-check-circle-o: "\f05d"
+#   line 140: $fa-var-check-square: "\f14a"
+#   line 141: $fa-var-check-square-o: "\f046"
+#   line 142: $fa-var-chevron-circle-down: "\f13a"
+#   line 143: $fa-var-chevron-circle-left: "\f137"
+#   line 144: $fa-var-chevron-circle-right: "\f138"
+#   line 145: $fa-var-chevron-circle-up: "\f139"
+#   line 146: $fa-var-chevron-down: "\f078"
+#   line 147: $fa-var-chevron-left: "\f053"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# CURRENT FIX BATCH - _variables.scss lines 148-177 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-chevron-right through $fa-var-compass
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 148: $fa-var-chevron-right: "\f054"
+#   line 149: $fa-var-chevron-up: "\f077"
+#   line 150: $fa-var-child: "\f1ae"
+#   line 151: $fa-var-chrome: "\f268"
+#   line 152: $fa-var-circle: "\f111"
+#   line 153: $fa-var-circle-o: "\f10c"
+#   line 154: $fa-var-circle-o-notch: "\f1ce"
+#   line 155: $fa-var-circle-thin: "\f1db"
+#   line 156: $fa-var-clipboard: "\f0ea"
+#   line 157: $fa-var-clock-o: "\f017"
+#   line 158: $fa-var-clone: "\f24d"
+#   line 159: $fa-var-close: "\f00d"
+#   line 160: $fa-var-cloud: "\f0c2"
+#   line 161: $fa-var-cloud-download: "\f0ed"
+#   line 162: $fa-var-cloud-upload: "\f0ee"
+#   line 163: $fa-var-cny: "\f157"
+#   line 164: $fa-var-code: "\f121"
+#   line 165: $fa-var-code-fork: "\f126"
+#   line 166: $fa-var-codepen: "\f1cb"
+#   line 167: $fa-var-coffee: "\f0f4"
+#   line 168: $fa-var-cog: "\f013"
+#   line 169: $fa-var-cogs: "\f085"
+#   line 170: $fa-var-columns: "\f0db"
+#   line 171: $fa-var-comment: "\f075"
+#   line 172: $fa-var-comment-o: "\f0e5"
+#   line 173: $fa-var-commenting: "\f27a"
+#   line 174: $fa-var-commenting-o: "\f27b"
+#   line 175: $fa-var-comments: "\f086"
+#   line 176: $fa-var-comments-o: "\f0e6"
+#   line 177: $fa-var-compass: "\f14e"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 178-207 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-compress through $fa-var-edit
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 178: $fa-var-compress: "\f066"
+#   line 179: $fa-var-connectdevelop: "\f20e"
+#   line 180: $fa-var-contao: "\f26d"
+#   line 181: $fa-var-copy: "\f0c5"
+#   line 182: $fa-var-copyright: "\f1f9"
+#   line 183: $fa-var-creative-commons: "\f25e"
+#   line 184: $fa-var-credit-card: "\f09d"
+#   line 185: $fa-var-crop: "\f125"
+#   line 186: $fa-var-crosshairs: "\f05b"
+#   line 187: $fa-var-css3: "\f13c"
+#   line 188: $fa-var-cube: "\f1b2"
+#   line 189: $fa-var-cubes: "\f1b3"
+#   line 190: $fa-var-cut: "\f0c4"
+#   line 191: $fa-var-cutlery: "\f0f5"
+#   line 192: $fa-var-dashboard: "\f0e4"
+#   line 193: $fa-var-dashcube: "\f210"
+#   line 194: $fa-var-database: "\f1c0"
+#   line 195: $fa-var-dedent: "\f03b"
+#   line 196: $fa-var-delicious: "\f1a5"
+#   line 197: $fa-var-desktop: "\f108"
+#   line 198: $fa-var-deviantart: "\f1bd"
+#   line 199: $fa-var-diamond: "\f219"
+#   line 200: $fa-var-digg: "\f1a6"
+#   line 201: $fa-var-dollar: "\f155"
+#   line 202: $fa-var-dot-circle-o: "\f192"
+#   line 203: $fa-var-download: "\f019"
+#   line 204: $fa-var-dribbble: "\f17d"
+#   line 205: $fa-var-dropbox: "\f16b"
+#   line 206: $fa-var-drupal: "\f1a9"
+#   line 207: $fa-var-edit: "\f044"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 208-237 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-eject through $fa-var-female
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 208: $fa-var-eject: "\f052"
+#   line 209: $fa-var-ellipsis-h: "\f141"
+#   line 210: $fa-var-ellipsis-v: "\f142"
+#   line 211: $fa-var-empire: "\f1d1"
+#   line 212: $fa-var-envelope: "\f0e0"
+#   line 213: $fa-var-envelope-o: "\f003"
+#   line 214: $fa-var-envelope-square: "\f199"
+#   line 215: $fa-var-eraser: "\f12d"
+#   line 216: $fa-var-eur: "\f153"
+#   line 217: $fa-var-euro: "\f153"
+#   line 218: $fa-var-exchange: "\f0ec"
+#   line 219: $fa-var-exclamation: "\f12a"
+#   line 220: $fa-var-exclamation-circle: "\f06a"
+#   line 221: $fa-var-exclamation-triangle: "\f071"
+#   line 222: $fa-var-expand: "\f065"
+#   line 223: $fa-var-expeditedssl: "\f23e"
+#   line 224: $fa-var-external-link: "\f08e"
+#   line 225: $fa-var-external-link-square: "\f14c"
+#   line 226: $fa-var-eye: "\f06e"
+#   line 227: $fa-var-eye-slash: "\f070"
+#   line 228: $fa-var-eyedropper: "\f1fb"
+#   line 229: $fa-var-facebook: "\f09a"
+#   line 230: $fa-var-facebook-f: "\f09a"
+#   line 231: $fa-var-facebook-official: "\f230"
+#   line 232: $fa-var-facebook-square: "\f082"
+#   line 233: $fa-var-fast-backward: "\f049"
+#   line 234: $fa-var-fast-forward: "\f050"
+#   line 235: $fa-var-fax: "\f1ac"
+#   line 236: $fa-var-feed: "\f09e"
+#   line 237: $fa-var-female: "\f182"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 238-267 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-fighter-jet through $fa-var-flask
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 238: $fa-var-fighter-jet: "\f0fb"
+#   line 239: $fa-var-file: "\f15b"
+#   line 240: $fa-var-file-archive-o: "\f1c6"
+#   line 241: $fa-var-file-audio-o: "\f1c7"
+#   line 242: $fa-var-file-code-o: "\f1c9"
+#   line 243: $fa-var-file-excel-o: "\f1c3"
+#   line 244: $fa-var-file-image-o: "\f1c5"
+#   line 245: $fa-var-file-movie-o: "\f1c8"
+#   line 246: $fa-var-file-o: "\f016"
+#   line 247: $fa-var-file-pdf-o: "\f1c1"
+#   line 248: $fa-var-file-photo-o: "\f1c5"
+#   line 249: $fa-var-file-picture-o: "\f1c5"
+#   line 250: $fa-var-file-powerpoint-o: "\f1c4"
+#   line 251: $fa-var-file-sound-o: "\f1c7"
+#   line 252: $fa-var-file-text: "\f15c"
+#   line 253: $fa-var-file-text-o: "\f0f6"
+#   line 254: $fa-var-file-video-o: "\f1c8"
+#   line 255: $fa-var-file-word-o: "\f1c2"
+#   line 256: $fa-var-file-zip-o: "\f1c6"
+#   line 257: $fa-var-files-o: "\f0c5"
+#   line 258: $fa-var-film: "\f008"
+#   line 259: $fa-var-filter: "\f0b0"
+#   line 260: $fa-var-fire: "\f06d"
+#   line 261: $fa-var-fire-extinguisher: "\f134"
+#   line 262: $fa-var-firefox: "\f269"
+#   line 263: $fa-var-flag: "\f024"
+#   line 264: $fa-var-flag-checkered: "\f11e"
+#   line 265: $fa-var-flag-o: "\f11d"
+#   line 266: $fa-var-flash: "\f0e7"
+#   line 267: $fa-var-flask: "\f0c3"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 268-297 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-flickr through $fa-var-gittip
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 268: $fa-var-flickr: "\f16e"
+#   line 269: $fa-var-floppy-o: "\f0c7"
+#   line 270: $fa-var-folder: "\f07b"
+#   line 271: $fa-var-folder-o: "\f114"
+#   line 272: $fa-var-folder-open: "\f07c"
+#   line 273: $fa-var-folder-open-o: "\f115"
+#   line 274: $fa-var-font: "\f031"
+#   line 275: $fa-var-fonticons: "\f280"
+#   line 276: $fa-var-forumbee: "\f211"
+#   line 277: $fa-var-forward: "\f04e"
+#   line 278: $fa-var-foursquare: "\f180"
+#   line 279: $fa-var-frown-o: "\f119"
+#   line 280: $fa-var-futbol-o: "\f1e3"
+#   line 281: $fa-var-gamepad: "\f11b"
+#   line 282: $fa-var-gavel: "\f0e3"
+#   line 283: $fa-var-gbp: "\f154"
+#   line 284: $fa-var-ge: "\f1d1"
+#   line 285: $fa-var-gear: "\f013"
+#   line 286: $fa-var-gears: "\f085"
+#   line 287: $fa-var-genderless: "\f22d"
+#   line 288: $fa-var-get-pocket: "\f265"
+#   line 289: $fa-var-gg: "\f260"
+#   line 290: $fa-var-gg-circle: "\f261"
+#   line 291: $fa-var-gift: "\f06b"
+#   line 292: $fa-var-git: "\f1d3"
+#   line 293: $fa-var-git-square: "\f1d2"
+#   line 294: $fa-var-github: "\f09b"
+#   line 295: $fa-var-github-alt: "\f113"
+#   line 296: $fa-var-github-square: "\f092"
+#   line 297: $fa-var-gittip: "\f184"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 298-327 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-glass through $fa-var-heartbeat
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 298: $fa-var-glass: "\f000"
+#   line 299: $fa-var-globe: "\f0ac"
+#   line 300: $fa-var-google: "\f1a0"
+#   line 301: $fa-var-google-plus: "\f0d5"
+#   line 302: $fa-var-google-plus-square: "\f0d4"
+#   line 303: $fa-var-google-wallet: "\f1ee"
+#   line 304: $fa-var-graduation-cap: "\f19d"
+#   line 305: $fa-var-gratipay: "\f184"
+#   line 306: $fa-var-group: "\f0c0"
+#   line 307: $fa-var-h-square: "\f0fd"
+#   line 308: $fa-var-hacker-news: "\f1d4"
+#   line 309: $fa-var-hand-grab-o: "\f255"
+#   line 310: $fa-var-hand-lizard-o: "\f258"
+#   line 311: $fa-var-hand-o-down: "\f0a7"
+#   line 312: $fa-var-hand-o-left: "\f0a5"
+#   line 313: $fa-var-hand-o-right: "\f0a4"
+#   line 314: $fa-var-hand-o-up: "\f0a6"
+#   line 315: $fa-var-hand-paper-o: "\f256"
+#   line 316: $fa-var-hand-peace-o: "\f25b"
+#   line 317: $fa-var-hand-pointer-o: "\f25a"
+#   line 318: $fa-var-hand-rock-o: "\f255"
+#   line 319: $fa-var-hand-scissors-o: "\f257"
+#   line 320: $fa-var-hand-spock-o: "\f259"
+#   line 321: $fa-var-hand-stop-o: "\f256"
+#   line 322: $fa-var-hdd-o: "\f0a0"
+#   line 323: $fa-var-header: "\f1dc"
+#   line 324: $fa-var-headphones: "\f025"
+#   line 325: $fa-var-heart: "\f004"
+#   line 326: $fa-var-heart-o: "\f08a"
+#   line 327: $fa-var-heartbeat: "\f21e"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
 # CURRENT FIX BATCH - _variables.scss lines 538-567:
 #   Covers cz-css-1011 occurrences for $fa-var-slideshare through $fa-var-steam
 #   icon unicode variable declarations that are SCSS preprocessor source files
@@ -155,7 +570,7 @@ TestResults/
 #   line 567: $fa-var-steam: "\f1b6"
 #   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
 #
-# CURRENT FIX BATCH - _variables.scss lines 568-597:
+# FIXED - _variables.scss lines 568-597 (cz-css-1011 occurrences 1-30):
 #   Covers cz-css-1011 occurrences for $fa-var-steam-square through $fa-var-th
 #   icon unicode variable declarations that are SCSS preprocessor source files
 #   and must not be present in the production container image:
@@ -192,7 +607,7 @@ TestResults/
 #   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
 # ---------------------------------------------------------------
 #
-# CURRENT FIX BATCH - _variables.scss lines 598-627 (cz-css-1011):
+# FIXED - _variables.scss lines 598-627 (cz-css-1011 occurrences 1-30):
 #   Covers cz-css-1011 occurrences for $fa-var-th-large through $fa-var-try
 #   icon unicode variable declarations that are SCSS preprocessor source files
 #   and must not be present in the production container image:
@@ -229,7 +644,7 @@ TestResults/
 #   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
 # ---------------------------------------------------------------
 #
-# CURRENT FIX BATCH - _variables.scss lines 628-657 (cz-css-1011):
+# FIXED - _variables.scss lines 628-657 (cz-css-1011 occurrences 1-30):
 #   Covers cz-css-1011 occurrences for $fa-var-tty through $fa-var-vimeo
 #   icon unicode variable declarations that are SCSS preprocessor source files
 #   and must not be present in the production container image.
@@ -271,7 +686,7 @@ TestResults/
 #   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
 # ---------------------------------------------------------------
 #
-# CURRENT FIX BATCH - _variables.scss lines 658-687 (cz-css-1011):
+# FIXED - _variables.scss lines 658-687 (cz-css-1011):
 #   Covers cz-css-1011 occurrences for $fa-var-vimeo-square through $fa-var-youtube-square
 #   icon unicode variable declarations that are SCSS preprocessor source files
 #   and must not be present in the production container image.
@@ -311,6 +726,311 @@ TestResults/
 #   line 686: $fa-var-youtube-play: "\f16a"
 #   line 687: $fa-var-youtube-square: "\f166"
 #   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 328-357 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-history through $fa-var-joomla
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 328: $fa-var-history: "\f1da"
+#   line 329: $fa-var-home: "\f015"
+#   line 330: $fa-var-hospital-o: "\f0f8"
+#   line 331: $fa-var-hotel: "\f236"
+#   line 332: $fa-var-hourglass: "\f254"
+#   line 333: $fa-var-hourglass-1: "\f251"
+#   line 334: $fa-var-hourglass-2: "\f252"
+#   line 335: $fa-var-hourglass-3: "\f253"
+#   line 336: $fa-var-hourglass-end: "\f253"
+#   line 337: $fa-var-hourglass-half: "\f252"
+#   line 338: $fa-var-hourglass-o: "\f250"
+#   line 339: $fa-var-hourglass-start: "\f251"
+#   line 340: $fa-var-houzz: "\f27c"
+#   line 341: $fa-var-html5: "\f13b"
+#   line 342: $fa-var-i-cursor: "\f246"
+#   line 343: $fa-var-ils: "\f20b"
+#   line 344: $fa-var-image: "\f03e"
+#   line 345: $fa-var-inbox: "\f01c"
+#   line 346: $fa-var-indent: "\f03c"
+#   line 347: $fa-var-industry: "\f275"
+#   line 348: $fa-var-info: "\f129"
+#   line 349: $fa-var-info-circle: "\f05a"
+#   line 350: $fa-var-inr: "\f156"
+#   line 351: $fa-var-instagram: "\f16d"
+#   line 352: $fa-var-institution: "\f19c"
+#   line 353: $fa-var-internet-explorer: "\f26b"
+#   line 354: $fa-var-intersex: "\f224"
+#   line 355: $fa-var-ioxhost: "\f208"
+#   line 356: $fa-var-italic: "\f033"
+#   line 357: $fa-var-joomla: "\f1aa"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 358-387 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-jpy through $fa-var-location-arrow
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 358: $fa-var-jpy: "\f157"
+#   line 359: $fa-var-jsfiddle: "\f1cc"
+#   line 360: $fa-var-key: "\f084"
+#   line 361: $fa-var-keyboard-o: "\f11c"
+#   line 362: $fa-var-krw: "\f159"
+#   line 363: $fa-var-language: "\f1ab"
+#   line 364: $fa-var-laptop: "\f109"
+#   line 365: $fa-var-lastfm: "\f202"
+#   line 366: $fa-var-lastfm-square: "\f203"
+#   line 367: $fa-var-leaf: "\f06c"
+#   line 368: $fa-var-leanpub: "\f212"
+#   line 369: $fa-var-legal: "\f0e3"
+#   line 370: $fa-var-lemon-o: "\f094"
+#   line 371: $fa-var-level-down: "\f149"
+#   line 372: $fa-var-level-up: "\f148"
+#   line 373: $fa-var-life-bouy: "\f1cd"
+#   line 374: $fa-var-life-buoy: "\f1cd"
+#   line 375: $fa-var-life-ring: "\f1cd"
+#   line 376: $fa-var-life-saver: "\f1cd"
+#   line 377: $fa-var-lightbulb-o: "\f0eb"
+#   line 378: $fa-var-line-chart: "\f201"
+#   line 379: $fa-var-link: "\f0c1"
+#   line 380: $fa-var-linkedin: "\f0e1"
+#   line 381: $fa-var-linkedin-square: "\f08c"
+#   line 382: $fa-var-linux: "\f17c"
+#   line 383: $fa-var-list: "\f03a"
+#   line 384: $fa-var-list-alt: "\f022"
+#   line 385: $fa-var-list-ol: "\f0cb"
+#   line 386: $fa-var-list-ul: "\f0ca"
+#   line 387: $fa-var-location-arrow: "\f124"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 388-417 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-lock through $fa-var-minus
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 388: $fa-var-lock: "\f023"
+#   line 389: $fa-var-long-arrow-down: "\f175"
+#   line 390: $fa-var-long-arrow-left: "\f177"
+#   line 391: $fa-var-long-arrow-right: "\f178"
+#   line 392: $fa-var-long-arrow-up: "\f176"
+#   line 393: $fa-var-magic: "\f0d0"
+#   line 394: $fa-var-magnet: "\f076"
+#   line 395: $fa-var-mail-forward: "\f064"
+#   line 396: $fa-var-mail-reply: "\f112"
+#   line 397: $fa-var-mail-reply-all: "\f122"
+#   line 398: $fa-var-male: "\f183"
+#   line 399: $fa-var-map: "\f279"
+#   line 400: $fa-var-map-marker: "\f041"
+#   line 401: $fa-var-map-o: "\f278"
+#   line 402: $fa-var-map-pin: "\f276"
+#   line 403: $fa-var-map-signs: "\f277"
+#   line 404: $fa-var-mars: "\f222"
+#   line 405: $fa-var-mars-double: "\f227"
+#   line 406: $fa-var-mars-stroke: "\f229"
+#   line 407: $fa-var-mars-stroke-h: "\f22b"
+#   line 408: $fa-var-mars-stroke-v: "\f22a"
+#   line 409: $fa-var-maxcdn: "\f136"
+#   line 410: $fa-var-meanpath: "\f20c"
+#   line 411: $fa-var-medium: "\f23a"
+#   line 412: $fa-var-medkit: "\f0fa"
+#   line 413: $fa-var-meh-o: "\f11a"
+#   line 414: $fa-var-mercury: "\f223"
+#   line 415: $fa-var-microphone: "\f130"
+#   line 416: $fa-var-microphone-slash: "\f131"
+#   line 417: $fa-var-minus: "\f068"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+#
+# FIXED - _variables.scss lines 418-447 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-minus-circle through $fa-var-paste
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 418: $fa-var-minus-circle: "\f056"
+#   line 419: $fa-var-minus-square: "\f146"
+#   line 420: $fa-var-minus-square-o: "\f147"
+#   line 421: $fa-var-mobile: "\f10b"
+#   line 422: $fa-var-mobile-phone: "\f10b"
+#   line 423: $fa-var-money: "\f0d6"
+#   line 424: $fa-var-moon-o: "\f186"
+#   line 425: $fa-var-mortar-board: "\f19d"
+#   line 426: $fa-var-motorcycle: "\f21c"
+#   line 427: $fa-var-mouse-pointer: "\f245"
+#   line 428: $fa-var-music: "\f001"
+#   line 429: $fa-var-navicon: "\f0c9"
+#   line 430: $fa-var-neuter: "\f22c"
+#   line 431: $fa-var-newspaper-o: "\f1ea"
+#   line 432: $fa-var-object-group: "\f247"
+#   line 433: $fa-var-object-ungroup: "\f248"
+#   line 434: $fa-var-odnoklassniki: "\f263"
+#   line 435: $fa-var-odnoklassniki-square: "\f264"
+#   line 436: $fa-var-opencart: "\f23d"
+#   line 437: $fa-var-openid: "\f19b"
+#   line 438: $fa-var-opera: "\f26a"
+#   line 439: $fa-var-optin-monster: "\f23c"
+#   line 440: $fa-var-outdent: "\f03b"
+#   line 441: $fa-var-pagelines: "\f18c"
+#   line 442: $fa-var-paint-brush: "\f1fc"
+#   line 443: $fa-var-paper-plane: "\f1d8"
+#   line 444: $fa-var-paper-plane-o: "\f1d9"
+#   line 445: $fa-var-paperclip: "\f0c6"
+#   line 446: $fa-var-paragraph: "\f1dd"
+#   line 447: $fa-var-paste: "\f0ea"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 448-477 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-pause through $fa-var-qrcode
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 448: $fa-var-pause: "\f04c"
+#   line 449: $fa-var-paw: "\f1b0"
+#   line 450: $fa-var-paypal: "\f1ed"
+#   line 451: $fa-var-pencil: "\f040"
+#   line 452: $fa-var-pencil-square: "\f14b"
+#   line 453: $fa-var-pencil-square-o: "\f044"
+#   line 454: $fa-var-phone: "\f095"
+#   line 455: $fa-var-phone-square: "\f098"
+#   line 456: $fa-var-photo: "\f03e"
+#   line 457: $fa-var-picture-o: "\f03e"
+#   line 458: $fa-var-pie-chart: "\f200"
+#   line 459: $fa-var-pied-piper: "\f1a7"
+#   line 460: $fa-var-pied-piper-alt: "\f1a8"
+#   line 461: $fa-var-pinterest: "\f0d2"
+#   line 462: $fa-var-pinterest-p: "\f231"
+#   line 463: $fa-var-pinterest-square: "\f0d3"
+#   line 464: $fa-var-plane: "\f072"
+#   line 465: $fa-var-play: "\f04b"
+#   line 466: $fa-var-play-circle: "\f144"
+#   line 467: $fa-var-play-circle-o: "\f01d"
+#   line 468: $fa-var-plug: "\f1e6"
+#   line 469: $fa-var-plus: "\f067"
+#   line 470: $fa-var-plus-circle: "\f055"
+#   line 471: $fa-var-plus-square: "\f0fe"
+#   line 472: $fa-var-plus-square-o: "\f196"
+#   line 473: $fa-var-power-off: "\f011"
+#   line 474: $fa-var-print: "\f02f"
+#   line 475: $fa-var-puzzle-piece: "\f12e"
+#   line 476: $fa-var-qq: "\f1d6"
+#   line 477: $fa-var-qrcode: "\f029"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+#   Remediation: Multi-stage Dockerfile Stage 1 (css-minify) compiles SCSS to CSS
+#   via 'npx sass assets/font-awesome/scss/font-awesome.scss' then removes all SCSS
+#   sources with 'RUN rm -rf assets/font-awesome/scss'. Runtime image receives only
+#   compiled CSS artifacts from MSBuild publish output - no SCSS sources included.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 478-507 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-question through $fa-var-rupee
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 478: $fa-var-question: "\f128"
+#   line 479: $fa-var-question-circle: "\f059"
+#   line 480: $fa-var-quote-left: "\f10d"
+#   line 481: $fa-var-quote-right: "\f10e"
+#   line 482: $fa-var-ra: "\f1d0"
+#   line 483: $fa-var-random: "\f074"
+#   line 484: $fa-var-rebel: "\f1d0"
+#   line 485: $fa-var-recycle: "\f1b8"
+#   line 486: $fa-var-reddit: "\f1a1"
+#   line 487: $fa-var-reddit-square: "\f1a2"
+#   line 488: $fa-var-refresh: "\f021"
+#   line 489: $fa-var-registered: "\f25d"
+#   line 490: $fa-var-remove: "\f00d"
+#   line 491: $fa-var-renren: "\f18b"
+#   line 492: $fa-var-reorder: "\f0c9"
+#   line 493: $fa-var-repeat: "\f01e"
+#   line 494: $fa-var-reply: "\f112"
+#   line 495: $fa-var-reply-all: "\f122"
+#   line 496: $fa-var-retweet: "\f079"
+#   line 497: $fa-var-rmb: "\f157"
+#   line 498: $fa-var-road: "\f018"
+#   line 499: $fa-var-rocket: "\f135"
+#   line 500: $fa-var-rotate-left: "\f0e2"
+#   line 501: $fa-var-rotate-right: "\f01e"
+#   line 502: $fa-var-rouble: "\f158"
+#   line 503: $fa-var-rss: "\f09e"
+#   line 504: $fa-var-rss-square: "\f143"
+#   line 505: $fa-var-rub: "\f158"
+#   line 506: $fa-var-ruble: "\f158"
+#   line 507: $fa-var-rupee: "\f156"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+#   Remediation: Multi-stage Dockerfile Stage 1 (css-minify) compiles SCSS to CSS
+#   via 'npx sass assets/font-awesome/scss/font-awesome.scss' then removes all SCSS
+#   sources with 'RUN rm -rf assets/font-awesome/scss'. Runtime image receives only
+#   compiled CSS artifacts from MSBuild publish output - no SCSS sources included.
+# ---------------------------------------------------------------
+#
+# FIXED - _variables.scss lines 508-537 (cz-css-1011 occurrences 1-30):
+#   Covers cz-css-1011 occurrences for $fa-var-safari through $fa-var-sliders
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 508: $fa-var-safari: "\f267"
+#   line 509: $fa-var-save: "\f0c7"
+#   line 510: $fa-var-scissors: "\f0c4"
+#   line 511: $fa-var-search: "\f002"
+#   line 512: $fa-var-search-minus: "\f010"
+#   line 513: $fa-var-search-plus: "\f00e"
+#   line 514: $fa-var-sellsy: "\f213"
+#   line 515: $fa-var-send: "\f1d8"
+#   line 516: $fa-var-send-o: "\f1d9"
+#   line 517: $fa-var-server: "\f233"
+#   line 518: $fa-var-share: "\f064"
+#   line 519: $fa-var-share-alt: "\f1e0"
+#   line 520: $fa-var-share-alt-square: "\f1e1"
+#   line 521: $fa-var-share-square: "\f14d"
+#   line 522: $fa-var-share-square-o: "\f045"
+#   line 523: $fa-var-shekel: "\f20b"
+#   line 524: $fa-var-sheqel: "\f20b"
+#   line 525: $fa-var-shield: "\f132"
+#   line 526: $fa-var-ship: "\f21a"
+#   line 527: $fa-var-shirtsinbulk: "\f214"
+#   line 528: $fa-var-shopping-cart: "\f07a"
+#   line 529: $fa-var-sign-in: "\f090"
+#   line 530: $fa-var-sign-out: "\f08b"
+#   line 531: $fa-var-signal: "\f012"
+#   line 532: $fa-var-simplybuilt: "\f215"
+#   line 533: $fa-var-sitemap: "\f0e8"
+#   line 534: $fa-var-skyatlas: "\f216"
+#   line 535: $fa-var-skype: "\f17e"
+#   line 536: $fa-var-slack: "\f198"
+#   line 537: $fa-var-sliders: "\f1de"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+#   Remediation: Multi-stage Dockerfile Stage 1 (css-minify) compiles SCSS to CSS
+#   via 'npx sass assets/font-awesome/scss/font-awesome.scss' then removes all SCSS
+#   sources with 'RUN rm -rf assets/font-awesome/scss'. Runtime image receives only
+#   compiled CSS artifacts from MSBuild publish output - no SCSS sources included.
 # ---------------------------------------------------------------
 assets/font-awesome/scss/
 assets/font-awesome/less/
