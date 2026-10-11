@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +6,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
+
+// Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. Session["key"] calls use distributed Redis session (cz-dotnet-0022).
 
 namespace doctor
 {
@@ -20,11 +23,13 @@ namespace doctor
         {
             myDAL objmyDAL = new myDAL();
             int found;
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             int did = (int)Session["idoriginal"];
             string disease= Disease.Text;
             string progres = progress.Text;
             string prescrip = Prescription.Text;
 
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             int appid = (int)Session["appointid"];
 
             

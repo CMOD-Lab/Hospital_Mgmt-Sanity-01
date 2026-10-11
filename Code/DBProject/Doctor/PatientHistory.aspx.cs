@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +6,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
+
+// Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. Session["key"] calls use distributed Redis session (cz-dotnet-0022).
 
 
 namespace doctor
@@ -18,6 +21,7 @@ namespace doctor
                 DataTable dt = new DataTable();
                 int found = 0;
 
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 int did = (int)Session["idoriginal"];
 
                 found = objmydal.search_patient_DAL(did, ref dt);
@@ -43,6 +47,7 @@ namespace doctor
                 //retrieve appointmentid  from that row (key-non editable)
                 int appointmentid = Convert.ToInt32(aId);
 
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 Session["appointid"] = appointmentid;
                 Response.Redirect("Historyupdate.aspx");
             }

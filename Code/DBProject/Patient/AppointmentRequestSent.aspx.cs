@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
 
+// Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. Session["key"] calls use distributed Redis session (cz-dotnet-0022).
 
 
 namespace DBProject
@@ -24,15 +26,15 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
-            
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             string dID1 = (string)Session["dID"];
 
             int dID = Convert.ToInt32(dID1);
 
-
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             int pID = (int)Session["idoriginal"];
 
-
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             string temp = (string)Session["freeSlot"];
 
             int freeSlot = Convert.ToInt32(temp);

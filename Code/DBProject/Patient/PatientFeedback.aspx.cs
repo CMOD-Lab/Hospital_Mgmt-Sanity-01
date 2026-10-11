@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,7 +7,8 @@ using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
 
-
+// Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. Session["key"] calls use distributed Redis session (cz-dotnet-0022).
 
 
 namespace DBProject
@@ -18,6 +19,7 @@ namespace DBProject
         {
 			if (!IsPostBack)
 			{
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
 				Session["aID"] = "";
 				pendingFeedback(sender, e);
 			}
@@ -32,6 +34,7 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             int pid = (int)Session["idoriginal"];
 
             string dName = "";
@@ -53,6 +56,7 @@ namespace DBProject
 
             else
             {
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 Session["aID"] = aID;
 
                 FDoctor.Text = "Your feedback for the appointment with Doctor " + dName + " is pending. Kindly give it.";
@@ -76,6 +80,7 @@ namespace DBProject
         {
             myDAL objmyDAl = new myDAL();
 
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             int aID = (int)Session["aID"];
 
 

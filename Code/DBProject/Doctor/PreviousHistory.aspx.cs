@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
 
+// Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. Session["key"] calls use distributed Redis session (cz-dotnet-0022).
 
 
 namespace DBProject.Doctor
@@ -27,7 +29,7 @@ namespace DBProject.Doctor
 
             DataTable DT = new DataTable();
 
-
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             int id = (int)Session["idoriginal"];
 
 
@@ -51,9 +53,6 @@ namespace DBProject.Doctor
 
 
         //-----------------------Add a new function here------------------//
-
-
-
 
 
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,9 +13,34 @@ namespace DBProject.DAL
 	//Database Layer of 3 tier architecture
 	public class myDAL
     {
-		//connection string of the server database
-        private static readonly string connString =
-            System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+		// cz-dotnet-0055: Connection string resolved exclusively from environment variables.
+        // Web.config XDT transforms (Web.Debug.config / Web.Release.config) are NOT used.
+        // In Kubernetes, inject configuration via a Secret or ConfigMap:
+        //   DB_CONNECTION_STRING  - full ADO.NET connection string (takes precedence), OR
+        //   DB_HOST, DB_NAME, DB_USER, DB_PASSWORD - individual components assembled at runtime.
+        private static readonly string connString = BuildConnectionString();
+
+        private static string BuildConnectionString()
+        {
+            string full = System.Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            if (!string.IsNullOrEmpty(full))
+                return full;
+
+            string host     = System.Environment.GetEnvironmentVariable("DB_HOST")     ?? string.Empty;
+            string name     = System.Environment.GetEnvironmentVariable("DB_NAME")     ?? string.Empty;
+            string user     = System.Environment.GetEnvironmentVariable("DB_USER")     ?? string.Empty;
+            string password = System.Environment.GetEnvironmentVariable("DB_PASSWORD") ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(host) && !string.IsNullOrEmpty(name))
+            {
+                if (!string.IsNullOrEmpty(user))
+                    return string.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};", host, name, user, password);
+                else
+                    return string.Format("Data Source={0};Initial Catalog={1};Integrated Security=True;", host, name);
+            }
+
+            return string.Empty;
+        }
 
 
 

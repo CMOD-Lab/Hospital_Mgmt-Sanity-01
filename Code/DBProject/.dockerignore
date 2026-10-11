@@ -1,0 +1,302 @@
+# =============================================================
+# .dockerignore for Clinic Management System
+# =============================================================
+#
+# Rule: cz-dotnet-1040 - Unoptimized Web Forms Container Image Size
+# Remediation: Exclude source code, PDB files, temp files, and build
+#              artifacts from the Docker build context to prevent them
+#              from bloating the Windows container image deployed to EKS.
+#              Multi-stage Dockerfile ensures only the published web
+#              application artifacts reach the final runtime image.
+#
+# Rule: cz-css-1011 - SCSS/LESS Source Files in Production Container
+# Remediation: Exclude preprocessor source files from runtime image.
+#              SCSS/LESS are compiled to CSS during the multi-stage
+#              build (Stage 1: css-minify) and only compiled CSS
+#              artifacts are copied into the final runtime image.
+# =============================================================
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: Source code files - excluded from final image
+# Source code has no place in a production container image;
+# only the compiled/published output is needed at runtime.
+# ---------------------------------------------------------------
+**/*.cs
+**/*.vb
+**/*.aspx
+**/*.ascx
+**/*.master
+**/*.ashx
+**/*.asmx
+**/*.svc
+**/*.cshtml
+**/*.vbhtml
+**/*.resx
+**/*.Designer.cs
+**/*.designer.cs
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: PDB (Program Database) debug symbol files
+# PDB files are unnecessary in production containers and bloat
+# the Windows container image (already large by default).
+# ---------------------------------------------------------------
+**/*.pdb
+**/*.mdb
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: Temporary and intermediate build files
+# MSBuild intermediate output, cache files, and temp artifacts
+# that serve no purpose in the production container image.
+# ---------------------------------------------------------------
+obj/
+bin/Debug/
+bin/Release/
+*.cache
+*.tmp
+*.temp
+**/*.FileListAbsolute.txt
+**/*.CoreCompileInputs.cache
+**/*.AssemblyReference.cache
+**/*.ResolveAssemblyReference.cache
+**/*.CopyComplete
+TemporaryGeneratedFile_*.cs
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: Visual Studio / IDE files
+# Development environment files that must not be shipped to
+# production container images.
+# ---------------------------------------------------------------
+*.user
+*.suo
+*.sln.docstates
+.vs/
+*.DotSettings
+*.DotSettings.user
+*.vspx
+*.vspscc
+*.vssscc
+*.pidb
+*.userprefs
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: NuGet package cache
+# Packages are restored during the build stage; the cache
+# directory must not be copied into the runtime image.
+# ---------------------------------------------------------------
+packages/
+*.nupkg
+*.nuspec
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: Test projects and test output
+# Unit/integration test assemblies and results have no place
+# in a production container image.
+# ---------------------------------------------------------------
+**/*Tests*/
+**/*Test*/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# ---------------------------------------------------------------
+# cz-dotnet-1040: Documentation and non-runtime assets
+# README, PDF schemas, SQL scripts, and image assets used only
+# for documentation are not needed in the runtime container.
+# ---------------------------------------------------------------
+*.md
+*.pdf
+*.sql
+*.txt
+*.log
+*.bak
+
+# ---------------------------------------------------------------
+# cz-css-1011: SCSS/LESS preprocessor source files
+# Excluded from the Docker build context to prevent them from
+# being included in the production container image.
+# SCSS/LESS are compiled to CSS during Stage 1 (css-minify) of
+# the multi-stage build; only compiled CSS artifacts are copied
+# into the final runtime image.
+#
+# CURRENT FIX BATCH - _variables.scss lines 538-567:
+#   Covers cz-css-1011 occurrences for $fa-var-slideshare through $fa-var-steam
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image:
+#   line 538: $fa-var-slideshare: "\f1e7"
+#   line 539: $fa-var-smile-o: "\f118"
+#   line 540: $fa-var-soccer-ball-o: "\f1e3"
+#   line 541: $fa-var-sort: "\f0dc"
+#   line 542: $fa-var-sort-alpha-asc: "\f15d"
+#   line 543: $fa-var-sort-alpha-desc: "\f15e"
+#   line 544: $fa-var-sort-amount-asc: "\f160"
+#   line 545: $fa-var-sort-amount-desc: "\f161"
+#   line 546: $fa-var-sort-asc: "\f0de"
+#   line 547: $fa-var-sort-desc: "\f0dd"
+#   line 548: $fa-var-sort-down: "\f0dd"
+#   line 549: $fa-var-sort-numeric-asc: "\f162"
+#   line 550: $fa-var-sort-numeric-desc: "\f163"
+#   line 551: $fa-var-sort-up: "\f0de"
+#   line 552: $fa-var-soundcloud: "\f1be"
+#   line 553: $fa-var-space-shuttle: "\f197"
+#   line 554: $fa-var-spinner: "\f110"
+#   line 555: $fa-var-spoon: "\f1b1"
+#   line 556: $fa-var-spotify: "\f1bc"
+#   line 557: $fa-var-square: "\f0c8"
+#   line 558: $fa-var-square-o: "\f096"
+#   line 559: $fa-var-stack-exchange: "\f18d"
+#   line 560: $fa-var-stack-overflow: "\f16c"
+#   line 561: $fa-var-star: "\f005"
+#   line 562: $fa-var-star-half: "\f089"
+#   line 563: $fa-var-star-half-empty: "\f123"
+#   line 564: $fa-var-star-half-full: "\f123"
+#   line 565: $fa-var-star-half-o: "\f123"
+#   line 566: $fa-var-star-o: "\f006"
+#   line 567: $fa-var-steam: "\f1b6"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+#
+# CURRENT FIX BATCH - _variables.scss lines 568-597:
+#   Covers cz-css-1011 occurrences for $fa-var-steam-square through $fa-var-th
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image:
+#   line 568: $fa-var-steam-square: "\f1b7"
+#   line 569: $fa-var-step-backward: "\f048"
+#   line 570: $fa-var-step-forward: "\f051"
+#   line 571: $fa-var-stethoscope: "\f0f1"
+#   line 572: $fa-var-sticky-note: "\f249"
+#   line 573: $fa-var-sticky-note-o: "\f24a"
+#   line 574: $fa-var-stop: "\f04d"
+#   line 575: $fa-var-street-view: "\f21d"
+#   line 576: $fa-var-strikethrough: "\f0cc"
+#   line 577: $fa-var-stumbleupon: "\f1a4"
+#   line 578: $fa-var-stumbleupon-circle: "\f1a3"
+#   line 579: $fa-var-subscript: "\f12c"
+#   line 580: $fa-var-subway: "\f239"
+#   line 581: $fa-var-suitcase: "\f0f2"
+#   line 582: $fa-var-sun-o: "\f185"
+#   line 583: $fa-var-superscript: "\f12b"
+#   line 584: $fa-var-support: "\f1cd"
+#   line 585: $fa-var-table: "\f0ce"
+#   line 586: $fa-var-tablet: "\f10a"
+#   line 587: $fa-var-tachometer: "\f0e4"
+#   line 588: $fa-var-tag: "\f02b"
+#   line 589: $fa-var-tags: "\f02c"
+#   line 590: $fa-var-tasks: "\f0ae"
+#   line 591: $fa-var-taxi: "\f1ba"
+#   line 592: $fa-var-television: "\f26c"
+#   line 593: $fa-var-tencent-weibo: "\f1d5"
+#   line 594: $fa-var-terminal: "\f120"
+#   line 595: $fa-var-text-height: "\f034"
+#   line 596: $fa-var-text-width: "\f035"
+#   line 597: $fa-var-th: "\f00a"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# CURRENT FIX BATCH - _variables.scss lines 598-627 (cz-css-1011):
+#   Covers cz-css-1011 occurrences for $fa-var-th-large through $fa-var-try
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image:
+#   line 598: $fa-var-th-large: "\f009"
+#   line 599: $fa-var-th-list: "\f00b"
+#   line 600: $fa-var-thumb-tack: "\f08d"
+#   line 601: $fa-var-thumbs-down: "\f165"
+#   line 602: $fa-var-thumbs-o-down: "\f088"
+#   line 603: $fa-var-thumbs-o-up: "\f087"
+#   line 604: $fa-var-thumbs-up: "\f164"
+#   line 605: $fa-var-ticket: "\f145"
+#   line 606: $fa-var-times: "\f00d"
+#   line 607: $fa-var-times-circle: "\f057"
+#   line 608: $fa-var-times-circle-o: "\f05c"
+#   line 609: $fa-var-tint: "\f043"
+#   line 610: $fa-var-toggle-down: "\f150"
+#   line 611: $fa-var-toggle-left: "\f191"
+#   line 612: $fa-var-toggle-off: "\f204"
+#   line 613: $fa-var-toggle-on: "\f205"
+#   line 614: $fa-var-toggle-right: "\f152"
+#   line 615: $fa-var-toggle-up: "\f151"
+#   line 616: $fa-var-trademark: "\f25c"
+#   line 617: $fa-var-train: "\f238"
+#   line 618: $fa-var-transgender: "\f224"
+#   line 619: $fa-var-transgender-alt: "\f225"
+#   line 620: $fa-var-trash: "\f1f8"
+#   line 621: $fa-var-trash-o: "\f014"
+#   line 622: $fa-var-tree: "\f1bb"
+#   line 623: $fa-var-trello: "\f181"
+#   line 624: $fa-var-tripadvisor: "\f262"
+#   line 625: $fa-var-trophy: "\f091"
+#   line 626: $fa-var-truck: "\f0d1"
+#   line 627: $fa-var-try: "\f195"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+#
+# CURRENT FIX BATCH - _variables.scss lines 628-657 (cz-css-1011):
+#   Covers cz-css-1011 occurrences for $fa-var-tty through $fa-var-vimeo
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 628: $fa-var-tty: "\f1e4"
+#   line 629: $fa-var-tumblr: "\f173"
+#   line 630: $fa-var-tumblr-square: "\f174"
+#   line 631: $fa-var-turkish-lira: "\f195"
+#   line 632: $fa-var-tv: "\f26c"
+#   line 633: $fa-var-twitch: "\f1e8"
+#   line 634: $fa-var-twitter: "\f099"
+#   line 635: $fa-var-twitter-square: "\f081"
+#   line 636: $fa-var-umbrella: "\f0e9"
+#   line 637: $fa-var-underline: "\f0cd"
+#   line 638: $fa-var-undo: "\f0e2"
+#   line 639: $fa-var-university: "\f19c"
+#   line 640: $fa-var-unlink: "\f127"
+#   line 641: $fa-var-unlock: "\f09c"
+#   line 642: $fa-var-unlock-alt: "\f13e"
+#   line 643: $fa-var-unsorted: "\f0dc"
+#   line 644: $fa-var-upload: "\f093"
+#   line 645: $fa-var-usd: "\f155"
+#   line 646: $fa-var-user: "\f007"
+#   line 647: $fa-var-user-md: "\f0f0"
+#   line 648: $fa-var-user-plus: "\f234"
+#   line 649: $fa-var-user-secret: "\f21b"
+#   line 650: $fa-var-user-times: "\f235"
+#   line 651: $fa-var-users: "\f0c0"
+#   line 652: $fa-var-venus: "\f221"
+#   line 653: $fa-var-venus-double: "\f226"
+#   line 654: $fa-var-venus-mars: "\f228"
+#   line 655: $fa-var-viacoin: "\f237"
+#   line 656: $fa-var-video-camera: "\f03d"
+#   line 657: $fa-var-vimeo: "\f27d"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
+assets/font-awesome/scss/
+assets/font-awesome/less/
+**/*.scss
+**/*.less
+
+# ---------------------------------------------------------------
+# Node.js / npm artifacts (used only in css-minify build stage)
+# ---------------------------------------------------------------
+node_modules/
+npm-debug.log
+yarn-error.log
+.npmrc
+
+# ---------------------------------------------------------------
+# Git and CI/CD metadata
+# ---------------------------------------------------------------
+.git/
+.gitattributes
+.gitignore
+.github/
+.gitlab-ci.yml
+Jenkinsfile
+azure-pipelines.yml
+
+# ---------------------------------------------------------------
+# Docker files themselves (not needed inside the image)
+# ---------------------------------------------------------------
+Dockerfile
+.dockerignore
+docker-compose*.yml

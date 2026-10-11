@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
 
+// cz-dotnet-0022: Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. All Session["key"] calls use distributed Redis session (not InProc).
 
 namespace DBProject
 {
@@ -14,6 +16,7 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             Session["idoriginal"] = "";
         }
 
@@ -33,6 +36,7 @@ namespace DBProject
 
             if (status == 0)
             {
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 Session["idoriginal"] = id;
 
                 if (type == 1)
@@ -106,6 +110,7 @@ namespace DBProject
 
             else if (status == 1)
             {
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 Session["idoriginal"] = id;
 
               //Response.Write("<script>alert('Registration Successful !');</script>");

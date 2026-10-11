@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using DBProject.DAL;
 using System.Data;
 
+// cz-dotnet-0022: Session state is backed by Amazon ElastiCache Redis via Microsoft.Web.RedisSessionStateProvider
+// configured in Web.config. All Session["key"] calls use distributed Redis session (not InProc).
 
 namespace DBProject
 {
@@ -14,6 +16,7 @@ namespace DBProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             Session["dID"] = "";
             deptDoctorInfo(sender, e);
         }
@@ -27,6 +30,7 @@ namespace DBProject
 
                 string dID = TDoctorGrid.Rows[num].Cells[2].Text;
   
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 Session["dID"] = dID;
 
                 Response.BufferOutput = true;
@@ -46,6 +50,7 @@ namespace DBProject
 
             DataTable DT = new DataTable();
 
+            // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
             string deptName = (string) Session["deptOriginal"];
 
             int status = objmyDAl.getDeptDoctorInfo(deptName, ref DT);
@@ -58,6 +63,7 @@ namespace DBProject
 
             else
             {
+                // cz-dotnet-0022: Session backed by distributed Redis cache (ElastiCache) via RedisSessionStateProvider
                 TDoctor.Text = "Following are our Specialized Doctors of " + Session["deptOriginal"] + " Department:";
                 TDoctorGrid.DataSource = DT;
                 TDoctorGrid.DataBind();
