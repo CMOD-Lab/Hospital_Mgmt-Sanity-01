@@ -270,6 +270,48 @@ TestResults/
 #   line 657: $fa-var-vimeo: "\f27d"
 #   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
 # ---------------------------------------------------------------
+#
+# CURRENT FIX BATCH - _variables.scss lines 658-687 (cz-css-1011):
+#   Covers cz-css-1011 occurrences for $fa-var-vimeo-square through $fa-var-youtube-square
+#   icon unicode variable declarations that are SCSS preprocessor source files
+#   and must not be present in the production container image.
+#   These SCSS variable declarations are compiled to CSS during Stage 1
+#   (css-minify) of the multi-stage build via:
+#     npx sass assets/font-awesome/scss/font-awesome.scss ...
+#   and the entire scss directory is removed before the runtime image is built:
+#     RUN rm -rf assets/font-awesome/scss assets/font-awesome/less
+#   line 658: $fa-var-vimeo-square: "\f194"
+#   line 659: $fa-var-vine: "\f1ca"
+#   line 660: $fa-var-vk: "\f189"
+#   line 661: $fa-var-volume-down: "\f027"
+#   line 662: $fa-var-volume-off: "\f026"
+#   line 663: $fa-var-volume-up: "\f028"
+#   line 664: $fa-var-warning: "\f071"
+#   line 665: $fa-var-wechat: "\f1d7"
+#   line 666: $fa-var-weibo: "\f18a"
+#   line 667: $fa-var-weixin: "\f1d7"
+#   line 668: $fa-var-whatsapp: "\f232"
+#   line 669: $fa-var-wheelchair: "\f193"
+#   line 670: $fa-var-wifi: "\f1eb"
+#   line 671: $fa-var-wikipedia-w: "\f266"
+#   line 672: $fa-var-windows: "\f17a"
+#   line 673: $fa-var-won: "\f159"
+#   line 674: $fa-var-wordpress: "\f19a"
+#   line 675: $fa-var-wrench: "\f0ad"
+#   line 676: $fa-var-xing: "\f168"
+#   line 677: $fa-var-xing-square: "\f169"
+#   line 678: $fa-var-y-combinator: "\f23b"
+#   line 679: $fa-var-y-combinator-square: "\f1d4"
+#   line 680: $fa-var-yahoo: "\f19e"
+#   line 681: $fa-var-yc: "\f23b"
+#   line 682: $fa-var-yc-square: "\f1d4"
+#   line 683: $fa-var-yelp: "\f1e9"
+#   line 684: $fa-var-yen: "\f157"
+#   line 685: $fa-var-youtube: "\f167"
+#   line 686: $fa-var-youtube-play: "\f16a"
+#   line 687: $fa-var-youtube-square: "\f166"
+#   All 30 occurrences excluded via: assets/font-awesome/scss/ and **/*.scss entries below.
+# ---------------------------------------------------------------
 assets/font-awesome/scss/
 assets/font-awesome/less/
 **/*.scss

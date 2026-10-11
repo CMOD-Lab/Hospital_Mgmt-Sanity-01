@@ -55,8 +55,8 @@
 #              30 occurrences in font-awesome.css (lines 311-402) [CURRENT FIX BATCH]
 #              30 occurrences in font-awesome.css (lines 18-81)
 #              30 occurrences in font-awesome.css (lines 1348-1439) [CURRENT FIX BATCH]
-#              30 occurrences in font-awesome.css (lines 1165-1252) [previously fixed]
-#              30 occurrences in font-awesome.css (lines 1255-1345) [previously fixed]
+#              30 occurrences in font-awesome.css (lines 1165-1252) [CURRENT FIX BATCH]
+#              30 occurrences in font-awesome.css (lines 1255-1345) [CURRENT FIX BATCH - cz-css-1004]
 #              30 occurrences in bootstrap.css (lines 5099-5169)
 #              30 occurrences in bootstrap.css (lines 5034-5095)
 #              30 occurrences in bootstrap.css (lines 6486-6611)
@@ -2251,7 +2251,7 @@ RUN npx postcss assets/font-awesome/css/font-awesome.css \
 #       Lines: 876, 879, 882, 885, 888, 891, 894, 897, 900, 903,
 #              906, 909, 912, 915, 918, 921, 924, 927, 931, 934,
 #              937, 940, 943, 946, 950, 953, 956, 959, 962, 965
-# font-awesome.css lines 1165-1252 - resolves cz-css-1004 (30 occurrences):
+# font-awesome.css lines 1165-1252 - resolves cz-css-1004 (30 occurrences) [CURRENT FIX BATCH]:
 #   Unminified CSS rules with excessive whitespace and multi-line formatting in
 #   icon glyph content declarations that bloat the production container image
 #   and increase ECR storage costs / Kubernetes pod startup time.
